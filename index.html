@@ -19,6 +19,7 @@
         <main>
             <!-- Pet Display Area -->
             <div class="pet-display">
+                <div class="mood-indicator" id="moodIndicator">😊</div>
                 <div class="pet-sprite" id="petSprite">
                     <div class="pet-animation"></div>
                 </div>
@@ -35,42 +36,42 @@
 
             <!-- Stats Display -->
             <div class="stats-panel">
-                <div class="stat-bar">
+                <div class="stat-bar" data-tooltip="">
                     <div class="stat-label">
                         <span>❤️ Health</span>
                         <span id="healthValue">100</span>
                     </div>
-                    <div class="progress-bar">
+                    <div class="progress-bar" id="healthBarContainer">
                         <div class="progress-fill health" id="healthBar"></div>
                     </div>
                 </div>
 
-                <div class="stat-bar">
+                <div class="stat-bar" data-tooltip="">
                     <div class="stat-label">
                         <span>🍔 Hunger</span>
                         <span id="hungerValue">100</span>
                     </div>
-                    <div class="progress-bar">
+                    <div class="progress-bar" id="hungerBarContainer">
                         <div class="progress-fill hunger" id="hungerBar"></div>
                     </div>
                 </div>
 
-                <div class="stat-bar">
+                <div class="stat-bar" data-tooltip="">
                     <div class="stat-label">
                         <span>😊 Happiness</span>
                         <span id="happinessValue">100</span>
                     </div>
-                    <div class="progress-bar">
+                    <div class="progress-bar" id="happinessBarContainer">
                         <div class="progress-fill happiness" id="happinessBar"></div>
                     </div>
                 </div>
 
-                <div class="stat-bar">
+                <div class="stat-bar" data-tooltip="">
                     <div class="stat-label">
                         <span>⚡ Energy</span>
                         <span id="energyValue">100</span>
                     </div>
-                    <div class="progress-bar">
+                    <div class="progress-bar" id="energyBarContainer">
                         <div class="progress-fill energy" id="energyBar"></div>
                     </div>
                 </div>

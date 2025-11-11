@@ -140,7 +140,7 @@ class Pet {
     // Handle evolution event
     onEvolution() {
         this.level++;
-        showNotification(`🎉 Your pet evolved to ${this.stage}!`);
+        showNotification(`🎉 Your pet evolved to ${this.stage}!`, 'success');
         this.save();
     }
 
@@ -178,19 +178,19 @@ class Pet {
     // Feed the pet
     feed() {
         if (this.isSleeping) {
-            showNotification('💤 Your pet is sleeping!');
+            showNotification('💤 Your pet is sleeping!', 'warning');
             return false;
         }
         
         if (this.hunger >= 90) {
-            showNotification('🍖 Your pet is not hungry!');
+            showNotification('🍖 Your pet is not hungry!', 'info');
             return false;
         }
         
         this.hunger = Math.min(100, this.hunger + 30);
         this.happiness = Math.min(100, this.happiness + 5);
         this.health = Math.min(100, this.health + 5);
-        showNotification('🍖 Fed your pet!');
+        showNotification('🍖 Fed your pet!', 'success');
         this.save();
         return true;
     }
@@ -198,19 +198,19 @@ class Pet {
     // Play with the pet
     play() {
         if (this.isSleeping) {
-            showNotification('💤 Your pet is sleeping!');
+            showNotification('💤 Your pet is sleeping!', 'warning');
             return false;
         }
         
         if (this.energy < 20) {
-            showNotification('😴 Your pet is too tired to play!');
+            showNotification('😴 Your pet is too tired to play!', 'warning');
             return false;
         }
         
         this.happiness = Math.min(100, this.happiness + 20);
         this.energy = Math.max(0, this.energy - 15);
         this.hunger = Math.max(0, this.hunger - 10);
-        showNotification('🎮 Played with your pet!');
+        showNotification('🎮 Played with your pet!', 'success');
         this.save();
         return true;
     }
@@ -275,11 +275,11 @@ class Pet {
             this.wins++;
             this.level += 0.5;
             this.happiness = Math.min(100, this.happiness + 10);
-            showNotification('🏆 Victory! Your pet gained experience!');
+            showNotification('🏆 Victory! Your pet gained experience!', 'success');
         } else {
             this.happiness = Math.max(0, this.happiness - 10);
             this.health = Math.max(0, this.health - 10);
-            showNotification('💔 Defeat! Your pet needs care.');
+            showNotification('💔 Defeat! Your pet needs care.', 'error');
         }
         
         this.energy = Math.max(0, this.energy - 30);
@@ -320,9 +320,15 @@ class Pet {
 }
 
 // Notification helper function
-function showNotification(message) {
+function showNotification(message, type = 'info') {
     const notification = document.getElementById('notification');
     notification.textContent = message;
+    
+    // Remove previous type classes
+    notification.classList.remove('success', 'warning', 'error', 'info');
+    
+    // Add new type class
+    notification.classList.add(type);
     notification.classList.add('show');
     
     setTimeout(() => {

@@ -78,6 +78,57 @@ function setupEventListeners() {
             closeSettingsModal();
         }
     });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', handleKeyboardShortcut);
+}
+
+// Handle keyboard shortcuts
+function handleKeyboardShortcut(e) {
+    // Don't trigger shortcuts if typing in an input field
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+    }
+    
+    // Don't trigger if a modal is open (except battle)
+    const settingsModal = document.getElementById('settingsModal');
+    const timeAwayModal = document.getElementById('timeAwayModal');
+    if (settingsModal.classList.contains('active') || timeAwayModal.classList.contains('active')) {
+        if (e.key === 'Escape') {
+            closeSettingsModal();
+            closeTimeAwayModal();
+        }
+        return;
+    }
+    
+    switch(e.key.toLowerCase()) {
+        case 'f':
+            e.preventDefault();
+            handleFeed();
+            break;
+        case 'p':
+            e.preventDefault();
+            handlePlay();
+            break;
+        case 's':
+            e.preventDefault();
+            handleSleep();
+            break;
+        case 't':
+            e.preventDefault();
+            handleTrain();
+            break;
+        case 'b':
+            e.preventDefault();
+            handleLocalBattle();
+            break;
+        case 'escape':
+            const battleModal = document.getElementById('battleModal');
+            if (battleModal.classList.contains('active')) {
+                closeBattleModal();
+            }
+            break;
+    }
 }
 
 // Try to connect to server
@@ -130,6 +181,12 @@ function updateUI() {
     
     // Update evolution preview
     updateEvolutionPreview();
+    
+    // Update mood indicator
+    updateMoodIndicator();
+    
+    // Update stat tooltips
+    updateStatTooltips();
 }
 
 // Update evolution preview display
@@ -154,6 +211,72 @@ function updateEvolutionPreview() {
         timeText = `${minutes}m until ${evolutionInfo.nextStage}`;
     }
     document.getElementById('evolutionTime').textContent = timeText;
+}
+
+// Update mood indicator based on pet stats
+function updateMoodIndicator() {
+    const moodElement = document.getElementById('moodIndicator');
+    
+    if (pet.isSleeping) {
+        moodElement.textContent = '😴';
+        return;
+    }
+    
+    // Calculate average stat level
+    const avgStats = (pet.health + pet.hunger + pet.happiness + pet.energy) / 4;
+    
+    // Determine mood based on stats
+    if (avgStats >= 80) {
+        moodElement.textContent = '😊'; // Happy
+    } else if (avgStats >= 60) {
+        moodElement.textContent = '🙂'; // Okay
+    } else if (avgStats >= 40) {
+        moodElement.textContent = '😐'; // Neutral
+    } else if (avgStats >= 20) {
+        moodElement.textContent = '😢'; // Sad
+    } else {
+        moodElement.textContent = '😰'; // Critical
+    }
+}
+
+// Update stat tooltips with helpful information
+function updateStatTooltips() {
+    const stats = [
+        {
+            name: 'health',
+            decay: 'Decreases when hunger is low',
+            critical: 30
+        },
+        {
+            name: 'hunger',
+            decay: '~0.5 per minute',
+            critical: 30
+        },
+        {
+            name: 'happiness',
+            decay: '~0.3 per minute',
+            critical: 30
+        },
+        {
+            name: 'energy',
+            decay: '~0.2 per minute (restores while sleeping)',
+            critical: 20
+        }
+    ];
+    
+    stats.forEach(stat => {
+        const statBar = document.querySelector(`.stat-bar[data-tooltip]`);
+        const value = pet[stat.name];
+        const barContainer = document.getElementById(`${stat.name}BarContainer`);
+        
+        if (barContainer && barContainer.parentElement) {
+            let tooltip = `Decay: ${stat.decay}`;
+            if (value < stat.critical) {
+                tooltip += ` | ⚠️ CRITICAL!`;
+            }
+            barContainer.parentElement.setAttribute('data-tooltip', tooltip);
+        }
+    });
 }
 
 // Update individual stat bar
@@ -329,12 +452,40 @@ function handleBattleAction(action) {
 
 // Update battle UI
 function updateBattleUI() {
-    // Update HP bars
+    // Update HP bars with animation
     const playerHPPercent = (currentBattle.playerStats.currentHP / currentBattle.playerStats.maxHP) * 100;
     const opponentHPPercent = (currentBattle.opponentStats.currentHP / currentBattle.opponentStats.maxHP) * 100;
     
-    document.getElementById('battleYourHp').style.width = playerHPPercent + '%';
-    document.getElementById('battleOpponentHp').style.width = opponentHPPercent + '%';
+    const playerHPBar = document.getElementById('battleYourHp');
+    const opponentHPBar = document.getElementById('battleOpponentHp');
+    
+    // Check for damage and add flash animation
+    if (parseFloat(playerHPBar.style.width) > playerHPPercent) {
+        playerHPBar.classList.add('damage-flash');
+        setTimeout(() => playerHPBar.classList.remove('damage-flash'), 300);
+        
+        // Add shake to player sprite
+        const playerSprite = document.querySelector('.battle-pet:first-child .battle-sprite');
+        if (playerSprite) {
+            playerSprite.classList.add('taking-damage');
+            setTimeout(() => playerSprite.classList.remove('taking-damage'), 300);
+        }
+    }
+    
+    if (parseFloat(opponentHPBar.style.width) > opponentHPPercent) {
+        opponentHPBar.classList.add('damage-flash');
+        setTimeout(() => opponentHPBar.classList.remove('damage-flash'), 300);
+        
+        // Add shake to opponent sprite
+        const opponentSprite = document.querySelector('.battle-pet:last-child .battle-sprite');
+        if (opponentSprite) {
+            opponentSprite.classList.add('taking-damage');
+            setTimeout(() => opponentSprite.classList.remove('taking-damage'), 300);
+        }
+    }
+    
+    playerHPBar.style.width = playerHPPercent + '%';
+    opponentHPBar.style.width = opponentHPPercent + '%';
     
     // Update battle log
     const battleLog = document.getElementById('battleLog');
@@ -346,6 +497,19 @@ function updateBattleUI() {
     if (!currentBattle.isActive) {
         document.getElementById('battleActions').style.display = 'none';
         document.getElementById('finishBattleBtn').style.display = 'block';
+        
+        // Add victory animation to winner
+        if (currentBattle.playerWon()) {
+            const playerSprite = document.querySelector('.battle-pet:first-child .battle-sprite');
+            if (playerSprite) {
+                playerSprite.classList.add('victory');
+            }
+        } else {
+            const opponentSprite = document.querySelector('.battle-pet:last-child .battle-sprite');
+            if (opponentSprite) {
+                opponentSprite.classList.add('victory');
+            }
+        }
     }
 }
 

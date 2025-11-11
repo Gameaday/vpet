@@ -78,6 +78,22 @@ main {
     border: 3px solid #333;
 }
 
+/* Mood Indicator */
+.mood-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2em;
+    z-index: 10;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
 .pet-sprite {
     width: 150px;
     height: 150px;
@@ -200,10 +216,42 @@ main {
 
 .stat-bar {
     margin-bottom: 12px;
+    position: relative;
 }
 
 .stat-bar:last-child {
     margin-bottom: 0;
+}
+
+/* Stat tooltips */
+.stat-bar[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    white-space: nowrap;
+    z-index: 100;
+    margin-bottom: 5px;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.stat-bar[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+    z-index: 100;
+    pointer-events: none;
 }
 
 .stat-label {
@@ -489,6 +537,35 @@ main {
     transition: width 0.5s ease;
 }
 
+/* Battle animations */
+@keyframes battle-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes battle-flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes victory-bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.1); }
+}
+
+.battle-sprite.taking-damage {
+    animation: battle-shake 0.3s, battle-flash 0.3s;
+}
+
+.battle-sprite.victory {
+    animation: victory-bounce 0.6s ease-in-out 3;
+}
+
+.battle-hp-fill.damage-flash {
+    animation: battle-flash 0.3s;
+}
+
 .vs-text {
     color: #fff;
     font-size: 1.5em;
@@ -609,6 +686,27 @@ main {
 .notification.show {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
+}
+
+/* Notification types */
+.notification.success {
+    background: #1a1a1a;
+    border-color: #4ade80;
+}
+
+.notification.warning {
+    background: #1a1a1a;
+    border-color: #fbbf24;
+}
+
+.notification.error {
+    background: #1a1a1a;
+    border-color: #ef4444;
+}
+
+.notification.info {
+    background: #1a1a1a;
+    border-color: #3b82f6;
 }
 
 /* Auto-save Indicator */
