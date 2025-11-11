@@ -24,6 +24,13 @@
                 </div>
                 <div class="pet-name" id="petName">My Pet</div>
                 <div class="pet-stage" id="petStage">Egg</div>
+                <div class="evolution-preview" id="evolutionPreview" style="display: none;">
+                    <div class="evolution-progress-text">Next Evolution</div>
+                    <div class="evolution-progress-bar">
+                        <div class="evolution-progress-fill" id="evolutionProgressFill"></div>
+                    </div>
+                    <div class="evolution-time" id="evolutionTime"></div>
+                </div>
             </div>
 
             <!-- Stats Display -->
@@ -167,6 +174,18 @@
 
         <!-- Notification Toast -->
         <div class="notification" id="notification"></div>
+        
+        <!-- Auto-save Indicator -->
+        <div class="save-indicator" id="saveIndicator">Saved ✓</div>
+        
+        <!-- Time Away Modal -->
+        <div class="modal" id="timeAwayModal">
+            <div class="modal-content">
+                <h2>Welcome Back!</h2>
+                <div class="time-away-content" id="timeAwayContent"></div>
+                <button class="battle-action-btn finish-btn" id="closeTimeAwayBtn">Continue</button>
+            </div>
+        </div>
     </div>
 
     <script src="pet.js"></script>

@@ -151,6 +151,44 @@ main {
     font-size: 1em;
 }
 
+/* Evolution Preview */
+.evolution-preview {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 8px;
+    border: 2px solid #667eea;
+}
+
+.evolution-progress-text {
+    color: #667eea;
+    font-size: 0.8em;
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.evolution-progress-bar {
+    height: 8px;
+    background: #333;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.evolution-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+}
+
+.evolution-time {
+    color: #aaa;
+    font-size: 0.75em;
+    text-align: center;
+}
+
 /* Stats Panel */
 .stats-panel {
     background: #1a1a1a;
@@ -186,8 +224,27 @@ main {
 
 .progress-fill {
     height: 100%;
-    transition: width 0.3s ease;
+    transition: width 0.3s ease, box-shadow 0.3s ease;
     border-radius: 8px;
+}
+
+/* Stat warning states */
+.progress-fill.critical {
+    animation: pulse-red 1.5s infinite;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+}
+
+.progress-fill.warning {
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+}
+
+.progress-fill.excellent {
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+@keyframes pulse-red {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
 }
 
 .progress-fill.health {
@@ -552,6 +609,66 @@ main {
 .notification.show {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
+}
+
+/* Auto-save Indicator */
+.save-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(74, 222, 128, 0.9);
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s;
+    z-index: 2000;
+    pointer-events: none;
+}
+
+.save-indicator.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Time Away Modal Content */
+.time-away-content {
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.time-away-content h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.time-away-content p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.time-away-content .stat-change {
+    padding: 8px 12px;
+    background: #2a2a2a;
+    border-radius: 6px;
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-away-content .stat-change.negative {
+    border-left: 3px solid #ef4444;
+}
+
+.time-away-content .stat-change.positive {
+    border-left: 3px solid #4ade80;
 }
 
 /* Responsive Design */

@@ -12,6 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create server connection
     serverConnection = new ServerConnection();
     
+    // Check for time away and show modal if needed
+    const timeAwayInfo = pet.updateStatsFromTimePassed();
+    if (timeAwayInfo) {
+        showTimeAwayModal(timeAwayInfo);
+    }
+    
     // Initial UI update
     updateUI();
     
@@ -50,6 +56,9 @@ function setupEventListeners() {
     
     // Settings save
     document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
+    
+    // Time away modal
+    document.getElementById('closeTimeAwayBtn').addEventListener('click', closeTimeAwayModal);
     
     // Battle actions
     document.getElementById('attackBtn').addEventListener('click', () => handleBattleAction('attack'));
@@ -118,6 +127,33 @@ function updateUI() {
     document.getElementById('playBtn').disabled = actionsDisabled;
     document.getElementById('trainBtn').disabled = actionsDisabled;
     document.getElementById('battleBtn').disabled = actionsDisabled;
+    
+    // Update evolution preview
+    updateEvolutionPreview();
+}
+
+// Update evolution preview display
+function updateEvolutionPreview() {
+    const evolutionInfo = pet.getEvolutionProgress();
+    const previewElement = document.getElementById('evolutionPreview');
+    
+    if (!evolutionInfo) {
+        previewElement.style.display = 'none';
+        return;
+    }
+    
+    previewElement.style.display = 'block';
+    document.getElementById('evolutionProgressFill').style.width = evolutionInfo.progress + '%';
+    
+    const hours = Math.floor(evolutionInfo.timeRemaining / 60);
+    const minutes = Math.floor(evolutionInfo.timeRemaining % 60);
+    let timeText = '';
+    if (hours > 0) {
+        timeText = `${hours}h ${minutes}m until ${evolutionInfo.nextStage}`;
+    } else {
+        timeText = `${minutes}m until ${evolutionInfo.nextStage}`;
+    }
+    document.getElementById('evolutionTime').textContent = timeText;
 }
 
 // Update individual stat bar
@@ -128,12 +164,23 @@ function updateStat(statName, value) {
     const clampedValue = Math.max(0, Math.min(100, value));
     valueElement.textContent = Math.floor(clampedValue);
     barElement.style.width = clampedValue + '%';
+    
+    // Add warning classes based on value
+    barElement.classList.remove('critical', 'warning', 'excellent');
+    if (clampedValue < 30) {
+        barElement.classList.add('critical');
+    } else if (clampedValue < 50) {
+        barElement.classList.add('warning');
+    } else if (clampedValue >= 90) {
+        barElement.classList.add('excellent');
+    }
 }
 
 // Handle feed action
 function handleFeed() {
     if (pet.feed()) {
         updateUI();
+        showSaveIndicator();
     }
 }
 
@@ -141,6 +188,7 @@ function handleFeed() {
 function handlePlay() {
     if (pet.play()) {
         updateUI();
+        showSaveIndicator();
     }
 }
 
@@ -148,12 +196,14 @@ function handlePlay() {
 function handleSleep() {
     pet.sleep();
     updateUI();
+    showSaveIndicator();
 }
 
 // Handle train action
 function handleTrain() {
     if (pet.train()) {
         updateUI();
+        showSaveIndicator();
     }
 }
 
@@ -355,11 +405,83 @@ function saveSettings() {
 
 // Handle reset
 function handleReset() {
-    if (confirm('Are you sure you want to reset your pet? This cannot be undone!')) {
+    const confirmText = `Are you sure you want to reset your pet?\n\nThis will permanently delete "${pet.name}" and all progress.\n\nType your pet's name to confirm:`;
+    const userInput = prompt(confirmText);
+    
+    if (userInput === pet.name) {
         pet.reset();
         updateUI();
         showNotification('🔄 Pet has been reset!');
+    } else if (userInput !== null) {
+        showNotification('❌ Reset cancelled - name did not match');
     }
+}
+
+// Show save indicator
+function showSaveIndicator() {
+    const indicator = document.getElementById('saveIndicator');
+    indicator.classList.add('show');
+    
+    setTimeout(() => {
+        indicator.classList.remove('show');
+    }, 2000);
+}
+
+// Show time away modal
+function showTimeAwayModal(timeAwayInfo) {
+    const modal = document.getElementById('timeAwayModal');
+    const content = document.getElementById('timeAwayContent');
+    
+    const hours = Math.floor(timeAwayInfo.timePassed / 60);
+    const minutes = Math.floor(timeAwayInfo.timePassed % 60);
+    
+    let timeText = 'You were away for ';
+    if (hours > 0) {
+        timeText += `${hours} hour${hours > 1 ? 's' : ''} and `;
+    }
+    timeText += `${minutes} minute${minutes > 1 ? 's' : ''}`;
+    
+    let html = `<h3>${timeText}</h3>`;
+    
+    // Show stat changes
+    const stats = [
+        { name: 'Health', key: 'health', icon: '❤️' },
+        { name: 'Hunger', key: 'hunger', icon: '🍔' },
+        { name: 'Happiness', key: 'happiness', icon: '😊' },
+        { name: 'Energy', key: 'energy', icon: '⚡' }
+    ];
+    
+    html += '<div>';
+    stats.forEach(stat => {
+        const oldValue = Math.floor(timeAwayInfo.oldStats[stat.key]);
+        const newValue = Math.floor(pet[stat.key]);
+        const change = newValue - oldValue;
+        
+        if (change !== 0) {
+            const changeClass = change < 0 ? 'negative' : 'positive';
+            const changeSign = change > 0 ? '+' : '';
+            html += `
+                <div class="stat-change ${changeClass}">
+                    <span>${stat.icon} ${stat.name}</span>
+                    <span>${oldValue} → ${newValue} (${changeSign}${change})</span>
+                </div>
+            `;
+        }
+    });
+    html += '</div>';
+    
+    if (timeAwayInfo.needsAttention) {
+        html += '<p style="color: #fbbf24; margin-top: 15px;">⚠️ Your pet needs attention!</p>';
+    }
+    
+    content.innerHTML = html;
+    modal.classList.add('active');
+}
+
+// Close time away modal
+function closeTimeAwayModal() {
+    const modal = document.getElementById('timeAwayModal');
+    modal.classList.remove('active');
 }
 
 // Clean up on page unload

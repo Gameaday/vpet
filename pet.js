@@ -70,6 +70,14 @@ class Pet {
         const timePassed = now - this.lastUpdateTime;
         const minutesPassed = timePassed / (1000 * 60);
         
+        // Store old stats for comparison
+        const oldStats = {
+            health: this.health,
+            hunger: this.hunger,
+            happiness: this.happiness,
+            energy: this.energy
+        };
+        
         // Decay rates per minute
         const hungerDecay = 0.5;
         const happinessDecay = 0.3;
@@ -98,6 +106,16 @@ class Pet {
         
         this.lastUpdateTime = now;
         this.save();
+        
+        // Return time away info if significant time passed (>5 minutes)
+        if (minutesPassed > 5) {
+            return {
+                timePassed: minutesPassed,
+                oldStats: oldStats,
+                needsAttention: this.health < 50 || this.hunger < 50 || this.happiness < 50
+            };
+        }
+        return null;
     }
 
     // Check and handle evolution
@@ -124,6 +142,37 @@ class Pet {
         this.level++;
         showNotification(`🎉 Your pet evolved to ${this.stage}!`);
         this.save();
+    }
+
+    // Get evolution progress information
+    getEvolutionProgress() {
+        const daysPassed = (Date.now() - this.birthTime) / (1000 * 60 * 60 * 24);
+        
+        const stages = {
+            'egg': { next: 'baby', threshold: 0.01, name: 'Baby' },
+            'baby': { next: 'child', threshold: 0.05, name: 'Child' },
+            'child': { next: 'teen', threshold: 0.1, name: 'Teen' },
+            'teen': { next: 'adult', threshold: 0.2, name: 'Adult' },
+            'adult': { next: null, threshold: null, name: null }
+        };
+        
+        const currentStage = stages[this.stage];
+        if (!currentStage.next) {
+            return null; // Already at final stage
+        }
+        
+        const previousThreshold = this.stage === 'egg' ? 0 : 
+            this.stage === 'baby' ? 0.01 : 
+            this.stage === 'child' ? 0.05 : 0.1;
+        
+        const progress = ((daysPassed - previousThreshold) / (currentStage.threshold - previousThreshold)) * 100;
+        const timeRemaining = (currentStage.threshold - daysPassed) * 24 * 60; // in minutes
+        
+        return {
+            nextStage: currentStage.name,
+            progress: Math.min(100, Math.max(0, progress)),
+            timeRemaining: Math.max(0, timeRemaining)
+        };
     }
 
     // Feed the pet
