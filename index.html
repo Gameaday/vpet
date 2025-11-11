@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Virtual Pet - VPet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐾 Virtual Pet</h1>
+            <div class="server-status" id="serverStatus">
+                <span class="status-dot offline"></span>
+                <span>Offline</span>
+            </div>
+        </header>
+
+        <main>
+            <!-- Pet Display Area -->
+            <div class="pet-display">
+                <div class="pet-sprite" id="petSprite">
+                    <div class="pet-animation"></div>
+                </div>
+                <div class="pet-name" id="petName">My Pet</div>
+                <div class="pet-stage" id="petStage">Egg</div>
+            </div>
+
+            <!-- Stats Display -->
+            <div class="stats-panel">
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>❤️ Health</span>
+                        <span id="healthValue">100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill health" id="healthBar"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>🍔 Hunger</span>
+                        <span id="hungerValue">100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill hunger" id="hungerBar"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>😊 Happiness</span>
+                        <span id="happinessValue">100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill happiness" id="happinessBar"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>⚡ Energy</span>
+                        <span id="energyValue">100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill energy" id="energyBar"></div>
+                    </div>
+                </div>
+
+                <div class="stat-info">
+                    <div>Age: <span id="petAge">0</span> days</div>
+                    <div>Level: <span id="petLevel">1</span></div>
+                    <div>Wins: <span id="petWins">0</span></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-panel">
+                <button class="action-btn feed-btn" id="feedBtn">
+                    <span class="btn-icon">🍖</span>
+                    <span>Feed</span>
+                </button>
+                <button class="action-btn play-btn" id="playBtn">
+                    <span class="btn-icon">🎮</span>
+                    <span>Play</span>
+                </button>
+                <button class="action-btn sleep-btn" id="sleepBtn">
+                    <span class="btn-icon">💤</span>
+                    <span>Sleep</span>
+                </button>
+                <button class="action-btn train-btn" id="trainBtn">
+                    <span class="btn-icon">💪</span>
+                    <span>Train</span>
+                </button>
+            </div>
+
+            <!-- Battle Section -->
+            <div class="battle-panel">
+                <button class="battle-btn" id="battleBtn">
+                    <span class="btn-icon">⚔️</span>
+                    <span>Battle</span>
+                </button>
+                <button class="online-battle-btn" id="onlineBattleBtn" disabled>
+                    <span class="btn-icon">🌐</span>
+                    <span>Online Battle</span>
+                </button>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="settings-panel">
+                <button class="settings-btn" id="settingsBtn">⚙️</button>
+                <button class="reset-btn" id="resetBtn">🔄</button>
+            </div>
+        </main>
+
+        <!-- Modal for Battle -->
+        <div class="modal" id="battleModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeBattleModal">&times;</span>
+                <h2>Battle Arena</h2>
+                <div class="battle-arena">
+                    <div class="battle-pet your-pet">
+                        <div class="battle-sprite"></div>
+                        <div class="battle-pet-name" id="battleYourName">Your Pet</div>
+                        <div class="battle-hp-bar">
+                            <div class="battle-hp-fill" id="battleYourHp"></div>
+                        </div>
+                    </div>
+                    <div class="vs-text">VS</div>
+                    <div class="battle-pet opponent-pet">
+                        <div class="battle-sprite"></div>
+                        <div class="battle-pet-name" id="battleOpponentName">Opponent</div>
+                        <div class="battle-hp-bar">
+                            <div class="battle-hp-fill" id="battleOpponentHp"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="battle-log" id="battleLog"></div>
+                <div class="battle-actions" id="battleActions">
+                    <button class="battle-action-btn" id="attackBtn">Attack</button>
+                    <button class="battle-action-btn" id="defendBtn">Defend</button>
+                    <button class="battle-action-btn" id="specialBtn">Special</button>
+                </div>
+                <button class="battle-action-btn finish-btn" id="finishBattleBtn" style="display: none;">Finish</button>
+            </div>
+        </div>
+
+        <!-- Modal for Settings -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeSettingsModal">&times;</span>
+                <h2>Settings</h2>
+                <div class="settings-content">
+                    <div class="setting-item">
+                        <label for="petNameInput">Pet Name:</label>
+                        <input type="text" id="petNameInput" maxlength="15" />
+                    </div>
+                    <div class="setting-item">
+                        <label for="serverUrlInput">Server URL:</label>
+                        <input type="text" id="serverUrlInput" placeholder="ws://localhost:3000" />
+                    </div>
+                    <button class="save-settings-btn" id="saveSettingsBtn">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div class="notification" id="notification"></div>
+    </div>
+
+    <script src="pet.js"></script>
+    <script src="battle.js"></script>
+    <script src="server.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
