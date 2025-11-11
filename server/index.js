@@ -20,7 +20,19 @@ const server = http.createServer((req, res) => {
     }
     
     // Serve static files from parent directory
-    let filePath = path.join(__dirname, '..', req.url === '/' ? 'index.html' : req.url);
+    // Sanitize URL to prevent path traversal attacks
+    const sanitizedUrl = req.url === '/' ? 'index.html' : req.url.split('?')[0];
+    let filePath = path.join(__dirname, '..', sanitizedUrl);
+    
+    // Ensure the resolved path is within the allowed directory
+    const parentDir = path.join(__dirname, '..');
+    const resolvedPath = path.resolve(filePath);
+    if (!resolvedPath.startsWith(parentDir)) {
+        res.writeHead(403);
+        res.end('403 Forbidden');
+        return;
+    }
+    
     const extname = path.extname(filePath);
     
     const contentTypes = {
