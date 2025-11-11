@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+README.md
+ROADMAP.md
+IMPROVEMENTS.md
+QUICKSTART.md
+
+# GitHub
+.github
+
+# Node modules (will be installed in container)
+node_modules
+server/node_modules
+
+# Client files (not needed for server)
+index.html
+style.css
+app.js
+pet.js
+battle.js
+server.js
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Development
+.DS_Store
+*.log
+npm-debug.log*

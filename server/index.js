@@ -8,6 +8,17 @@ const PORT = process.env.PORT || 3000;
 
 // Create HTTP server for serving static files
 const server = http.createServer((req, res) => {
+    // Health check endpoint
+    if (req.url === '/health') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ 
+            status: 'ok', 
+            uptime: process.uptime(),
+            connections: wss ? wss.clients.size : 0
+        }));
+        return;
+    }
+    
     // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');

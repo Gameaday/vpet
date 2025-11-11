@@ -29,3 +29,12 @@ build/
 # Temporary files
 tmp/
 temp/
+
+# Docker
+docker-compose.override.yml
+.docker/
+*.tar
+
+# Deployment
+_site/
+DEPLOY_INFO.txt
