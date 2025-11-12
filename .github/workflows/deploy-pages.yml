@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: 🚀 Deploy to GitHub Pages
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
       - '*.html'
       - '*.css'
       - '*.js'
+      - '*.md'
       - '!server/**'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
@@ -22,33 +23,91 @@ concurrency:
 
 jobs:
   build:
+    name: Build VPet Website
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Pages
+      - name: 🔧 Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Create deployment package
+      - name: 📦 Create deployment package
         run: |
           mkdir -p _site
+          
+          # Copy game files
           cp index.html _site/
-          cp *.css _site/ 2>/dev/null || true
-          cp *.js _site/ 2>/dev/null || true
-          cp *.md _site/ 2>/dev/null || true
-          echo "VPet deployed on $(date)" > _site/DEPLOY_INFO.txt
+          cp *.css _site/
+          cp *.js _site/
+          
+          # Exclude server-side files
+          rm -f _site/server.js 2>/dev/null || true
+          
+          # Copy documentation
+          cp README.md _site/
+          cp QUICKSTART.md _site/
+          cp ROADMAP.md _site/
+          cp IMPROVEMENTS.md _site/
+          cp DEPLOYMENT.md _site/
+          
+          # Create helpful landing info
+          cat > _site/VERSION.txt << EOF
+          VPet - Virtual Pet Game
+          Deployed: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          Commit: ${{ github.sha }}
+          Branch: ${{ github.ref_name }}
+          EOF
+          
+          # Create .nojekyll to serve files directly
+          touch _site/.nojekyll
+          
+          # Create a robots.txt
+          cat > _site/robots.txt << EOF
+          User-agent: *
+          Allow: /
+          Sitemap: ${{ github.server_url }}/${{ github.repository }}/sitemap.xml
+          EOF
 
-      - name: Upload artifact
+      - name: 📊 Generate build summary
+        run: |
+          echo "### 🎮 VPet Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status**: ✅ Build successful" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Files deployed**:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          ls -lh _site/ | tail -n +2 >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **Live URL**: Will be available after deployment" >> $GITHUB_STEP_SUMMARY
+
+      - name: 📤 Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          name: vpet-website
+          retention-days: 30
 
   deploy:
+    name: Deploy to GitHub Pages
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - name: 🌐 Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: 🎉 Deployment complete
+        run: |
+          echo "### 🚀 Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **Live URL**: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Quick Links" >> $GITHUB_STEP_SUMMARY
+          echo "- 🎮 [Play VPet](${{ steps.deployment.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
+          echo "- 📖 [Documentation](${{ steps.deployment.outputs.page_url }}README.md)" >> $GITHUB_STEP_SUMMARY
+          echo "- ⚡ [Quick Start](${{ steps.deployment.outputs.page_url }}QUICKSTART.md)" >> $GITHUB_STEP_SUMMARY
+          echo "- 🗺️ [Roadmap](${{ steps.deployment.outputs.page_url }}ROADMAP.md)" >> $GITHUB_STEP_SUMMARY

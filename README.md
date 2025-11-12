@@ -1,21 +1,36 @@
 # 🐾 VPet - Virtual Pet Game
 
+[![🚀 Deploy to GitHub Pages](https://github.com/Gameaday/vpet/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/Gameaday/vpet/actions/workflows/deploy-pages.yml)
+[![🐳 Docker Image CI/CD](https://github.com/Gameaday/vpet/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/Gameaday/vpet/actions/workflows/docker-publish.yml)
+[![✅ CI - Validation & Tests](https://github.com/Gameaday/vpet/actions/workflows/ci.yml/badge.svg)](https://github.com/Gameaday/vpet/actions/workflows/ci.yml)
+
 A cross-platform virtual pet application inspired by Digimon and traditional virtual pets. Take care of your pixelated animated pet, watch it grow and evolve, and battle with others online!
+
+🎮 **[Play Now on GitHub Pages](https://gameaday.github.io/vpet/)** | 📖 [Quick Start Guide](QUICKSTART.md) | 🗺️ [Roadmap](ROADMAP.md) | 🐳 [Docker Hub](https://github.com/Gameaday/vpet/pkgs/container/vpet)
 
 ## ✨ Features
 
-- **🎮 Interactive Pet Care**: Feed, play, train, and rest your virtual pet
-- **📊 Dynamic Stats System**: Monitor health, hunger, happiness, and energy
+- **🎮 Interactive Pet Care**: Feed, play, train, and rest your virtual pet with keyboard shortcuts
+- **📊 Dynamic Stats System**: Monitor health, hunger, happiness, energy, discipline, and cleanliness
 - **🌱 Evolution System**: Watch your pet grow from egg → baby → child → teen → adult
-- **⚔️ Battle System**: Fight against AI opponents locally or challenge other players online
-- **💾 Persistent Data**: Your pet's progress is automatically saved
+- **⚔️ Battle System**: Fight against AI opponents locally or challenge other players online with damage numbers
+- **💾 Persistent Data**: Your pet's progress, personality, and stats history are automatically saved
 - **📱 Mobile-First Design**: Responsive UI optimized for mobile devices
 - **🌐 Online Multiplayer**: Connect to the server for real-time battles with other players
-- **🎨 Pixelated Animations**: Retro-style visual effects and smooth animations
+- **🎨 Pixelated Animations**: Retro-style visual effects and smooth idle animations
+- **🔊 8-bit Sound Effects**: Optional retro audio for immersive gameplay
+- **🏆 Achievement System**: Unlock milestones and celebrate progress
+- **🎭 Personality Traits**: Your pet develops unique characteristics based on your care
+- **🤒 Illness System**: Keep your pet healthy or use medicine to cure sickness
+- **🎨 Theme Customization**: Dark mode, light mode, and authentic retro LCD theme
 
 ## 🚀 Quick Start
 
-### Playing the Game (Client Only)
+### 🌐 Play Online (Easiest!)
+
+Visit **[https://gameaday.github.io/vpet/](https://gameaday.github.io/vpet/)** to play instantly in your browser!
+
+### 💻 Playing Locally
 
 1. **Open the game**:
    - Simply open `index.html` in a web browser
