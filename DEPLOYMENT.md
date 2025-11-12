@@ -8,17 +8,35 @@ This guide covers deploying the VPet application and multiplayer server.
 
 The client application is automatically deployed to GitHub Pages when changes are pushed to the main branch.
 
-**Setup:**
-1. Go to your repository Settings → Pages
-2. Select "GitHub Actions" as the source
-3. The workflow will automatically deploy on push to main
-4. Access your app at: `https://[username].github.io/vpet/`
+**Automatic Setup:**
+
+The workflow automatically attempts to enable GitHub Pages. If it works, you're done!
+
+**Manual Setup (if needed):**
+
+If the automatic setup fails, follow these steps:
+
+1. Go to your repository **Settings** → **Pages**
+2. Under "Build and deployment":
+   - **Source**: Select `GitHub Actions`
+3. Save the settings
+4. The workflow will automatically deploy on the next push to main
+5. Access your app at: `https://[username].github.io/vpet/`
+
+**Troubleshooting:**
+
+If the deployment fails with "Get Pages site failed":
+- Check that you have admin access to the repository
+- Ensure GitHub Pages is enabled in repository settings
+- Verify "GitHub Actions" is selected as the source
+- Re-run the failed workflow after fixing settings
 
 **Features:**
 - ✅ Free hosting
 - ✅ Automatic deployments
 - ✅ HTTPS enabled
 - ✅ CDN distribution
+- ✅ PWA support (installable on mobile)
 - ⚠️ Client-only (no multiplayer server)
 
 ### Option 2: Docker (Full Stack) - Recommended
@@ -288,8 +306,9 @@ Two workflows are included:
 
 2. **deploy-pages.yml** - Deploys client to GitHub Pages
    - Triggers on push to main (client changes)
-   - Automatic deployment
-   - No configuration needed
+   - Automatically enables GitHub Pages if needed
+   - Provides clear error messages if setup fails
+   - Includes PWA assets (manifest, icons, service worker)
 
 ### Automatic Updates
 
@@ -342,6 +361,40 @@ The app can be installed on mobile devices:
 ## 🆘 Troubleshooting
 
 ### Common Issues
+
+**GitHub Pages Deployment Fails:**
+
+If you see "Get Pages site failed" error:
+
+1. **Check Pages Settings:**
+   - Go to repository Settings → Pages
+   - Ensure "Source" is set to `GitHub Actions`
+   - You need admin access to the repository
+
+2. **Verify Workflow Permissions:**
+   - Settings → Actions → General
+   - Under "Workflow permissions", ensure:
+     - "Read and write permissions" is enabled
+     - "Allow GitHub Actions to create and approve pull requests" is checked
+
+3. **Re-run Workflow:**
+   - Go to Actions tab
+   - Find the failed workflow run
+   - Click "Re-run all jobs"
+
+4. **Check Workflow Status:**
+   - The workflow provides detailed error messages in the Summary
+   - Follow the instructions provided in the error message
+
+**Live Page Not Loading:**
+
+If https://[username].github.io/vpet/ doesn't work:
+
+1. Check that the deployment workflow completed successfully
+2. Wait a few minutes for GitHub Pages CDN to update
+3. Clear your browser cache and try again
+4. Check browser console for JavaScript errors
+5. Verify all files were copied correctly in the workflow logs
 
 **Port Already in Use:**
 ```bash
