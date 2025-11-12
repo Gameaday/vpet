@@ -14,6 +14,17 @@ class Pet {
         this.birthTime = Date.now();
         this.lastUpdateTime = Date.now();
         this.battleHistory = []; // Track last 10 battles
+        this.statsHistory = []; // Track stats over time for graphs
+        this.isSick = false; // Illness system
+        this.sicknessDuration = 0; // How long pet has been sick
+        this.personalityTraits = {
+            brave: 50,
+            friendly: 50,
+            energetic: 50,
+            disciplined: 50
+        }; // Personality system (0-100 scale)
+        this.discipline = 100; // New stat for training effectiveness
+        this.cleanliness = 100; // New stat for hygiene
         
         // Load saved pet or create new one
         this.load();
@@ -34,7 +45,13 @@ class Pet {
             isSleeping: this.isSleeping,
             birthTime: this.birthTime,
             lastUpdateTime: this.lastUpdateTime,
-            battleHistory: this.battleHistory || []
+            battleHistory: this.battleHistory || [],
+            statsHistory: this.statsHistory || [],
+            isSick: this.isSick || false,
+            sicknessDuration: this.sicknessDuration || 0,
+            personalityTraits: this.personalityTraits || {brave: 50, friendly: 50, energetic: 50, disciplined: 50},
+            discipline: this.discipline || 100,
+            cleanliness: this.cleanliness || 100
         };
         localStorage.setItem('vpet_data', JSON.stringify(petData));
     }
@@ -58,6 +75,12 @@ class Pet {
                 this.birthTime = petData.birthTime || Date.now();
                 this.lastUpdateTime = petData.lastUpdateTime || Date.now();
                 this.battleHistory = petData.battleHistory || [];
+                this.statsHistory = petData.statsHistory || [];
+                this.isSick = petData.isSick || false;
+                this.sicknessDuration = petData.sicknessDuration || 0;
+                this.personalityTraits = petData.personalityTraits || {brave: 50, friendly: 50, energetic: 50, disciplined: 50};
+                this.discipline = petData.discipline || 100;
+                this.cleanliness = petData.cleanliness || 100;
                 
                 // Update stats based on time passed
                 this.updateStatsFromTimePassed();
@@ -325,7 +348,120 @@ class Pet {
         this.isSleeping = false;
         this.birthTime = Date.now();
         this.lastUpdateTime = Date.now();
+        this.battleHistory = [];
+        this.statsHistory = [];
+        this.isSick = false;
+        this.sicknessDuration = 0;
+        this.personalityTraits = {brave: 50, friendly: 50, energetic: 50, disciplined: 50};
+        this.discipline = 100;
+        this.cleanliness = 100;
         this.save();
+    }
+    
+    // Record stats snapshot for history tracking
+    recordStatsSnapshot() {
+        const snapshot = {
+            timestamp: Date.now(),
+            health: this.health,
+            hunger: this.hunger,
+            happiness: this.happiness,
+            energy: this.energy,
+            level: this.level
+        };
+        
+        this.statsHistory.push(snapshot);
+        
+        // Keep only last 24 hours of data (144 snapshots at 10-minute intervals)
+        if (this.statsHistory.length > 144) {
+            this.statsHistory = this.statsHistory.slice(-144);
+        }
+    }
+    
+    // Get stats history for graphing
+    getStatsHistory() {
+        return this.statsHistory;
+    }
+    
+    // Check for and handle sickness
+    checkSickness() {
+        // Pet can get sick if stats are very low
+        if (!this.isSick) {
+            const avgStats = (this.health + this.hunger + this.happiness + this.energy) / 4;
+            const sicknessChance = avgStats < 20 ? 0.3 : avgStats < 30 ? 0.1 : 0;
+            
+            if (Math.random() < sicknessChance) {
+                this.isSick = true;
+                this.sicknessDuration = 0;
+                showNotification('🤒 Your pet is sick! Give it medicine or improve stats.', 'warning');
+            }
+        } else {
+            // Recover from sickness if stats are good and time has passed
+            this.sicknessDuration++;
+            const avgStats = (this.health + this.hunger + this.happiness + this.energy) / 4;
+            
+            if (avgStats > 70 && this.sicknessDuration > 10) {
+                this.isSick = false;
+                this.sicknessDuration = 0;
+                showNotification('✨ Your pet has recovered!', 'success');
+            }
+        }
+    }
+    
+    // Give medicine to cure sickness
+    giveMedicine() {
+        if (this.isSick) {
+            this.isSick = false;
+            this.sicknessDuration = 0;
+            this.health = Math.min(100, this.health + 20);
+            showNotification('💊 Medicine administered! Your pet is recovering.', 'success');
+            this.save();
+            return true;
+        } else {
+            showNotification('ℹ️ Your pet is not sick!', 'info');
+            return false;
+        }
+    }
+    
+    // Clean pet (hygiene system)
+    clean() {
+        this.cleanliness = 100;
+        this.happiness = Math.min(100, this.happiness + 5);
+        showNotification('🧹 Your pet is clean and happy!', 'success');
+        this.save();
+    }
+    
+    // Update personality based on actions
+    updatePersonality(actionType) {
+        switch (actionType) {
+            case 'battle':
+                this.personalityTraits.brave = Math.min(100, this.personalityTraits.brave + 1);
+                break;
+            case 'play':
+                this.personalityTraits.friendly = Math.min(100, this.personalityTraits.friendly + 1);
+                this.personalityTraits.energetic = Math.min(100, this.personalityTraits.energetic + 1);
+                break;
+            case 'train':
+                this.personalityTraits.disciplined = Math.min(100, this.personalityTraits.disciplined + 1);
+                break;
+            case 'neglect':
+                this.personalityTraits.friendly = Math.max(0, this.personalityTraits.friendly - 2);
+                break;
+        }
+    }
+    
+    // Get personality description
+    getPersonalityDescription() {
+        const traits = this.personalityTraits;
+        let description = [];
+        
+        if (traits.brave > 70) description.push('Brave');
+        if (traits.friendly > 70) description.push('Friendly');
+        if (traits.energetic > 70) description.push('Energetic');
+        if (traits.disciplined > 70) description.push('Disciplined');
+        
+        if (description.length === 0) description.push('Balanced');
+        
+        return description.join(', ');
     }
 
     // Get pet data for serialization

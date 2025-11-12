@@ -200,20 +200,43 @@ class MockServer {
     }
 
     updateConnectionStatus(connected) {
-        // Mock implementation
+        // Update UI connection status
+        const statusIndicator = document.querySelector('.server-status');
+        if (statusIndicator) {
+            statusIndicator.textContent = connected ? 'Online' : 'Offline';
+            statusIndicator.style.color = connected ? '#10b981' : '#ef4444';
+        }
     }
 
     requestBattle(petData) {
-        // Mock implementation - would simulate finding an opponent
+        // Simulate finding an opponent - in a real implementation, 
+        // this would send the request to the server via WebSocket
+        if (!this.connected) {
+            console.log('Not connected to server');
+            return false;
+        }
+        
+        // Mock: simulate successful matchmaking
+        console.log('Requesting battle with pet data:', petData);
         return true;
     }
 
     sendBattleAction(action) {
-        // Mock implementation
+        // Send battle action to server
+        // In a real implementation, this would send via WebSocket
+        if (!this.connected) {
+            console.log('Not connected to server');
+            return false;
+        }
+        
+        console.log('Sending battle action:', action);
         return true;
     }
 
     leaveBattle() {
-        // Mock implementation
+        // Notify server that player is leaving battle
+        if (this.connected) {
+            console.log('Leaving battle');
+        }
     }
 }
