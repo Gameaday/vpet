@@ -145,6 +145,23 @@ main {
     animation: breathe 3s infinite;
 }
 
+/* Idle animations based on energy/mood */
+.pet-animation.idle-high-energy {
+    animation: bounce 2s infinite;
+}
+
+.pet-animation.idle-medium-energy {
+    animation: float 3s ease-in-out infinite;
+}
+
+.pet-animation.idle-low-energy {
+    animation: breathe 4s ease-in-out infinite;
+}
+
+.pet-animation.idle-critical {
+    animation: tremble 0.5s infinite;
+}
+
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-20px); }
@@ -153,6 +170,18 @@ main {
 @keyframes breathe {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-5px) rotate(1deg); }
+    75% { transform: translateY(-5px) rotate(-1deg); }
+}
+
+@keyframes tremble {
+    0%, 100% { transform: translateX(0) scale(1); }
+    25% { transform: translateX(-2px) scale(0.98); }
+    75% { transform: translateX(2px) scale(0.98); }
 }
 
 .pet-name {
@@ -428,6 +457,7 @@ main {
 }
 
 .settings-btn,
+.help-btn,
 .reset-btn {
     flex: 1;
     background: #333;
@@ -664,6 +694,105 @@ main {
 .save-settings-btn:hover {
     background: #5a67d8;
     transform: translateY(-2px);
+}
+
+/* Battle History */
+.battle-history-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    border: 2px solid #333;
+}
+
+.battle-history-section h3 {
+    color: #fff;
+    margin: 0 0 15px 0;
+    font-size: 1.1em;
+}
+
+.battle-history-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.battle-history-item {
+    background: #222;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    font-size: 0.9em;
+}
+
+.battle-history-item.won {
+    border-left-color: #10b981;
+}
+
+.battle-history-item.lost {
+    border-left-color: #ef4444;
+}
+
+.battle-history-item .battle-result {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.battle-history-item.won .battle-result {
+    color: #10b981;
+}
+
+.battle-history-item.lost .battle-result {
+    color: #ef4444;
+}
+
+.battle-history-item .battle-details {
+    color: #aaa;
+    font-size: 0.85em;
+}
+
+.no-history {
+    color: #666;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* Help Modal */
+.help-modal-content {
+    max-height: 80vh;
+    overflow-y: auto;
+    max-width: 600px;
+}
+
+.help-section {
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.help-section h3 {
+    color: #667eea;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.help-section ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.help-section li {
+    color: #ccc;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.help-section p {
+    color: #aaa;
+    margin: 10px 0 0 0;
+    line-height: 1.5;
 }
 
 /* Notification Toast */

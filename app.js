@@ -48,11 +48,14 @@ function setupEventListeners() {
     
     // Settings buttons
     document.getElementById('settingsBtn').addEventListener('click', openSettings);
+    document.getElementById('helpBtn').addEventListener('click', openHelp);
     document.getElementById('resetBtn').addEventListener('click', handleReset);
     
     // Modal close buttons
     document.getElementById('closeBattleModal').addEventListener('click', closeBattleModal);
     document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
+    document.getElementById('closeHelpModal').addEventListener('click', closeHelp);
+    document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
     
     // Settings save
     document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
@@ -79,8 +82,29 @@ function setupEventListeners() {
         }
     });
     
+    document.getElementById('helpModal').addEventListener('click', (e) => {
+        if (e.target.id === 'helpModal') {
+            closeHelp();
+        }
+    });
+    
     // Keyboard shortcuts
     document.addEventListener('keydown', handleKeyboardShortcut);
+    
+    // Show tutorial on first visit
+    checkFirstVisit();
+}
+
+// Check if this is the user's first visit
+function checkFirstVisit() {
+    const hasVisited = localStorage.getItem('vpet_has_visited');
+    if (!hasVisited) {
+        localStorage.setItem('vpet_has_visited', 'true');
+        // Show tutorial after a short delay
+        setTimeout(() => {
+            openHelp();
+        }, 1000);
+    }
 }
 
 // Handle keyboard shortcuts
@@ -187,6 +211,9 @@ function updateUI() {
     
     // Update stat tooltips
     updateStatTooltips();
+    
+    // Update idle animation
+    updateIdleAnimation();
 }
 
 // Update evolution preview display
@@ -236,6 +263,32 @@ function updateMoodIndicator() {
         moodElement.textContent = '😢'; // Sad
     } else {
         moodElement.textContent = '😰'; // Critical
+    }
+}
+
+// Update idle animation based on pet stats
+function updateIdleAnimation() {
+    const petAnimation = document.querySelector('.pet-animation');
+    if (!petAnimation) return;
+    
+    // Remove all idle animation classes
+    petAnimation.classList.remove('idle-high-energy', 'idle-medium-energy', 'idle-low-energy', 'idle-critical');
+    
+    // Skip if pet is sleeping (has its own animation)
+    if (pet.isSleeping) return;
+    
+    // Calculate average stats
+    const avgStats = (pet.health + pet.hunger + pet.happiness + pet.energy) / 4;
+    
+    // Apply animation based on stats
+    if (avgStats < 20) {
+        petAnimation.classList.add('idle-critical');
+    } else if (pet.energy < 30) {
+        petAnimation.classList.add('idle-low-energy');
+    } else if (pet.energy < 60) {
+        petAnimation.classList.add('idle-medium-energy');
+    } else {
+        petAnimation.classList.add('idle-high-energy');
     }
 }
 
@@ -412,8 +465,9 @@ function closeBattleModal() {
     modal.classList.remove('active');
     
     if (currentBattle && !currentBattle.isActive) {
-        // Battle ended, update pet
-        pet.updateAfterBattle(currentBattle.playerWon());
+        // Battle ended, update pet with opponent name
+        const opponentName = currentBattle.opponent.name || 'Opponent';
+        pet.updateAfterBattle(currentBattle.playerWon(), opponentName);
         updateUI();
     }
     
@@ -535,11 +589,50 @@ function openSettings() {
     // Load current settings
     document.getElementById('petNameInput').value = pet.name;
     document.getElementById('serverUrlInput').value = serverConnection.serverUrl;
+    
+    // Update battle history
+    updateBattleHistory();
 }
 
 // Close settings modal
 function closeSettingsModal() {
     const modal = document.getElementById('settingsModal');
+    modal.classList.remove('active');
+}
+
+// Update battle history display
+function updateBattleHistory() {
+    const historyList = document.getElementById('battleHistoryList');
+    
+    if (!pet.battleHistory || pet.battleHistory.length === 0) {
+        historyList.innerHTML = '<p class="no-history">No battles yet</p>';
+        return;
+    }
+    
+    historyList.innerHTML = pet.battleHistory.map(battle => {
+        const resultClass = battle.won ? 'won' : 'lost';
+        const resultText = battle.won ? '🏆 Victory' : '💔 Defeat';
+        return `
+            <div class="battle-history-item ${resultClass}">
+                <div class="battle-result">${resultText}</div>
+                <div class="battle-details">
+                    vs ${battle.opponent} (Lv.${battle.petLevel})<br>
+                    ${battle.timestamp}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Open help modal
+function openHelp() {
+    const modal = document.getElementById('helpModal');
+    modal.classList.add('active');
+}
+
+// Close help modal
+function closeHelp() {
+    const modal = document.getElementById('helpModal');
     modal.classList.remove('active');
 }
 

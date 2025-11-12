@@ -13,6 +13,7 @@ class Pet {
         this.isSleeping = false;
         this.birthTime = Date.now();
         this.lastUpdateTime = Date.now();
+        this.battleHistory = []; // Track last 10 battles
         
         // Load saved pet or create new one
         this.load();
@@ -32,7 +33,8 @@ class Pet {
             wins: this.wins,
             isSleeping: this.isSleeping,
             birthTime: this.birthTime,
-            lastUpdateTime: this.lastUpdateTime
+            lastUpdateTime: this.lastUpdateTime,
+            battleHistory: this.battleHistory || []
         };
         localStorage.setItem('vpet_data', JSON.stringify(petData));
     }
@@ -55,6 +57,7 @@ class Pet {
                 this.isSleeping = petData.isSleeping || false;
                 this.birthTime = petData.birthTime || Date.now();
                 this.lastUpdateTime = petData.lastUpdateTime || Date.now();
+                this.battleHistory = petData.battleHistory || [];
                 
                 // Update stats based on time passed
                 this.updateStatsFromTimePassed();
@@ -270,7 +273,7 @@ class Pet {
     }
 
     // Update stats after battle
-    updateAfterBattle(won) {
+    updateAfterBattle(won, opponentName = 'Opponent') {
         if (won) {
             this.wins++;
             this.level += 0.5;
@@ -283,7 +286,29 @@ class Pet {
         }
         
         this.energy = Math.max(0, this.energy - 30);
+        
+        // Record battle in history
+        this.recordBattle(won, opponentName);
+        
         this.save();
+    }
+    
+    // Record battle in history (keep last 10)
+    recordBattle(won, opponentName) {
+        const battleRecord = {
+            date: Date.now(),
+            won: won,
+            opponent: opponentName,
+            petLevel: Math.floor(this.level),
+            timestamp: new Date().toLocaleString()
+        };
+        
+        this.battleHistory.unshift(battleRecord);
+        
+        // Keep only last 10 battles
+        if (this.battleHistory.length > 10) {
+            this.battleHistory = this.battleHistory.slice(0, 10);
+        }
     }
 
     // Reset pet

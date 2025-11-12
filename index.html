@@ -118,6 +118,7 @@
             <!-- Settings Section -->
             <div class="settings-panel">
                 <button class="settings-btn" id="settingsBtn">⚙️</button>
+                <button class="help-btn" id="helpBtn">❓</button>
                 <button class="reset-btn" id="resetBtn">🔄</button>
             </div>
         </main>
@@ -168,6 +169,15 @@
                         <label for="serverUrlInput">Server URL:</label>
                         <input type="text" id="serverUrlInput" placeholder="ws://localhost:3000" />
                     </div>
+                    
+                    <!-- Battle History Section -->
+                    <div class="battle-history-section">
+                        <h3>⚔️ Battle History</h3>
+                        <div id="battleHistoryList" class="battle-history-list">
+                            <p class="no-history">No battles yet</p>
+                        </div>
+                    </div>
+                    
                     <button class="save-settings-btn" id="saveSettingsBtn">Save</button>
                 </div>
             </div>
@@ -185,6 +195,80 @@
                 <h2>Welcome Back!</h2>
                 <div class="time-away-content" id="timeAwayContent"></div>
                 <button class="battle-action-btn finish-btn" id="closeTimeAwayBtn">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help/Tutorial Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-overlay">
+            <div class="modal-content help-modal-content">
+                <span class="close-btn" id="closeHelpModal">×</span>
+                <h2>How to Play VPet 🐾</h2>
+                
+                <div class="help-section">
+                    <h3>📚 Pet Care</h3>
+                    <ul>
+                        <li><strong>🍖 Feed (F)</strong> - Restore hunger and health</li>
+                        <li><strong>🎮 Play (P)</strong> - Increase happiness (uses energy)</li>
+                        <li><strong>💤 Sleep (S)</strong> - Restore energy over time</li>
+                        <li><strong>💪 Train (T)</strong> - Increase level (requires energy)</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>📊 Stats Guide</h3>
+                    <ul>
+                        <li><strong>❤️ Health</strong> - Keep hunger high to maintain health</li>
+                        <li><strong>🍔 Hunger</strong> - Decreases over time (~0.5/min)</li>
+                        <li><strong>😊 Happiness</strong> - Decreases over time (~0.3/min)</li>
+                        <li><strong>⚡ Energy</strong> - Used by activities, restored by sleep</li>
+                    </ul>
+                    <p><strong>Tip:</strong> Stat bars glow red when critical (&lt;30%), yellow when low (&lt;50%), and green when excellent (≥90%)</p>
+                </div>
+                
+                <div class="help-section">
+                    <h3>🌱 Evolution</h3>
+                    <p>Your pet evolves through 5 stages based on age:</p>
+                    <ul>
+                        <li>🥚 Egg → 👶 Baby → 🧒 Child → 🧑 Teen → 👨 Adult</li>
+                    </ul>
+                    <p>Check the evolution preview to see time until next stage!</p>
+                </div>
+                
+                <div class="help-section">
+                    <h3>⚔️ Battles (B)</h3>
+                    <ul>
+                        <li><strong>Attack</strong> - Deal damage to opponent</li>
+                        <li><strong>Defend</strong> - Reduce incoming damage</li>
+                        <li><strong>Special</strong> - High risk, high reward move</li>
+                    </ul>
+                    <p>Battles require 30 energy. Win to gain experience and levels!</p>
+                </div>
+                
+                <div class="help-section">
+                    <h3>⌨️ Keyboard Shortcuts</h3>
+                    <ul>
+                        <li><strong>F</strong> - Feed</li>
+                        <li><strong>P</strong> - Play</li>
+                        <li><strong>S</strong> - Sleep</li>
+                        <li><strong>T</strong> - Train</li>
+                        <li><strong>B</strong> - Battle</li>
+                        <li><strong>ESC</strong> - Close modals</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>💡 Pro Tips</h3>
+                    <ul>
+                        <li>Hover over stat bars for detailed information</li>
+                        <li>Watch the mood indicator (😊) above your pet</li>
+                        <li>Data is auto-saved after every action</li>
+                        <li>Your pet continues to age even when you're away!</li>
+                    </ul>
+                </div>
+                
+                <button class="battle-action-btn finish-btn" id="closeHelpBtn">Got it!</button>
             </div>
         </div>
     </div>
