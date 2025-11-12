@@ -3,9 +3,58 @@ let pet = null;
 let currentBattle = null;
 let serverConnection = null;
 let updateInterval = null;
+let soundEnabled = localStorage.getItem('soundEnabled') !== 'false'; // Default true
+let currentTheme = localStorage.getItem('theme') || 'dark'; // dark, light, or retro
+
+// Reusable AudioContext for sound effects
+let audioContext = null;
+
+// Simple 8-bit sound effects using Web Audio API
+const soundEffects = {
+    feed: () => playTone([440, 523, 659], 100), // C-E-G chord
+    play: () => playTone([523, 659, 784], 120), // E-G-B happy sound
+    sleep: () => playTone([330, 294, 262], 200), // Descending calm
+    train: () => playTone([392, 523, 659, 784], 80), // Rising power-up
+    battle: () => playTone([196, 220, 247], 150), // Battle start
+    hit: () => playTone([130], 80), // Impact sound
+    win: () => playTone([523, 659, 784, 1047], 100), // Victory fanfare
+    lose: () => playTone([392, 330, 262], 150), // Defeat sound
+    evolution: () => playTone([523, 659, 784, 1047, 1319], 120), // Evolution fanfare
+    click: () => playTone([880], 30), // Quick blip
+};
+
+function playTone(frequencies, duration) {
+    if (!soundEnabled) return;
+    
+    // Create or reuse AudioContext
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    const now = audioContext.currentTime;
+    
+    frequencies.forEach((freq, i) => {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = freq;
+        oscillator.type = 'square'; // 8-bit style
+        
+        gainNode.gain.setValueAtTime(0.1, now + (i * duration / 1000));
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + ((i + 1) * duration / 1000));
+        
+        oscillator.start(now + (i * duration / 1000));
+        oscillator.stop(now + ((i + 1) * duration / 1000));
+    });
+}
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
+    // Apply saved theme
+    applyTheme(currentTheme);
+    
     // Create pet instance
     pet = new Pet();
     
@@ -93,6 +142,92 @@ function setupEventListeners() {
     
     // Show tutorial on first visit
     checkFirstVisit();
+}
+
+// Show achievement notification
+function showAchievement(title, message, emoji = '🏆') {
+    const achievement = document.createElement('div');
+    achievement.className = 'achievement-popup';
+    achievement.innerHTML = `
+        <div class="achievement-content">
+            <div class="achievement-emoji">${emoji}</div>
+            <div class="achievement-text">
+                <div class="achievement-title">${title}</div>
+                <div class="achievement-message">${message}</div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(achievement);
+    
+    // Trigger animation
+    setTimeout(() => achievement.classList.add('show'), 10);
+    
+    // Remove after animation
+    setTimeout(() => {
+        achievement.classList.remove('show');
+        setTimeout(() => achievement.remove(), 500);
+    }, 4000);
+    
+    // Play achievement sound
+    if (soundEnabled) {
+        playTone([659, 784, 1047, 1319], 100);
+    }
+}
+
+// Check for milestones and show achievements
+function checkMilestones(action) {
+    // First action achievements
+    const firstActions = localStorage.getItem('vpet_first_actions') || '{}';
+    const actions = JSON.parse(firstActions);
+    
+    if (!actions[action]) {
+        actions[action] = true;
+        localStorage.setItem('vpet_first_actions', JSON.stringify(actions));
+        
+        const messages = {
+            feed: { title: 'First Meal!', message: 'You fed your pet for the first time!', emoji: '🍖' },
+            play: { title: 'Playtime!', message: 'Your pet had fun playing!', emoji: '🎮' },
+            train: { title: 'Training Starts!', message: 'Your pet is getting stronger!', emoji: '💪' },
+            battle: { title: 'First Battle!', message: 'You entered your first battle!', emoji: '⚔️' }
+        };
+        
+        if (messages[action]) {
+            showAchievement(messages[action].title, messages[action].message, messages[action].emoji);
+        }
+    }
+    
+    // Level milestones
+    if (action === 'level' && pet.level >= 5 && Number.isInteger(pet.level) && pet.level % 5 === 0) {
+        showAchievement('Level Up!', `Your pet reached level ${pet.level}!`, '⭐');
+    }
+    
+    // Win milestones
+    if (action === 'win') {
+        if (pet.wins === 1) {
+            showAchievement('First Victory!', 'You won your first battle!', '🏆');
+        } else if (pet.wins === 10) {
+            showAchievement('Battle Master!', '10 battles won!', '👑');
+        } else if (pet.wins === 50) {
+            showAchievement('Champion!', '50 battles won!', '🌟');
+        }
+    }
+    
+    // Evolution milestones
+    if (action === 'evolve') {
+        const stageMessages = {
+            baby: { title: 'Born!', message: 'Your egg hatched into a baby!', emoji: '🐣' },
+            child: { title: 'Growing Up!', message: 'Your pet evolved to a child!', emoji: '🌱' },
+            teen: { title: 'Teenager!', message: 'Your pet is now a teen!', emoji: '🌿' },
+            adult: { title: 'Fully Grown!', message: 'Your pet reached adulthood!', emoji: '🌳' }
+        };
+        
+        const msg = stageMessages[pet.stage];
+        if (msg) {
+            showAchievement(msg.title, msg.message, msg.emoji);
+            soundEffects.evolution();
+        }
+    }
 }
 
 // Check if this is the user's first visit
@@ -355,6 +490,8 @@ function updateStat(statName, value) {
 // Handle feed action
 function handleFeed() {
     if (pet.feed()) {
+        soundEffects.feed();
+        checkMilestones('feed');
         updateUI();
         showSaveIndicator();
     }
@@ -363,6 +500,8 @@ function handleFeed() {
 // Handle play action
 function handlePlay() {
     if (pet.play()) {
+        soundEffects.play();
+        checkMilestones('play');
         updateUI();
         showSaveIndicator();
     }
@@ -370,6 +509,7 @@ function handlePlay() {
 
 // Handle sleep action
 function handleSleep() {
+    soundEffects.sleep();
     pet.sleep();
     updateUI();
     showSaveIndicator();
@@ -377,7 +517,17 @@ function handleSleep() {
 
 // Handle train action
 function handleTrain() {
+    const prevLevel = Math.floor(pet.level);
     if (pet.train()) {
+        soundEffects.train();
+        checkMilestones('train');
+        
+        // Check for level up
+        const newLevel = Math.floor(pet.level);
+        if (newLevel > prevLevel) {
+            checkMilestones('level');
+        }
+        
         updateUI();
         showSaveIndicator();
     }
@@ -504,6 +654,27 @@ function handleBattleAction(action) {
     }
 }
 
+// Calculate damage from HP change
+function calculateDamage(prevHP, currentHP, maxHP) {
+    return Math.round((prevHP - currentHP) / 100 * maxHP);
+}
+
+// Show damage number in battle
+function showDamageNumber(damage, isPlayer, isCrit = false) {
+    const container = isPlayer ? document.querySelector('.battle-your-pet') : document.querySelector('.battle-opponent-pet');
+    if (!container) return;
+    
+    const damageNum = document.createElement('div');
+    damageNum.className = `damage-number ${isCrit ? 'crit' : ''}`;
+    damageNum.textContent = `-${damage}`;
+    
+    container.style.position = 'relative';
+    container.appendChild(damageNum);
+    
+    // Remove after animation
+    setTimeout(() => damageNum.remove(), 1000);
+}
+
 // Update battle UI
 function updateBattleUI() {
     // Update HP bars with animation
@@ -513,9 +684,22 @@ function updateBattleUI() {
     const playerHPBar = document.getElementById('battleYourHp');
     const opponentHPBar = document.getElementById('battleOpponentHp');
     
-    // Check for damage and add flash animation
-    if (parseFloat(playerHPBar.style.width) > playerHPPercent) {
+    // Initialize HP tracking on first update
+    if (!playerHPBar.dataset.hp) {
+        playerHPBar.dataset.hp = 100;
+        opponentHPBar.dataset.hp = 100;
+    }
+    
+    // Track previous HP for damage calculation
+    const prevPlayerHP = parseFloat(playerHPBar.dataset.hp);
+    const prevOpponentHP = parseFloat(opponentHPBar.dataset.hp);
+    
+    // Check for damage and add flash animation + damage numbers
+    if (prevPlayerHP > playerHPPercent) {
+        const damage = calculateDamage(prevPlayerHP, playerHPPercent, currentBattle.playerStats.maxHP);
         playerHPBar.classList.add('damage-flash');
+        showDamageNumber(damage, true);
+        soundEffects.hit();
         setTimeout(() => playerHPBar.classList.remove('damage-flash'), 300);
         
         // Add shake to player sprite
@@ -526,8 +710,11 @@ function updateBattleUI() {
         }
     }
     
-    if (parseFloat(opponentHPBar.style.width) > opponentHPPercent) {
+    if (prevOpponentHP > opponentHPPercent) {
+        const damage = calculateDamage(prevOpponentHP, opponentHPPercent, currentBattle.opponentStats.maxHP);
         opponentHPBar.classList.add('damage-flash');
+        showDamageNumber(damage, false);
+        soundEffects.hit();
         setTimeout(() => opponentHPBar.classList.remove('damage-flash'), 300);
         
         // Add shake to opponent sprite
@@ -540,6 +727,10 @@ function updateBattleUI() {
     
     playerHPBar.style.width = playerHPPercent + '%';
     opponentHPBar.style.width = opponentHPPercent + '%';
+    
+    // Store current HP for next comparison
+    playerHPBar.dataset.hp = playerHPPercent;
+    opponentHPBar.dataset.hp = opponentHPPercent;
     
     // Update battle log
     const battleLog = document.getElementById('battleLog');
@@ -558,11 +749,15 @@ function updateBattleUI() {
             if (playerSprite) {
                 playerSprite.classList.add('victory');
             }
+            soundEffects.win();
+            checkMilestones('battle');
+            checkMilestones('win');
         } else {
             const opponentSprite = document.querySelector('.battle-pet:last-child .battle-sprite');
             if (opponentSprite) {
                 opponentSprite.classList.add('victory');
             }
+            soundEffects.lose();
         }
     }
 }
@@ -589,6 +784,8 @@ function openSettings() {
     // Load current settings
     document.getElementById('petNameInput').value = pet.name;
     document.getElementById('serverUrlInput').value = serverConnection.serverUrl;
+    document.getElementById('soundToggle').checked = soundEnabled;
+    document.getElementById('themeSelect').value = currentTheme;
     
     // Update battle history
     updateBattleHistory();
@@ -640,6 +837,8 @@ function closeHelp() {
 function saveSettings() {
     const newName = document.getElementById('petNameInput').value.trim();
     const newServerUrl = document.getElementById('serverUrlInput').value.trim();
+    const newSoundEnabled = document.getElementById('soundToggle').checked;
+    const newTheme = document.getElementById('themeSelect').value;
     
     if (newName && newName !== pet.name) {
         pet.name = newName;
@@ -656,8 +855,28 @@ function saveSettings() {
         setTimeout(() => tryConnectToServer(), 500);
     }
     
+    // Save sound preference
+    if (newSoundEnabled !== soundEnabled) {
+        soundEnabled = newSoundEnabled;
+        localStorage.setItem('soundEnabled', soundEnabled);
+        showNotification(`🔊 Sound ${soundEnabled ? 'enabled' : 'disabled'}`);
+    }
+    
+    // Save theme preference
+    if (newTheme !== currentTheme) {
+        currentTheme = newTheme;
+        localStorage.setItem('theme', currentTheme);
+        applyTheme(currentTheme);
+        showNotification(`🎨 Theme changed to ${currentTheme}`);
+    }
+    
     updateUI();
     closeSettingsModal();
+}
+
+// Apply theme to document
+function applyTheme(theme) {
+    document.body.className = `theme-${theme}`;
 }
 
 // Handle reset

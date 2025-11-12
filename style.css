@@ -945,3 +945,264 @@ main {
 ::-webkit-scrollbar-thumb:hover {
     background: #5a67d8;
 }
+
+/* Achievement Popup Styles */
+.achievement-popup {
+    position: fixed;
+    top: 80px;
+    right: -400px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 2px solid #fff;
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    transition: right 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    min-width: 300px;
+    max-width: 350px;
+}
+
+.achievement-popup.show {
+    right: 20px;
+}
+
+.achievement-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.achievement-emoji {
+    font-size: 3em;
+    animation: achievement-bounce 0.6s ease;
+}
+
+@keyframes achievement-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2) rotate(5deg); }
+}
+
+.achievement-text {
+    flex: 1;
+}
+
+.achievement-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.achievement-message {
+    font-size: 0.9em;
+    color: #f0f0f0;
+}
+
+/* Damage Numbers in Battle */
+.damage-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    font-weight: bold;
+    color: #ff4444;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 68, 68, 0.5);
+    animation: damage-float 1s ease-out forwards;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.damage-number.crit {
+    color: #ff0000;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.8);
+}
+
+@keyframes damage-float {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -100%) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -150%) scale(0.8);
+    }
+}
+
+/* Theme Styles */
+body.theme-dark {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+body.theme-dark .container {
+    background: #2a2a2a;
+}
+
+body.theme-dark header {
+    background: #1a1a1a;
+    border-bottom: 3px solid #667eea;
+}
+
+body.theme-light {
+    background: linear-gradient(135deg, #a8c0ff 0%, #e0c3fc 100%);
+}
+
+body.theme-light .container {
+    background: #f5f5f5;
+}
+
+body.theme-light header {
+    background: #fff;
+    border-bottom: 3px solid #a8c0ff;
+}
+
+body.theme-light header h1,
+body.theme-light .stats-panel,
+body.theme-light .action-panel button,
+body.theme-light .modal-content h2,
+body.theme-light .battle-log,
+body.theme-light .setting-item label {
+    color: #333;
+}
+
+body.theme-light .stats-panel,
+body.theme-light .pet-display,
+body.theme-light .stat-item,
+body.theme-light .evolution-preview {
+    background: #fff;
+    border-color: #ddd;
+}
+
+body.theme-light .action-panel button {
+    background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+    border-color: #ccc;
+}
+
+body.theme-light .action-panel button:hover {
+    background: linear-gradient(135deg, #d0d0d0, #e5e5e5);
+}
+
+body.theme-light .modal-content {
+    background: #fff;
+    color: #333;
+}
+
+body.theme-light .battle-log,
+body.theme-light .battle-arena {
+    background: #f5f5f5;
+    border-color: #ddd;
+}
+
+body.theme-retro {
+    background: #9cb770;
+}
+
+body.theme-retro .container {
+    background: #9cb770;
+    border: 4px solid #2c3e0f;
+}
+
+body.theme-retro header {
+    background: #7d9c50;
+    border-bottom: 3px solid #2c3e0f;
+}
+
+body.theme-retro header h1,
+body.theme-retro .stats-panel,
+body.theme-retro .action-panel button,
+body.theme-retro .modal-content,
+body.theme-retro .battle-log,
+body.theme-retro .pet-info {
+    color: #2c3e0f;
+}
+
+body.theme-retro .stats-panel,
+body.theme-retro .pet-display,
+body.theme-retro .stat-item,
+body.theme-retro .evolution-preview {
+    background: #8fac5d;
+    border-color: #2c3e0f;
+}
+
+body.theme-retro .action-panel button {
+    background: #7d9c50;
+    border-color: #2c3e0f;
+}
+
+body.theme-retro .action-panel button:hover {
+    background: #6d8c40;
+}
+
+body.theme-retro .pet-sprite {
+    background: #8fac5d;
+    border-color: #2c3e0f;
+}
+
+body.theme-retro .stat-bar {
+    background: #6d8c40;
+}
+
+body.theme-retro .stat-bar-fill {
+    background: #2c3e0f;
+}
+
+body.theme-retro .modal-content {
+    background: #9cb770;
+    border-color: #2c3e0f;
+    color: #2c3e0f;
+}
+
+body.theme-retro .modal-content h2,
+body.theme-retro .modal-content h3 {
+    color: #2c3e0f;
+}
+
+body.theme-retro .battle-arena {
+    background: #8fac5d;
+    border-color: #2c3e0f;
+}
+
+body.theme-retro .battle-log {
+    background: #7d9c50;
+    border-color: #2c3e0f;
+}
+
+body.theme-retro input,
+body.theme-retro select {
+    background: #8fac5d;
+    border-color: #2c3e0f;
+    color: #2c3e0f;
+}
+
+/* Settings additions */
+.setting-item {
+    margin-bottom: 15px;
+}
+
+.setting-item label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.setting-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.setting-item select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 2px solid #444;
+    background: #1a1a1a;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+}
