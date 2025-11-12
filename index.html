@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Virtual Pet - VPet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐾 Virtual Pet</h1>
+            <div class="server-status" id="serverStatus">
+                <span class="status-dot offline"></span>
+                <span>Offline</span>
+            </div>
+        </header>
+
+        <main>
+            <!-- Pet Display Area -->
+            <div class="pet-display">
+                <div class="mood-indicator" id="moodIndicator">😊</div>
+                <div class="pet-sprite" id="petSprite">
+                    <div class="pet-animation"></div>
+                </div>
+                <div class="pet-name" id="petName">My Pet</div>
+                <div class="pet-stage" id="petStage">Egg</div>
+                <div class="evolution-preview" id="evolutionPreview" style="display: none;">
+                    <div class="evolution-progress-text">Next Evolution</div>
+                    <div class="evolution-progress-bar">
+                        <div class="evolution-progress-fill" id="evolutionProgressFill"></div>
+                    </div>
+                    <div class="evolution-time" id="evolutionTime"></div>
+                </div>
+            </div>
+
+            <!-- Stats Display -->
+            <div class="stats-panel">
+                <div class="stat-bar" data-tooltip="">
+                    <div class="stat-label">
+                        <span>❤️ Health</span>
+                        <span id="healthValue">100</span>
+                    </div>
+                    <div class="progress-bar" id="healthBarContainer">
+                        <div class="progress-fill health" id="healthBar"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar" data-tooltip="">
+                    <div class="stat-label">
+                        <span>🍔 Hunger</span>
+                        <span id="hungerValue">100</span>
+                    </div>
+                    <div class="progress-bar" id="hungerBarContainer">
+                        <div class="progress-fill hunger" id="hungerBar"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar" data-tooltip="">
+                    <div class="stat-label">
+                        <span>😊 Happiness</span>
+                        <span id="happinessValue">100</span>
+                    </div>
+                    <div class="progress-bar" id="happinessBarContainer">
+                        <div class="progress-fill happiness" id="happinessBar"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar" data-tooltip="">
+                    <div class="stat-label">
+                        <span>⚡ Energy</span>
+                        <span id="energyValue">100</span>
+                    </div>
+                    <div class="progress-bar" id="energyBarContainer">
+                        <div class="progress-fill energy" id="energyBar"></div>
+                    </div>
+                </div>
+
+                <div class="stat-info">
+                    <div>Age: <span id="petAge">0</span> days</div>
+                    <div>Level: <span id="petLevel">1</span></div>
+                    <div>Wins: <span id="petWins">0</span></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-panel">
+                <button class="action-btn feed-btn" id="feedBtn">
+                    <span class="btn-icon">🍖</span>
+                    <span>Feed</span>
+                </button>
+                <button class="action-btn play-btn" id="playBtn">
+                    <span class="btn-icon">🎮</span>
+                    <span>Play</span>
+                </button>
+                <button class="action-btn sleep-btn" id="sleepBtn">
+                    <span class="btn-icon">💤</span>
+                    <span>Sleep</span>
+                </button>
+                <button class="action-btn train-btn" id="trainBtn">
+                    <span class="btn-icon">💪</span>
+                    <span>Train</span>
+                </button>
+            </div>
+
+            <!-- Battle Section -->
+            <div class="battle-panel">
+                <button class="battle-btn" id="battleBtn">
+                    <span class="btn-icon">⚔️</span>
+                    <span>Battle</span>
+                </button>
+                <button class="online-battle-btn" id="onlineBattleBtn" disabled>
+                    <span class="btn-icon">🌐</span>
+                    <span>Online Battle</span>
+                </button>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="settings-panel">
+                <button class="settings-btn" id="settingsBtn">⚙️</button>
+                <button class="help-btn" id="helpBtn">❓</button>
+                <button class="reset-btn" id="resetBtn">🔄</button>
+            </div>
+        </main>
+
+        <!-- Modal for Battle -->
+        <div class="modal" id="battleModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeBattleModal">&times;</span>
+                <h2>Battle Arena</h2>
+                <div class="battle-arena">
+                    <div class="battle-pet your-pet">
+                        <div class="battle-sprite"></div>
+                        <div class="battle-pet-name" id="battleYourName">Your Pet</div>
+                        <div class="battle-hp-bar">
+                            <div class="battle-hp-fill" id="battleYourHp"></div>
+                        </div>
+                    </div>
+                    <div class="vs-text">VS</div>
+                    <div class="battle-pet opponent-pet">
+                        <div class="battle-sprite"></div>
+                        <div class="battle-pet-name" id="battleOpponentName">Opponent</div>
+                        <div class="battle-hp-bar">
+                            <div class="battle-hp-fill" id="battleOpponentHp"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="battle-log" id="battleLog"></div>
+                <div class="battle-actions" id="battleActions">
+                    <button class="battle-action-btn" id="attackBtn">Attack</button>
+                    <button class="battle-action-btn" id="defendBtn">Defend</button>
+                    <button class="battle-action-btn" id="specialBtn">Special</button>
+                </div>
+                <button class="battle-action-btn finish-btn" id="finishBattleBtn" style="display: none;">Finish</button>
+            </div>
+        </div>
+
+        <!-- Modal for Settings -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeSettingsModal">&times;</span>
+                <h2>Settings</h2>
+                <div class="settings-content">
+                    <div class="setting-item">
+                        <label for="petNameInput">Pet Name:</label>
+                        <input type="text" id="petNameInput" maxlength="15" />
+                    </div>
+                    <div class="setting-item">
+                        <label for="serverUrlInput">Server URL:</label>
+                        <input type="text" id="serverUrlInput" placeholder="ws://localhost:3000" />
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="soundToggle" checked />
+                            🔊 Sound Effects
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="themeSelect">🎨 Theme:</label>
+                        <select id="themeSelect">
+                            <option value="dark">Dark Mode</option>
+                            <option value="light">Light Mode</option>
+                            <option value="retro">Retro LCD</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Battle History Section -->
+                    <div class="battle-history-section">
+                        <h3>⚔️ Battle History</h3>
+                        <div id="battleHistoryList" class="battle-history-list">
+                            <p class="no-history">No battles yet</p>
+                        </div>
+                    </div>
+                    
+                    <button class="save-settings-btn" id="saveSettingsBtn">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div class="notification" id="notification"></div>
+        
+        <!-- Auto-save Indicator -->
+        <div class="save-indicator" id="saveIndicator">Saved ✓</div>
+        
+        <!-- Time Away Modal -->
+        <div class="modal" id="timeAwayModal">
+            <div class="modal-content">
+                <h2>Welcome Back!</h2>
+                <div class="time-away-content" id="timeAwayContent"></div>
+                <button class="battle-action-btn finish-btn" id="closeTimeAwayBtn">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help/Tutorial Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-overlay">
+            <div class="modal-content help-modal-content">
+                <span class="close-btn" id="closeHelpModal">×</span>
+                <h2>How to Play VPet 🐾</h2>
+                
+                <div class="help-section">
+                    <h3>📚 Pet Care</h3>
+                    <ul>
+                        <li><strong>🍖 Feed (F)</strong> - Restore hunger and health</li>
+                        <li><strong>🎮 Play (P)</strong> - Increase happiness (uses energy)</li>
+                        <li><strong>💤 Sleep (S)</strong> - Restore energy over time</li>
+                        <li><strong>💪 Train (T)</strong> - Increase level (requires energy)</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>📊 Stats Guide</h3>
+                    <ul>
+                        <li><strong>❤️ Health</strong> - Keep hunger high to maintain health</li>
+                        <li><strong>🍔 Hunger</strong> - Decreases over time (~0.5/min)</li>
+                        <li><strong>😊 Happiness</strong> - Decreases over time (~0.3/min)</li>
+                        <li><strong>⚡ Energy</strong> - Used by activities, restored by sleep</li>
+                    </ul>
+                    <p><strong>Tip:</strong> Stat bars glow red when critical (&lt;30%), yellow when low (&lt;50%), and green when excellent (≥90%)</p>
+                </div>
+                
+                <div class="help-section">
+                    <h3>🌱 Evolution</h3>
+                    <p>Your pet evolves through 5 stages based on age:</p>
+                    <ul>
+                        <li>🥚 Egg → 👶 Baby → 🧒 Child → 🧑 Teen → 👨 Adult</li>
+                    </ul>
+                    <p>Check the evolution preview to see time until next stage!</p>
+                </div>
+                
+                <div class="help-section">
+                    <h3>⚔️ Battles (B)</h3>
+                    <ul>
+                        <li><strong>Attack</strong> - Deal damage to opponent</li>
+                        <li><strong>Defend</strong> - Reduce incoming damage</li>
+                        <li><strong>Special</strong> - High risk, high reward move</li>
+                    </ul>
+                    <p>Battles require 30 energy. Win to gain experience and levels!</p>
+                </div>
+                
+                <div class="help-section">
+                    <h3>⌨️ Keyboard Shortcuts</h3>
+                    <ul>
+                        <li><strong>F</strong> - Feed</li>
+                        <li><strong>P</strong> - Play</li>
+                        <li><strong>S</strong> - Sleep</li>
+                        <li><strong>T</strong> - Train</li>
+                        <li><strong>B</strong> - Battle</li>
+                        <li><strong>ESC</strong> - Close modals</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>💡 Pro Tips</h3>
+                    <ul>
+                        <li>Hover over stat bars for detailed information</li>
+                        <li>Watch the mood indicator (😊) above your pet</li>
+                        <li>Data is auto-saved after every action</li>
+                        <li>Your pet continues to age even when you're away!</li>
+                    </ul>
+                </div>
+                
+                <button class="battle-action-btn finish-btn" id="closeHelpBtn">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="pet.js"></script>
+    <script src="battle.js"></script>
+    <script src="server.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

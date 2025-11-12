@@ -1,0 +1,170 @@
+name: ✅ CI - Validation & Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate-client:
+    name: Validate Client Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔍 Check file structure
+        run: |
+          echo "### 📁 File Structure Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check required files
+          required_files=("index.html" "style.css" "app.js" "pet.js" "battle.js" "server.js" "README.md")
+          all_found=true
+          
+          for file in "${required_files[@]}"; do
+            if [ -f "$file" ]; then
+              echo "✅ $file" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ $file - MISSING" >> $GITHUB_STEP_SUMMARY
+              all_found=false
+            fi
+          done
+          
+          if [ "$all_found" = false ]; then
+            exit 1
+          fi
+
+      - name: 🧹 Validate HTML
+        uses: Cyb3r-Jak3/html5validator-action@v7.2.0
+        with:
+          root: ./
+          css: true
+
+      - name: 📊 Analyze JavaScript
+        run: |
+          echo "### 📊 JavaScript Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Count lines of code
+          total_js=$(cat *.js | wc -l)
+          echo "**Total JS Lines**: $total_js" >> $GITHUB_STEP_SUMMARY
+          
+          # Check for console.log statements (should be minimal in production)
+          console_count=$(grep -r "console\." *.js | wc -l || true)
+          echo "**Console statements**: $console_count" >> $GITHUB_STEP_SUMMARY
+          
+          # List all JS files with line counts
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**JavaScript files**:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          wc -l *.js >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: 📤 Upload artifact - Client Files
+        uses: actions/upload-artifact@v4
+        with:
+          name: vpet-client-${{ github.sha }}
+          path: |
+            index.html
+            *.css
+            *.js
+            !server.js
+            *.md
+          retention-days: 30
+
+  validate-server:
+    name: Validate Server Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: 📦 Install dependencies
+        working-directory: ./server
+        run: npm ci
+
+      - name: 🔍 Check for vulnerabilities
+        working-directory: ./server
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: 📊 Generate server report
+        working-directory: ./server
+        run: |
+          echo "### 🔧 Server Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Node.js Version**: $(node --version)" >> $GITHUB_STEP_SUMMARY
+          echo "**npm Version**: $(npm --version)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Dependencies**:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+          cat package.json | jq '.dependencies' >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: 📤 Upload artifact - Server Files
+        uses: actions/upload-artifact@v4
+        with:
+          name: vpet-server-${{ github.sha }}
+          path: |
+            server/
+            Dockerfile
+            docker-compose.yml
+          retention-days: 30
+
+  validate-docs:
+    name: Validate Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📝 Check documentation
+        run: |
+          echo "### 📚 Documentation Check" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          docs=("README.md" "QUICKSTART.md" "ROADMAP.md" "IMPROVEMENTS.md" "DEPLOYMENT.md")
+          
+          for doc in "${docs[@]}"; do
+            if [ -f "$doc" ]; then
+              lines=$(wc -l < "$doc")
+              size=$(du -h "$doc" | cut -f1)
+              echo "✅ **$doc** - $lines lines, $size" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⚠️ **$doc** - Not found" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+      - name: 🔗 Check for broken links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          config-file: '.github/workflows/mlc_config.json'
+        continue-on-error: true
+
+  summary:
+    name: Generate Summary
+    runs-on: ubuntu-latest
+    needs: [validate-client, validate-server, validate-docs]
+    if: always()
+    steps:
+      - name: 📋 Overall Status
+        run: |
+          echo "## 🎮 VPet CI Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All validation checks completed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Status" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Client validation: ${{ needs.validate-client.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Server validation: ${{ needs.validate-server.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Documentation check: ${{ needs.validate-docs.result }}" >> $GITHUB_STEP_SUMMARY
