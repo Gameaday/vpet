@@ -30,7 +30,28 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🔧 Setup Pages
+        id: setup-pages
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
+        continue-on-error: true
+
+      - name: ⚠️ Pages Setup Check
+        if: steps.setup-pages.outcome == 'failure'
+        run: |
+          echo "### ⚠️ GitHub Pages Setup Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "GitHub Pages may not be enabled in this repository." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**To enable GitHub Pages:**" >> $GITHUB_STEP_SUMMARY
+          echo "1. Go to repository Settings" >> $GITHUB_STEP_SUMMARY
+          echo "2. Navigate to 'Pages' in the left sidebar" >> $GITHUB_STEP_SUMMARY
+          echo "3. Under 'Build and deployment', select:" >> $GITHUB_STEP_SUMMARY
+          echo "   - Source: \`GitHub Actions\`" >> $GITHUB_STEP_SUMMARY
+          echo "4. Save and re-run this workflow" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See [DEPLOYMENT.md](https://github.com/${{ github.repository }}/blob/main/DEPLOYMENT.md) for more details." >> $GITHUB_STEP_SUMMARY
+          exit 1
 
       - name: 📦 Create deployment package
         run: |
@@ -40,6 +61,10 @@ jobs:
           cp index.html _site/
           cp *.css _site/
           cp *.js _site/
+          cp manifest.json _site/ || true
+          
+          # Copy icons directory for PWA
+          cp -r icons _site/ 2>/dev/null || true
           
           # Exclude server-side files
           rm -f _site/server.js 2>/dev/null || true
