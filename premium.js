@@ -98,7 +98,8 @@ class PremiumManager {
                     'Priority Matchmaking',
                     'Remove Ads',
                     'Custom Pet Names with Emojis',
-                    'Cloud Save Backup'
+                    'Cloud Save Backup',
+                    'Cryo Sleep (1 week, unlimited pauses)'
                 ]
             },
             premium: {
@@ -112,7 +113,8 @@ class PremiumManager {
                     'Tournament Entry Priority',
                     'Early Access to New Features',
                     'VIP Discord Role',
-                    'Pet History Analytics'
+                    'Pet History Analytics',
+                    'Unlimited Cryo Sleep'
                 ]
             }
         };
@@ -197,7 +199,8 @@ class PremiumManager {
             'priority_matchmaking',
             'no_ads',
             'custom_names',
-            'cloud_save'
+            'cloud_save',
+            'hibernation_extended'
         ];
 
         const premiumFeatures = [
@@ -206,7 +209,8 @@ class PremiumManager {
             'tournament_priority',
             'early_access',
             'vip_discord',
-            'analytics'
+            'analytics',
+            'hibernation_unlimited'
         ];
 
         if (basicFeatures.includes(featureName)) {

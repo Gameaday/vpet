@@ -1,11 +1,13 @@
 // Main application logic - Refactored with Modular Architecture
 /* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager, SocialFeatures */
-/* global AppConfig */
+/* global AppConfig, BackupManager, HibernationManager */
 
 let pet = null;
 let currentBattle = null;
 let serverConnection = null;
 let premiumManager = null;
+let backupManager = null;
+let hibernationManager = null;
 let updateInterval = null;
 
 // Initialize managers
@@ -38,6 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create premium manager
     premiumManager = new PremiumManager();
     
+    // Create backup manager
+    backupManager = new BackupManager(premiumManager);
+    
+    // Create hibernation manager
+    hibernationManager = new HibernationManager(premiumManager);
+    
     // Create server connection
     serverConnection = new ServerConnection();
     
@@ -53,9 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up periodic updates
     const updateFrequency = AppConfig.TIMERS?.statsUpdate || 10000;
     updateInterval = setInterval(() => {
-        pet.updateStatsFromTimePassed();
-        pet.checkSickness();
-        pet.recordStatsSnapshot();
+        // Skip updates if pet is hibernating
+        if (!hibernationManager.shouldFreezePet()) {
+            pet.updateStatsFromTimePassed();
+            pet.checkSickness();
+            pet.recordStatsSnapshot();
+        }
         updateUI();
     }, updateFrequency);
     
@@ -83,6 +94,10 @@ function setupEventListeners() {
     document.getElementById('shareBtn').addEventListener('click', handleShare);
     document.getElementById('leaderboardBtn').addEventListener('click', showLeaderboard);
     
+    // QoL buttons
+    document.getElementById('hibernateBtn').addEventListener('click', openHibernationModal);
+    document.getElementById('backupBtn').addEventListener('click', openBackupModal);
+    
     // Settings buttons
     document.getElementById('settingsBtn').addEventListener('click', openSettings);
     document.getElementById('helpBtn').addEventListener('click', openHelp);
@@ -97,6 +112,18 @@ function setupEventListeners() {
     document.getElementById('closeHelpModal').addEventListener('click', closeHelp);
     document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
     document.getElementById('closeLeaderboardModal').addEventListener('click', closeLeaderboard);
+    document.getElementById('closeHibernationModal').addEventListener('click', closeHibernationModal);
+    document.getElementById('closeBackupModal').addEventListener('click', closeBackupModal);
+    
+    // Backup modal buttons
+    document.getElementById('exportBackupBtn').addEventListener('click', handleExportBackup);
+    document.getElementById('importBackupBtnTrigger').addEventListener('click', () => {
+        document.getElementById('importBackupInput').click();
+    });
+    document.getElementById('importBackupInput').addEventListener('change', handleImportBackup);
+    document.getElementById('saveToCloudBtn').addEventListener('click', handleSaveToCloud);
+    document.getElementById('loadFromCloudBtn').addEventListener('click', handleLoadFromCloud);
+    document.getElementById('autoCloudBackupToggle').addEventListener('change', handleAutoCloudBackupToggle);
     
     // Settings save
     document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
@@ -132,6 +159,18 @@ function setupEventListeners() {
     document.getElementById('premiumModal').addEventListener('click', (e) => {
         if (e.target.id === 'premiumModal') {
             premiumManager.closePremiumModal();
+        }
+    });
+    
+    document.getElementById('hibernationModal').addEventListener('click', (e) => {
+        if (e.target.id === 'hibernationModal') {
+            closeHibernationModal();
+        }
+    });
+    
+    document.getElementById('backupModal').addEventListener('click', (e) => {
+        if (e.target.id === 'backupModal') {
+            closeBackupModal();
         }
     });
     
@@ -264,6 +303,29 @@ function updateUI() {
     // Update pet sprite
     const petAnimation = document.querySelector('.pet-animation');
     petAnimation.className = `pet-animation ${pet.stage}`;
+    
+    // Check hibernation status
+    const isHibernating = hibernationManager && hibernationManager.shouldFreezePet();
+    
+    if (isHibernating) {
+        petAnimation.classList.add('hibernating');
+        // Show hibernation status on pet
+        const petDisplay = document.querySelector('.pet-display');
+        if (!document.getElementById('hibernationIndicator')) {
+            const indicator = document.createElement('div');
+            indicator.id = 'hibernationIndicator';
+            indicator.className = 'hibernation-indicator';
+            indicator.innerHTML = '❄️ Cryo Sleep';
+            petDisplay.appendChild(indicator);
+        }
+    } else {
+        petAnimation.classList.remove('hibernating');
+        const indicator = document.getElementById('hibernationIndicator');
+        if (indicator) {
+            indicator.remove();
+        }
+    }
+    
     if (pet.isSleeping) {
         petAnimation.classList.add('sleeping');
     }
@@ -285,12 +347,13 @@ function updateUI() {
     const sleepBtnText = sleepBtn.querySelector('span:last-child');
     sleepBtnText.textContent = pet.isSleeping ? 'Wake' : 'Sleep';
     
-    // Disable actions if sleeping
-    const actionsDisabled = pet.isSleeping;
+    // Disable actions if sleeping or hibernating
+    const actionsDisabled = pet.isSleeping || isHibernating;
     document.getElementById('feedBtn').disabled = actionsDisabled;
     document.getElementById('playBtn').disabled = actionsDisabled;
     document.getElementById('trainBtn').disabled = actionsDisabled;
     document.getElementById('battleBtn').disabled = actionsDisabled;
+    document.getElementById('sleepBtn').disabled = isHibernating;
     
     // Update evolution preview
     updateEvolutionPreview();
@@ -992,6 +1055,174 @@ function showLeaderboard() {
 function closeLeaderboard() {
     const modal = document.getElementById('leaderboardModal');
     modal.classList.remove('active');
+}
+
+// Open hibernation modal
+function openHibernationModal() {
+    if (!pet || !hibernationManager) return;
+    
+    const modal = document.getElementById('hibernationModal');
+    const status = document.getElementById('hibernationStatus');
+    const controls = document.getElementById('hibernationControls');
+    
+    const hibStatus = hibernationManager.getStatus();
+    
+    // Update status section
+    if (hibStatus.isHibernating) {
+        status.innerHTML = `
+            <div class="hibernating-status">
+                <p>❄️ Your pet is in cryo sleep</p>
+                <div class="hibernation-timer">
+                    <strong>Time Remaining:</strong> ${hibStatus.remainingTimeFormatted}
+                </div>
+                <p class="hibernation-note">Stats are frozen while hibernating</p>
+            </div>
+        `;
+        
+        controls.innerHTML = `
+            <button class="action-btn" id="wakeUpBtn" ${!hibStatus.canUnpauseAnytime && hibStatus.remainingTime.total > 0 ? 'disabled' : ''}>
+                <span class="btn-icon">🌅</span>
+                <span>Wake Up</span>
+            </button>
+            ${!hibStatus.canUnpauseAnytime && hibStatus.remainingTime.total > 0 ? 
+                '<p class="hibernation-warning">⚠️ Free tier cannot wake up early</p>' : ''}
+        `;
+        
+        document.getElementById('wakeUpBtn').addEventListener('click', () => {
+            if (hibernationManager.wakeUp()) {
+                closeHibernationModal();
+                updateUI();
+            }
+        });
+    } else {
+        const tierName = premiumManager.subscriptionTier;
+        const maxDays = hibStatus.maxDuration === Infinity ? 'Unlimited' : `${hibStatus.maxDuration} day${hibStatus.maxDuration > 1 ? 's' : ''}`;
+        const pausesRemaining = hibStatus.maxPausesPerDay === Infinity ? 'Unlimited' : `${hibStatus.maxPausesPerDay - hibStatus.pauseCount}`;
+        
+        status.innerHTML = `
+            <div class="hibernation-info">
+                <p><strong>Subscription Tier:</strong> ${tierName.charAt(0).toUpperCase() + tierName.slice(1)}</p>
+                <p><strong>Max Duration:</strong> ${maxDays}</p>
+                <p><strong>Pauses Today:</strong> ${hibStatus.pauseCount} / ${hibStatus.maxPausesPerDay === Infinity ? '∞' : hibStatus.maxPausesPerDay}</p>
+                <p><strong>Early Wake Up:</strong> ${hibStatus.canUnpauseAnytime ? 'Yes' : 'No'}</p>
+            </div>
+        `;
+        
+        if (hibStatus.canStartHibernation.canHibernate) {
+            const maxDaysInput = hibStatus.maxDuration === Infinity ? 30 : hibStatus.maxDuration;
+            controls.innerHTML = `
+                <div class="hibernation-input">
+                    <label for="hibernationDays">Sleep Duration (days):</label>
+                    <input type="number" id="hibernationDays" min="1" max="${maxDaysInput}" value="1" />
+                </div>
+                <button class="action-btn" id="startHibernationBtn">
+                    <span class="btn-icon">❄️</span>
+                    <span>Start Cryo Sleep</span>
+                </button>
+            `;
+            
+            document.getElementById('startHibernationBtn').addEventListener('click', () => {
+                const days = parseInt(document.getElementById('hibernationDays').value);
+                if (hibernationManager.startHibernation(days)) {
+                    closeHibernationModal();
+                    updateUI();
+                }
+            });
+        } else {
+            controls.innerHTML = `
+                <p class="hibernation-error">❌ ${hibStatus.canStartHibernation.reason}</p>
+                <button class="action-btn" onclick="premiumManager.openPremiumModal()">
+                    <span class="btn-icon">⭐</span>
+                    <span>Upgrade for More</span>
+                </button>
+            `;
+        }
+    }
+    
+    modal.classList.add('active');
+    soundManager.play('open');
+}
+
+// Close hibernation modal
+function closeHibernationModal() {
+    const modal = document.getElementById('hibernationModal');
+    modal.classList.remove('active');
+}
+
+// Open backup modal
+function openBackupModal() {
+    if (!backupManager) return;
+    
+    const modal = document.getElementById('backupModal');
+    const lastBackupTime = document.getElementById('lastBackupTime');
+    const autoCloudBackupToggle = document.getElementById('autoCloudBackupToggle');
+    
+    // Update last backup time
+    lastBackupTime.textContent = backupManager.getLastBackupTimeFormatted();
+    
+    // Update auto backup toggle
+    autoCloudBackupToggle.checked = backupManager.cloudBackupEnabled;
+    
+    // Disable cloud features for non-premium users
+    const isPremium = premiumManager.canAccessFeature('cloud_save');
+    document.getElementById('saveToCloudBtn').disabled = !isPremium;
+    document.getElementById('loadFromCloudBtn').disabled = !isPremium;
+    document.getElementById('autoCloudBackupToggle').disabled = !isPremium;
+    
+    modal.classList.add('active');
+    soundManager.play('open');
+}
+
+// Close backup modal
+function closeBackupModal() {
+    const modal = document.getElementById('backupModal');
+    modal.classList.remove('active');
+}
+
+// Handle export backup
+function handleExportBackup() {
+    if (!backupManager) return;
+    backupManager.exportLocalBackup();
+}
+
+// Handle import backup
+async function handleImportBackup(event) {
+    if (!backupManager) return;
+    
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    try {
+        await backupManager.importLocalBackup(file);
+    } catch (error) {
+        console.error('Error importing backup:', error);
+    }
+    
+    // Reset file input
+    event.target.value = '';
+}
+
+// Handle save to cloud
+async function handleSaveToCloud() {
+    if (!backupManager) return;
+    await backupManager.saveToCloud();
+}
+
+// Handle load from cloud
+async function handleLoadFromCloud() {
+    if (!backupManager) return;
+    await backupManager.loadFromCloud();
+}
+
+// Handle auto cloud backup toggle
+function handleAutoCloudBackupToggle(event) {
+    if (!backupManager) return;
+    
+    if (event.target.checked) {
+        backupManager.enableCloudBackups();
+    } else {
+        backupManager.disableCloudBackups();
+    }
 }
 
 // Clean up on page unload

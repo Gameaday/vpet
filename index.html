@@ -141,6 +141,18 @@
                 </button>
             </div>
 
+            <!-- Quality of Life Features Section -->
+            <div class="qol-panel">
+                <button class="qol-btn" id="hibernateBtn" title="Cryo Sleep">
+                    <span class="btn-icon">❄️</span>
+                    <span>Cryo Sleep</span>
+                </button>
+                <button class="qol-btn" id="backupBtn" title="Backup & Restore">
+                    <span class="btn-icon">💾</span>
+                    <span>Backup</span>
+                </button>
+            </div>
+
             <!-- Settings Section -->
             <div class="settings-panel">
                 <button class="settings-btn" id="settingsBtn">⚙️</button>
@@ -345,6 +357,68 @@
         </div>
     </div>
 
+    <!-- Hibernation Modal -->
+    <div class="modal" id="hibernationModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeHibernationModal">×</span>
+            <h2>❄️ Cryo Sleep</h2>
+            <div class="hibernation-content">
+                <p>Put your pet into suspended animation when you need a break!</p>
+                <div class="hibernation-status" id="hibernationStatus">
+                    <!-- Status will be populated dynamically -->
+                </div>
+                <div class="hibernation-controls" id="hibernationControls">
+                    <!-- Controls will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backup Modal -->
+    <div class="modal" id="backupModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeBackupModal">×</span>
+            <h2>💾 Backup & Restore</h2>
+            <div class="backup-content">
+                <p>Save and restore your pet's progress!</p>
+                <div class="backup-section">
+                    <h3>Local Backup (All Users)</h3>
+                    <button class="action-btn" id="exportBackupBtn">
+                        <span class="btn-icon">💾</span>
+                        <span>Export Backup</span>
+                    </button>
+                    <div class="file-input-wrapper">
+                        <button class="action-btn" id="importBackupBtnTrigger">
+                            <span class="btn-icon">📥</span>
+                            <span>Import Backup</span>
+                        </button>
+                        <input type="file" id="importBackupInput" accept=".json" style="display: none;" />
+                    </div>
+                    <div class="backup-info" id="localBackupInfo">
+                        Last backup: <span id="lastBackupTime">Never</span>
+                    </div>
+                </div>
+                <div class="backup-section cloud-backup">
+                    <h3>☁️ Cloud Backup (Premium Only)</h3>
+                    <button class="action-btn" id="saveToCloudBtn">
+                        <span class="btn-icon">☁️</span>
+                        <span>Save to Cloud</span>
+                    </button>
+                    <button class="action-btn" id="loadFromCloudBtn">
+                        <span class="btn-icon">📥</span>
+                        <span>Load from Cloud</span>
+                    </button>
+                    <div class="backup-toggle">
+                        <label>
+                            <input type="checkbox" id="autoCloudBackupToggle" />
+                            Automatic cloud backups
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Save Indicator -->
     <div class="save-indicator" id="saveIndicator">
         Saved
@@ -368,6 +442,8 @@
     <script src="battle.js"></script>
     <script src="server.js"></script>
     <script src="premium.js"></script>
+    <script src="backup-manager.js"></script>
+    <script src="hibernation-manager.js"></script>
     
     <!-- Main Application -->
     <script src="app.js"></script>
