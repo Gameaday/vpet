@@ -8,6 +8,27 @@ A cross-platform virtual pet application inspired by Digimon and traditional vir
 
 🎮 **[Play Now on GitHub Pages](https://gameaday.github.io/vpet/)** | 📖 [Quick Start Guide](QUICKSTART.md) | 🗺️ [Roadmap](ROADMAP.md) | 🐳 [Docker Hub](https://github.com/Gameaday/vpet/pkgs/container/vpet)
 
+---
+
+## 📚 Documentation Navigation
+
+**New to VPet?** Start here:
+- 📋 **[EXECUTIVE_SUMMARY.md](EXECUTIVE_SUMMARY.md)** - Single-page project overview and status
+- 🚀 **[QUICKSTART.md](QUICKSTART.md)** - Get playing in 30 seconds
+
+**For Developers:**
+- 🤝 **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to VPet
+- 🔧 **[TECHNICAL_DEBT.md](TECHNICAL_DEBT.md)** - Known issues and priorities
+- 🗺️ **[ROADMAP.md](ROADMAP.md)** - Future features and improvements
+- 💡 **[IMPROVEMENTS.md](IMPROVEMENTS.md)** - Quick wins and enhancement ideas
+
+**For Project Planning:**
+- 📊 **[PROJECT_STATUS.md](PROJECT_STATUS.md)** - Detailed analysis and metrics
+- 🎯 **[DEVELOPMENT_STRATEGY.md](DEVELOPMENT_STRATEGY.md)** - 6-phase development plan and monetization strategy
+- 🚀 **[DEPLOYMENT.md](DEPLOYMENT.md)** - How to deploy VPet
+
+---
+
 ## ✨ Features
 
 - **🎮 Interactive Pet Care**: Feed, play, train, and rest your virtual pet with keyboard shortcuts
