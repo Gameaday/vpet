@@ -76,6 +76,16 @@
                     </div>
                 </div>
 
+                <div class="stat-bar" data-tooltip="">
+                    <div class="stat-label">
+                        <span>🧹 Cleanliness</span>
+                        <span id="cleanlinessValue">100</span>
+                    </div>
+                    <div class="progress-bar" id="cleanlinessBarContainer">
+                        <div class="progress-fill cleanliness" id="cleanlinessBar"></div>
+                    </div>
+                </div>
+
                 <div class="stat-info">
                     <div>Age: <span id="petAge">0</span> days</div>
                     <div>Level: <span id="petLevel">1</span></div>
@@ -100,6 +110,10 @@
                 <button class="action-btn train-btn" id="trainBtn">
                     <span class="btn-icon">💪</span>
                     <span>Train</span>
+                </button>
+                <button class="action-btn clean-btn" id="cleanBtn">
+                    <span class="btn-icon">🧹</span>
+                    <span>Clean</span>
                 </button>
             </div>
 

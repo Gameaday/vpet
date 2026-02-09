@@ -117,6 +117,7 @@ function setupEventListeners() {
     document.getElementById('playBtn').addEventListener('click', handlePlay);
     document.getElementById('sleepBtn').addEventListener('click', handleSleep);
     document.getElementById('trainBtn').addEventListener('click', handleTrain);
+    document.getElementById('cleanBtn').addEventListener('click', handleClean);
     
     // Battle buttons
     document.getElementById('battleBtn').addEventListener('click', handleLocalBattle);
@@ -396,6 +397,7 @@ function updateUI() {
     updateStat('hunger', pet.hunger);
     updateStat('happiness', pet.happiness);
     updateStat('energy', pet.energy);
+    updateStat('cleanliness', pet.cleanliness);
     
     // Update info
     document.getElementById('petAge').textContent = pet.age;
@@ -522,6 +524,11 @@ function updateStatTooltips() {
             name: 'energy',
             decay: '~0.2 per minute (restores while sleeping)',
             critical: 20
+        },
+        {
+            name: 'cleanliness',
+            decay: '~0.4 per minute',
+            critical: 30
         }
     ];
     
@@ -607,6 +614,17 @@ function handleTrain() {
             checkMilestones('level');
         }
         
+        updateUI();
+        showSaveIndicator();
+    }
+}
+
+// Handle clean action
+function handleClean() {
+    if (pet.clean()) {
+        vibrate('medium');
+        soundEffects.play(); // Use play sound for cleaning
+        checkMilestones('clean');
         updateUI();
         showSaveIndicator();
     }
