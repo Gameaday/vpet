@@ -11,6 +11,7 @@ class ServerConnection {
         this.maxReconnectAttempts = 5;
         this.reconnectDelay = 1000; // Start with 1 second
         this.reconnectTimer = null;
+        this.manualDisconnect = false; // Track intentional disconnects
     }
 
     // Get server URL from localStorage or default
@@ -37,6 +38,7 @@ class ServerConnection {
                 this.ws.onopen = () => {
                     this.connected = true;
                     this.reconnectAttempts = 0; // Reset on successful connection
+                    this.manualDisconnect = false; // Reset manual disconnect flag
                     this.updateConnectionStatus(true);
                     console.log('Connected to server');
                     resolve();
@@ -47,8 +49,10 @@ class ServerConnection {
                     this.updateConnectionStatus(false);
                     console.log('Disconnected from server');
                     
-                    // Attempt reconnection with exponential backoff
-                    this.attemptReconnect();
+                    // Only attempt reconnection if not manually disconnected
+                    if (!this.manualDisconnect) {
+                        this.attemptReconnect();
+                    }
                 };
                 
                 this.ws.onerror = (error) => {
@@ -110,12 +114,14 @@ class ServerConnection {
 
     // Disconnect from server
     disconnect() {
+        // Mark as manual disconnect to prevent auto-reconnect
+        this.manualDisconnect = true;
+        
         // Clear reconnect timer when manually disconnecting
         if (this.reconnectTimer) {
             clearTimeout(this.reconnectTimer);
             this.reconnectTimer = null;
         }
-        this.reconnectAttempts = this.maxReconnectAttempts; // Prevent auto-reconnect
         
         if (this.ws) {
             this.ws.close();
@@ -286,4 +292,9 @@ class MockServer {
             console.log('Leaving battle');
         }
     }
+}
+
+// Export for testing
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { ServerConnection, MockServer };
 }
