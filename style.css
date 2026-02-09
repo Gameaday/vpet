@@ -395,8 +395,12 @@ main {
 }
 
 .action-btn:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
+    background: #2a2a2a;
+    border-color: #444;
+    transform: none !important;
+    filter: grayscale(50%);
 }
 
 .btn-icon {
@@ -457,8 +461,12 @@ main {
 
 .battle-btn:disabled,
 .online-battle-btn:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
+    background: #2a2a2a;
+    border-color: #444;
+    transform: none !important;
+    filter: grayscale(50%);
 }
 
 /* Settings Panel */
@@ -482,9 +490,11 @@ main {
 }
 
 .settings-btn:hover,
-.reset-btn:hover {
+.reset-btn:hover,
+.help-btn:hover {
     background: #444;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 /* Modal Styles */
@@ -496,9 +506,20 @@ main {
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
     align-items: center;
     justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .modal.active {
@@ -514,20 +535,43 @@ main {
     overflow-y: auto;
     position: relative;
     border: 2px solid #667eea;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .close-btn {
     position: absolute;
-    top: 8px;
+    top: 10px;
     right: 15px;
-    font-size: 1.8em;
+    font-size: 2em;
     color: #aaa;
     cursor: pointer;
     line-height: 1;
+    transition: all 0.2s;
+    padding: 5px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
 .close-btn:hover {
     color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
 }
 
 .modal h2 {
@@ -815,15 +859,19 @@ main {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
-    background: #1a1a1a;
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(8px);
     border: 2px solid #667eea;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 12px 20px;
     color: #fff;
     font-size: 0.95em;
     opacity: 0;
-    transition: all 0.3s;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 2000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    min-width: 200px;
+    text-align: center;
 }
 
 .notification.show {
@@ -833,23 +881,27 @@ main {
 
 /* Notification types */
 .notification.success {
-    background: #1a1a1a;
+    background: rgba(26, 26, 26, 0.95);
     border-color: #4ade80;
+    box-shadow: 0 8px 24px rgba(74, 222, 128, 0.3);
 }
 
 .notification.warning {
-    background: #1a1a1a;
+    background: rgba(26, 26, 26, 0.95);
     border-color: #fbbf24;
+    box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
 }
 
 .notification.error {
-    background: #1a1a1a;
+    background: rgba(26, 26, 26, 0.95);
     border-color: #ef4444;
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
 }
 
 .notification.info {
-    background: #1a1a1a;
+    background: rgba(26, 26, 26, 0.95);
     border-color: #3b82f6;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
 }
 
 /* Auto-save Indicator */
@@ -931,10 +983,36 @@ main {
     .action-panel {
         grid-template-columns: repeat(2, 1fr);
     }
+    
+    /* Larger touch targets for mobile */
+    .action-btn {
+        padding: 14px;
+        min-height: 60px;
+    }
+    
+    .battle-btn,
+    .online-battle-btn {
+        padding: 14px;
+        min-height: 50px;
+    }
+    
+    .settings-btn,
+    .help-btn,
+    .reset-btn {
+        padding: 14px;
+        min-height: 48px;
+    }
 
     .modal-content {
         max-width: 95%;
         padding: 20px;
+    }
+    
+    /* Larger close button for mobile */
+    .close-btn {
+        font-size: 2.2em;
+        width: 40px;
+        height: 40px;
     }
 }
 

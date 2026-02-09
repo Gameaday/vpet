@@ -86,7 +86,7 @@ class ServerConnection {
         // Don't reconnect if we've exceeded max attempts
         if (this.reconnectAttempts >= this.maxReconnectAttempts) {
             console.log('Max reconnection attempts reached. Manual reconnection required.');
-            showNotification('❌ Connection lost. Please reconnect manually from settings.', 'error');
+            showNotification('⚠️ Unable to connect. Check settings to reconnect.', 'warning');
             return;
         }
 
