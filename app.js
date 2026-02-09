@@ -1,5 +1,5 @@
 // Main application logic - Refactored with Modular Architecture
-/* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager */
+/* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager, SocialFeatures */
 /* global AppConfig */
 
 let pet = null;
@@ -14,6 +14,7 @@ let vibrationManager = null;
 let uiManager = null;
 let battleUIManager = null;
 let milestoneManager = null;
+let socialFeatures = null;
 
 // Theme management
 let currentTheme = localStorage.getItem('theme') || 'dark';
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     uiManager = new UIManager(AppConfig);
     battleUIManager = new BattleUIManager();
     milestoneManager = new MilestoneManager(AppConfig);
+    socialFeatures = new SocialFeatures();
     
     // Apply saved theme
     uiManager.applyTheme(currentTheme);
@@ -77,6 +79,10 @@ function setupEventListeners() {
     document.getElementById('battleBtn').addEventListener('click', handleLocalBattle);
     document.getElementById('onlineBattleBtn').addEventListener('click', handleOnlineBattle);
     
+    // Social buttons
+    document.getElementById('shareBtn').addEventListener('click', handleShare);
+    document.getElementById('leaderboardBtn').addEventListener('click', showLeaderboard);
+    
     // Settings buttons
     document.getElementById('settingsBtn').addEventListener('click', openSettings);
     document.getElementById('helpBtn').addEventListener('click', openHelp);
@@ -90,6 +96,7 @@ function setupEventListeners() {
     document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
     document.getElementById('closeHelpModal').addEventListener('click', closeHelp);
     document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
+    document.getElementById('closeLeaderboardModal').addEventListener('click', closeLeaderboard);
     
     // Settings save
     document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
@@ -544,6 +551,12 @@ function closeBattleModal() {
         const opponentName = currentBattle.opponentPet.name || 'Opponent';
         pet.updatePersonality('battle'); // Update personality based on battle
         pet.updateAfterBattle(currentBattle.playerWon(), opponentName);
+        
+        // Update leaderboard after battle
+        if (socialFeatures) {
+            socialFeatures.updateLeaderboard(pet);
+        }
+        
         updateUI();
     }
     
@@ -908,6 +921,76 @@ function showTimeAwayModal(timeAwayInfo) {
 // Close time away modal
 function closeTimeAwayModal() {
     const modal = document.getElementById('timeAwayModal');
+    modal.classList.remove('active');
+}
+
+// Handle share button
+async function handleShare() {
+    if (!pet) return;
+    
+    // Update leaderboard before sharing
+    socialFeatures.updateLeaderboard(pet);
+    
+    const success = await socialFeatures.sharePet(pet);
+    if (success) {
+        soundManager.play('success');
+        vibrationManager.vibrate('medium');
+        if (navigator.share) {
+            uiManager.showToast('📤 Shared successfully!', 'success');
+        } else {
+            uiManager.showToast('📤 Copied to clipboard!', 'success');
+        }
+    } else {
+        uiManager.showToast('❌ Failed to share', 'error');
+    }
+}
+
+// Show leaderboard modal
+function showLeaderboard() {
+    if (!pet) return;
+    
+    // Update leaderboard with current pet
+    socialFeatures.updateLeaderboard(pet);
+    
+    const modal = document.getElementById('leaderboardModal');
+    const content = document.getElementById('leaderboardContent');
+    
+    // Get leaderboard entries
+    const entries = socialFeatures.getLeaderboard(20);
+    
+    if (entries.length === 0) {
+        content.innerHTML = '<div class="empty">No entries yet. Be the first!</div>';
+    } else {
+        let html = '';
+        entries.forEach((entry, index) => {
+            const rank = index + 1;
+            const isCurrentPet = entry.name === pet.name;
+            const rankClass = rank <= 3 ? 'top3' : '';
+            const highlightClass = isCurrentPet ? 'highlight' : '';
+            
+            html += `
+                <div class="leaderboard-entry ${highlightClass}">
+                    <div class="leaderboard-rank ${rankClass}">#${rank}</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">${entry.name}</div>
+                        <div class="leaderboard-stats">
+                            <span class="leaderboard-level">Lv ${entry.level}</span>
+                            ${entry.stage} | ${entry.wins} wins
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        content.innerHTML = html;
+    }
+    
+    modal.classList.add('active');
+    soundManager.play('open');
+}
+
+// Close leaderboard modal
+function closeLeaderboard() {
+    const modal = document.getElementById('leaderboardModal');
     modal.classList.remove('active');
 }
 
