@@ -112,8 +112,14 @@ class Pet {
                     
                     // Validate and sanitize pet name
                     if (petData.name && typeof petData.name === 'string') {
-                        // Remove HTML tags and limit length
-                        this.name = petData.name.replace(/<[^>]*>/g, '').substring(0, 50) || 'My Pet';
+                        // Remove HTML tags and dangerous characters, limit length
+                        // Use multiple passes to ensure all HTML is removed
+                        let safeName = petData.name;
+                        // Remove all < and > characters to prevent any HTML injection
+                        safeName = safeName.replace(/[<>]/g, '');
+                        // Trim and limit length
+                        safeName = safeName.trim().substring(0, 50);
+                        this.name = safeName || 'My Pet';
                     }
                     
                     this.stage = petData.stage || 'egg';

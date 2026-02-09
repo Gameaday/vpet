@@ -9,6 +9,7 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint *.js",
     "lint:fix": "eslint --fix *.js",
+    "validate": "bash validate-build.sh",
     "clean": "rm -rf www/ dist/ coverage/",
     "prebuild": "npm run lint && npm run test",
     "build": "npm run clean && mkdir -p www && cp -r index.html style.css pet.js battle.js server.js app.js premium.js manifest.json sw.js icons www/",
