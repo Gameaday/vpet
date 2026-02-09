@@ -350,6 +350,10 @@ main {
     background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
 }
 
+.progress-fill.cleanliness {
+    background: linear-gradient(90deg, #06b6d4 0%, #0891b2 100%);
+}
+
 .stat-info {
     display: flex;
     justify-content: space-around;
@@ -428,6 +432,10 @@ main {
 
 .train-btn {
     border-color: #ec4899;
+}
+
+.clean-btn {
+    border-color: #06b6d4;
 }
 
 /* Battle Panel */

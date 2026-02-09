@@ -12,8 +12,8 @@
     "validate": "bash validate-build.sh",
     "clean": "rm -rf www/ dist/ coverage/",
     "prebuild": "npm run lint && npm run test",
-    "build": "npm run clean && mkdir -p www && cp -r index.html style.css pet.js battle.js server.js app.js premium.js manifest.json sw.js icons www/",
-    "build:quick": "mkdir -p www && cp -r index.html style.css pet.js battle.js server.js app.js premium.js manifest.json sw.js icons www/",
+    "build": "npm run clean && mkdir -p www && cp index.html style.css manifest.json www/ && cp *.js icons -r www/ && rm -f www/*.backup www/*.test.js www/eslint.config.js www/vitest.config.js www/generate-icons.js",
+    "build:quick": "mkdir -p www && cp index.html style.css manifest.json www/ && cp *.js icons -r www/ && rm -f www/*.backup www/*.test.js www/eslint.config.js www/vitest.config.js www/generate-icons.js",
     "serve": "python -m http.server 8000",
     "android:build": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
     "android:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease"
