@@ -356,12 +356,13 @@ function handleKeyboardShortcut(e) {
             e.preventDefault();
             handleLocalBattle();
             break;
-        case 'escape':
+        case 'escape': {
             const battleModal = document.getElementById('battleModal');
             if (battleModal.classList.contains('active')) {
                 closeBattleModal();
             }
             break;
+        }
     }
 }
 
@@ -441,12 +442,9 @@ function updateEvolutionPreview() {
     
     const hours = Math.floor(evolutionInfo.timeRemaining / 60);
     const minutes = Math.floor(evolutionInfo.timeRemaining % 60);
-    let timeText = '';
-    if (hours > 0) {
-        timeText = `${hours}h ${minutes}m until ${evolutionInfo.nextStage}`;
-    } else {
-        timeText = `${minutes}m until ${evolutionInfo.nextStage}`;
-    }
+    const timeText = hours > 0
+        ? `${hours}h ${minutes}m until ${evolutionInfo.nextStage}`
+        : `${minutes}m until ${evolutionInfo.nextStage}`;
     document.getElementById('evolutionTime').textContent = timeText;
 }
 

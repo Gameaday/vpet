@@ -30,63 +30,130 @@ class Pet {
         this.load();
     }
 
+    // Validate and clamp stat values to ensure they're in valid range
+    validateStats() {
+        this.health = Math.max(0, Math.min(100, this.health));
+        this.hunger = Math.max(0, Math.min(100, this.hunger));
+        this.happiness = Math.max(0, Math.min(100, this.happiness));
+        this.energy = Math.max(0, Math.min(100, this.energy));
+        this.discipline = Math.max(0, Math.min(100, this.discipline));
+        this.cleanliness = Math.max(0, Math.min(100, this.cleanliness));
+        this.level = Math.max(1, this.level);
+        this.wins = Math.max(0, this.wins);
+        
+        // Validate stage
+        const validStages = ['egg', 'baby', 'child', 'teen', 'adult'];
+        if (!validStages.includes(this.stage)) {
+            this.stage = 'egg';
+        }
+    }
+
     // Save pet to localStorage
     save() {
-        const petData = {
-            name: this.name,
-            stage: this.stage,
-            health: this.health,
-            hunger: this.hunger,
-            happiness: this.happiness,
-            energy: this.energy,
-            age: this.age,
-            level: this.level,
-            wins: this.wins,
-            isSleeping: this.isSleeping,
-            birthTime: this.birthTime,
-            lastUpdateTime: this.lastUpdateTime,
-            battleHistory: this.battleHistory || [],
-            statsHistory: this.statsHistory || [],
-            isSick: this.isSick || false,
-            sicknessDuration: this.sicknessDuration || 0,
-            personalityTraits: this.personalityTraits || {brave: 50, friendly: 50, energetic: 50, disciplined: 50},
-            discipline: this.discipline || 100,
-            cleanliness: this.cleanliness || 100
-        };
-        localStorage.setItem('vpet_data', JSON.stringify(petData));
+        try {
+            // Validate stats before saving
+            this.validateStats();
+            
+            const petData = {
+                name: this.name,
+                stage: this.stage,
+                health: this.health,
+                hunger: this.hunger,
+                happiness: this.happiness,
+                energy: this.energy,
+                age: this.age,
+                level: this.level,
+                wins: this.wins,
+                isSleeping: this.isSleeping,
+                birthTime: this.birthTime,
+                lastUpdateTime: this.lastUpdateTime,
+                battleHistory: this.battleHistory || [],
+                statsHistory: this.statsHistory || [],
+                isSick: this.isSick || false,
+                sicknessDuration: this.sicknessDuration || 0,
+                personalityTraits: this.personalityTraits || {brave: 50, friendly: 50, energetic: 50, disciplined: 50},
+                discipline: this.discipline || 100,
+                cleanliness: this.cleanliness || 100
+            };
+            
+            // Check if localStorage is available and has space
+            const dataString = JSON.stringify(petData);
+            try {
+                localStorage.setItem('vpet_data', dataString);
+            } catch (quotaError) {
+                // Handle quota exceeded error
+                console.error('localStorage quota exceeded. Clearing old data...');
+                // Keep only last 10 battles and last 24 hours of stats
+                if (this.battleHistory.length > 10) {
+                    this.battleHistory = this.battleHistory.slice(-10);
+                }
+                const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+                if (this.statsHistory.length > 0) {
+                    this.statsHistory = this.statsHistory.filter(s => s.timestamp > oneDayAgo);
+                }
+                // Try again with reduced data
+                petData.battleHistory = this.battleHistory;
+                petData.statsHistory = this.statsHistory;
+                localStorage.setItem('vpet_data', JSON.stringify(petData));
+            }
+        } catch (error) {
+            console.error('Error saving pet data:', error);
+            // Fail gracefully - continue running with in-memory state
+        }
     }
 
     // Load pet from localStorage
     load() {
-        const savedData = localStorage.getItem('vpet_data');
-        if (savedData) {
-            try {
-                const petData = JSON.parse(savedData);
-                this.name = petData.name || 'My Pet';
-                this.stage = petData.stage || 'egg';
-                this.health = petData.health || 100;
-                this.hunger = petData.hunger || 100;
-                this.happiness = petData.happiness || 100;
-                this.energy = petData.energy || 100;
-                this.age = petData.age || 0;
-                this.level = petData.level || 1;
-                this.wins = petData.wins || 0;
-                this.isSleeping = petData.isSleeping || false;
-                this.birthTime = petData.birthTime || Date.now();
-                this.lastUpdateTime = petData.lastUpdateTime || Date.now();
-                this.battleHistory = petData.battleHistory || [];
-                this.statsHistory = petData.statsHistory || [];
-                this.isSick = petData.isSick || false;
-                this.sicknessDuration = petData.sicknessDuration || 0;
-                this.personalityTraits = petData.personalityTraits || {brave: 50, friendly: 50, energetic: 50, disciplined: 50};
-                this.discipline = petData.discipline || 100;
-                this.cleanliness = petData.cleanliness || 100;
-                
-                // Update stats based on time passed
-                this.updateStatsFromTimePassed();
-            } catch (e) {
-                console.error('Error loading pet data:', e);
+        try {
+            const savedData = localStorage.getItem('vpet_data');
+            if (savedData) {
+                try {
+                    const petData = JSON.parse(savedData);
+                    
+                    // Validate and sanitize pet name
+                    if (petData.name && typeof petData.name === 'string') {
+                        // Remove HTML tags and dangerous characters, limit length
+                        // Use multiple passes to ensure all HTML is removed
+                        let safeName = petData.name;
+                        // Remove all < and > characters to prevent any HTML injection
+                        safeName = safeName.replace(/[<>]/g, '');
+                        // Trim and limit length
+                        safeName = safeName.trim().substring(0, 50);
+                        this.name = safeName || 'My Pet';
+                    }
+                    
+                    this.stage = petData.stage || 'egg';
+                    this.health = Number(petData.health) || 100;
+                    this.hunger = Number(petData.hunger) || 100;
+                    this.happiness = Number(petData.happiness) || 100;
+                    this.energy = Number(petData.energy) || 100;
+                    this.age = Number(petData.age) || 0;
+                    this.level = Number(petData.level) || 1;
+                    this.wins = Number(petData.wins) || 0;
+                    this.isSleeping = Boolean(petData.isSleeping);
+                    this.birthTime = Number(petData.birthTime) || Date.now();
+                    this.lastUpdateTime = Number(petData.lastUpdateTime) || Date.now();
+                    this.battleHistory = Array.isArray(petData.battleHistory) ? petData.battleHistory : [];
+                    this.statsHistory = Array.isArray(petData.statsHistory) ? petData.statsHistory : [];
+                    this.isSick = Boolean(petData.isSick);
+                    this.sicknessDuration = Number(petData.sicknessDuration) || 0;
+                    this.personalityTraits = petData.personalityTraits || {brave: 50, friendly: 50, energetic: 50, disciplined: 50};
+                    this.discipline = Number(petData.discipline) || 100;
+                    this.cleanliness = Number(petData.cleanliness) || 100;
+                    
+                    // Validate all stats are in proper ranges
+                    this.validateStats();
+                    
+                    // Update stats based on time passed
+                    this.updateStatsFromTimePassed();
+                } catch (parseError) {
+                    console.error('Error parsing pet data. Starting fresh:', parseError);
+                    // Data is corrupted, start fresh but keep localStorage key for future saves
+                }
             }
+        } catch (error) {
+            console.error('Error accessing localStorage:', error);
+            // localStorage not available or blocked - continue with default values
         }
     }
 

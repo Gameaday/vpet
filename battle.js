@@ -87,7 +87,7 @@ class Battle {
         }
         
         switch (action) {
-            case 'attack':
+            case 'attack': {
                 const damage = this.calculateDamage(
                     this.opponentStats.attack,
                     this.playerStats.defense,
@@ -97,13 +97,14 @@ class Battle {
                 this.addLog(`Opponent attacks for ${damage} damage!`);
                 this.playerDefending = false;
                 break;
+            }
                 
             case 'defend':
                 this.opponentDefending = true;
                 this.addLog('Opponent takes a defensive stance!');
                 break;
                 
-            case 'special':
+            case 'special': {
                 const specialDamage = this.calculateDamage(
                     this.opponentStats.attack * 1.5,
                     this.playerStats.defense,
@@ -113,6 +114,7 @@ class Battle {
                 this.addLog(`Opponent uses special attack for ${specialDamage} damage!`);
                 this.playerDefending = false;
                 break;
+            }
         }
         
         if (this.checkBattleEnd()) return;

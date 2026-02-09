@@ -7,8 +7,14 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "lint": "eslint *.js",
+    "lint:fix": "eslint --fix *.js",
+    "validate": "bash validate-build.sh",
+    "clean": "rm -rf www/ dist/ coverage/",
+    "prebuild": "npm run lint && npm run test",
+    "build": "npm run clean && mkdir -p www && cp -r index.html style.css pet.js battle.js server.js app.js premium.js manifest.json sw.js icons www/",
+    "build:quick": "mkdir -p www && cp -r index.html style.css pet.js battle.js server.js app.js premium.js manifest.json sw.js icons www/",
     "serve": "python -m http.server 8000",
-    "build": "mkdir -p www && cp -r index.html style.css pet.js battle.js server.js app.js premium.js manifest.json sw.js icons www/",
     "android:build": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
     "android:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease"
   },
@@ -22,7 +28,9 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@vitest/coverage-v8": "^1.2.0",
+    "eslint": "^10.0.0",
     "happy-dom": "^20.0.0",
     "vitest": "^1.2.0"
   },
