@@ -202,33 +202,59 @@ MIT License - Feel free to use and modify!
 
 ## 🤝 Contributing
 
-Contributions are welcome! Some ideas:
-- Add more pet stages and evolution paths
-- Create different pet species
-- Add items and inventory system
-- Implement achievement system
-- Add mini-games
-- Improve AI battle strategy
-- Add pet customization options
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+**Quick Start:**
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+**Priority Areas:**
+- Bug fixes (see [TECHNICAL_DEBT.md](TECHNICAL_DEBT.md))
+- Visual polish and animations
+- Battle system enhancements
+- Multiplayer features
+- Documentation improvements
+
+**Resources:**
+- [ROADMAP.md](ROADMAP.md) - Planned features
+- [IMPROVEMENTS.md](IMPROVEMENTS.md) - Quick wins
+- [DEVELOPMENT_STRATEGY.md](DEVELOPMENT_STRATEGY.md) - Long-term strategy
 
 ## 🐛 Known Issues
 
-- Server reconnection could be more robust
-- Battle animations are basic
-- No sound effects yet
+See [TECHNICAL_DEBT.md](TECHNICAL_DEBT.md) for a complete list of known issues and planned fixes.
+
+**Critical Issues:**
+- Server reconnection needs improvement (manual reconnect required after disconnect)
+- Illness system exists but not fully activated
+- Some personality traits and stats (cleanliness, discipline) need deeper integration
+
+**Note:** We track all issues transparently and prioritize fixes based on impact.
 
 ## 🎯 Future Enhancements
 
-- [ ] Multiple pet species with different stats
+See [DEVELOPMENT_STRATEGY.md](DEVELOPMENT_STRATEGY.md) for our complete development roadmap.
+
+**Next Up (Phase 1-2):**
+- [ ] Fix critical bugs and activate dormant features
+- [ ] Enhanced animations and visual polish
+- [ ] Battle system improvements
+- [ ] Automated testing suite
+
+**Coming Soon (Phase 3-4):**
+- [ ] Multiple evolution paths based on care style
+- [ ] Item system with shop
+- [ ] Mini-games for coins and stat boosts
+- [ ] Friend system and leaderboards
+
+**Long Term (Phase 5-6):**
+- [ ] Native mobile apps
+- [ ] Tournament mode
 - [ ] Breeding system
-- [ ] Items and shop
-- [ ] Achievements and badges
-- [ ] Leaderboards
-- [ ] Friend system
-- [ ] Pet trading
-- [ ] Mini-games
-- [ ] Sound effects and music
-- [ ] More evolution branches
+- [ ] Advanced social features
 
 ---
 
