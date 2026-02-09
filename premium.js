@@ -288,7 +288,6 @@ class PremiumManager {
             });
         });
     }
-    }
 
     /**
      * Initiate purchase flow
