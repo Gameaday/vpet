@@ -192,6 +192,8 @@ function setupTouchGestures() {
     // Handle swipe down to close modals
     const modals = document.querySelectorAll('.modal');
     modals.forEach(modal => {
+        // Use passive: true to improve scrolling performance
+        // This means we cannot call preventDefault() but we don't need to for gesture detection
         modal.addEventListener('touchstart', (e) => {
             touchStartY = e.touches[0].clientY;
             touchStartX = e.touches[0].clientX;

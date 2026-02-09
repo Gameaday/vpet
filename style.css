@@ -306,21 +306,21 @@ main {
     border-radius: 8px;
 }
 
-/* Stat warning states with color transitions */
-.progress-fill.critical {
+/* Stat warning states with color transitions - higher specificity than base stat colors */
+.progress-bar .progress-fill.critical {
     animation: pulse-red 1.5s infinite;
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
-    background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%) !important;
+    background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
 }
 
-.progress-fill.warning {
+.progress-bar .progress-fill.warning {
     box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
-    background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%) !important;
+    background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
 }
 
-.progress-fill.excellent {
+.progress-bar .progress-fill.excellent {
     box-shadow: 0 0 10px rgba(74, 222, 128, 0.6);
-    background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%) !important;
+    background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%);
 }
 
 @keyframes pulse-red {

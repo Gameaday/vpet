@@ -35,7 +35,7 @@ For Android:
 Add to `android/app/build.gradle`:
 ```gradle
 dependencies {
-    implementation 'com.stripe:stripe-android:20.+'
+    implementation 'com.stripe:stripe-android:20.25.0'
 }
 ```
 

@@ -262,7 +262,7 @@ class PremiumManager {
             html += `<li>✓ ${feature}</li>`;
         });
         html += '</ul>';
-        html += '<button class="premium-purchase-btn" onclick="premiumManager.initiatePurchase(\'basic\')">Get Basic Premium</button>';
+        html += '<button class="premium-purchase-btn" data-tier="basic">Get Basic Premium</button>';
         html += '</div>';
 
         // Premium tier
@@ -274,10 +274,20 @@ class PremiumManager {
             html += `<li>✓ ${feature}</li>`;
         });
         html += '</ul>';
-        html += '<button class="premium-purchase-btn premium-btn" onclick="premiumManager.initiatePurchase(\'premium\')">Get Premium Plus</button>';
+        html += '<button class="premium-purchase-btn premium-btn" data-tier="premium">Get Premium Plus</button>';
         html += '</div>';
 
         modalContent.innerHTML = html;
+        
+        // Attach event listeners to purchase buttons
+        const purchaseButtons = modalContent.querySelectorAll('.premium-purchase-btn');
+        purchaseButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tier = button.getAttribute('data-tier');
+                this.initiatePurchase(tier);
+            });
+        });
+    }
     }
 
     /**
