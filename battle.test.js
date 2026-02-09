@@ -164,7 +164,6 @@ describe('Battle Class', () => {
   describe('Opponent Turn', () => {
     it('should make opponent take an action', (done) => {
       battle.turn = 'opponent';
-      const initialHP = battle.playerStats.currentHP;
       
       battle.opponentTurn();
       

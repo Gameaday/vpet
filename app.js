@@ -526,7 +526,6 @@ function updateStatTooltips() {
     ];
     
     stats.forEach(stat => {
-        const statBar = document.querySelector(`.stat-bar[data-tooltip]`);
         const value = pet[stat.name];
         const barContainer = document.getElementById(`${stat.name}BarContainer`);
         
@@ -994,6 +993,7 @@ function showSaveIndicator() {
 }
 
 // Show toast notification (used by premium system and other features)
+// eslint-disable-next-line no-unused-vars
 function showToast(message, type = 'info', duration = 3000) {
     // Create toast if it doesn't exist
     let toast = document.getElementById('globalToast');

@@ -80,7 +80,7 @@ class Pet {
             const dataString = JSON.stringify(petData);
             try {
                 localStorage.setItem('vpet_data', dataString);
-            } catch (quotaError) {
+            } catch {
                 // Handle quota exceeded error
                 console.error('localStorage quota exceeded. Clearing old data...');
                 // Keep only last 10 battles and last 24 hours of stats

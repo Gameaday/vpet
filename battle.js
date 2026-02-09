@@ -175,6 +175,7 @@ class Battle {
 }
 
 // Generate AI opponent based on player's level
+// eslint-disable-next-line no-unused-vars
 function generateOpponent(playerLevel) {
     const levelVariance = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
     const opponentLevel = Math.max(1, playerLevel + levelVariance);
