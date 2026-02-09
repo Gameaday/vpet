@@ -1097,7 +1097,6 @@ function openHibernationModal() {
     } else {
         const tierName = premiumManager.subscriptionTier;
         const maxDays = hibStatus.maxDuration === Infinity ? 'Unlimited' : `${hibStatus.maxDuration} day${hibStatus.maxDuration > 1 ? 's' : ''}`;
-        const pausesRemaining = hibStatus.maxPausesPerDay === Infinity ? 'Unlimited' : `${hibStatus.maxPausesPerDay - hibStatus.pauseCount}`;
         
         status.innerHTML = `
             <div class="hibernation-info">

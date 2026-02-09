@@ -67,7 +67,7 @@ class BackupManager {
 
             // Create downloadable file
             const dataStr = JSON.stringify(backup, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const dataBlob = new window.Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             
             const link = document.createElement('a');
@@ -101,7 +101,7 @@ class BackupManager {
      */
     importLocalBackup(file) {
         return new Promise((resolve, reject) => {
-            const reader = new FileReader();
+            const reader = new window.FileReader();
             
             reader.onload = (e) => {
                 try {
@@ -354,5 +354,5 @@ class BackupManager {
 
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = BackupManager;
+    module.exports = { BackupManager };
 }
