@@ -178,8 +178,8 @@ Play VPet: https://gameaday.github.io/vpet/`;
             battleStats: {
                 wins: pet.battleStats?.wins || 0,
                 losses: pet.battleStats?.losses || 0,
-                winRate: pet.battleStats?.wins > 0 
-                    ? Math.round((pet.battleStats.wins / (pet.battleStats.wins + pet.battleStats.losses)) * 100)
+                winRate: (pet.battleStats?.wins || 0) + (pet.battleStats?.losses || 0) > 0
+                    ? Math.round(((pet.battleStats?.wins || 0) / ((pet.battleStats?.wins || 0) + (pet.battleStats?.losses || 0))) * 100)
                     : 0
             },
             personality: pet.getPersonalityDescription(),
