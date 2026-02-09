@@ -2,6 +2,7 @@
  * Backup Manager Module
  * Handles local and cloud backups for VPet save data
  */
+/* global Blob */
 
 class BackupManager {
     constructor(premiumManager) {

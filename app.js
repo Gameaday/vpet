@@ -351,6 +351,7 @@ function updateUI() {
     document.getElementById('feedBtn').disabled = actionsDisabled;
     document.getElementById('playBtn').disabled = actionsDisabled;
     document.getElementById('trainBtn').disabled = actionsDisabled;
+    document.getElementById('cleanBtn').disabled = actionsDisabled;
     document.getElementById('battleBtn').disabled = actionsDisabled;
     document.getElementById('sleepBtn').disabled = isHibernating;
     
@@ -465,6 +466,12 @@ function updateStatTooltips() {
 
 // Handle feed action
 function handleFeed() {
+    // Prevent actions during hibernation
+    if (hibernationManager && hibernationManager.shouldFreezePet()) {
+        showNotification('❄️ Pet is in cryo sleep!');
+        return;
+    }
+    
     if (pet.feed()) {
         vibrationManager.vibrate('medium');
         soundManager.play('feed');
@@ -476,6 +483,12 @@ function handleFeed() {
 
 // Handle play action
 function handlePlay() {
+    // Prevent actions during hibernation
+    if (hibernationManager && hibernationManager.shouldFreezePet()) {
+        showNotification('❄️ Pet is in cryo sleep!');
+        return;
+    }
+    
     if (pet.play()) {
         vibrationManager.vibrate('medium');
         pet.updatePersonality('play');
@@ -488,6 +501,12 @@ function handlePlay() {
 
 // Handle sleep action
 function handleSleep() {
+    // Prevent actions during hibernation
+    if (hibernationManager && hibernationManager.shouldFreezePet()) {
+        showNotification('❄️ Pet is in cryo sleep!');
+        return;
+    }
+    
     vibrationManager.vibrate('light');
     soundManager.play('sleep');
     pet.sleep();
@@ -497,6 +516,12 @@ function handleSleep() {
 
 // Handle train action
 function handleTrain() {
+    // Prevent actions during hibernation
+    if (hibernationManager && hibernationManager.shouldFreezePet()) {
+        showNotification('❄️ Pet is in cryo sleep!');
+        return;
+    }
+    
     const prevLevel = Math.floor(pet.level);
     if (pet.train()) {
         vibrationManager.vibrate('heavy');
@@ -518,6 +543,12 @@ function handleTrain() {
 
 // Handle clean action
 function handleClean() {
+    // Prevent actions during hibernation
+    if (hibernationManager && hibernationManager.shouldFreezePet()) {
+        showNotification('❄️ Pet is in cryo sleep!');
+        return;
+    }
+    
     if (pet.clean()) {
         vibrationManager.vibrate('medium');
         soundManager.play('play'); // Play success sound effect for cleaning action
@@ -529,6 +560,12 @@ function handleClean() {
 
 // Handle local battle
 function handleLocalBattle() {
+    // Prevent actions during hibernation
+    if (hibernationManager && hibernationManager.shouldFreezePet()) {
+        showNotification('❄️ Pet is in cryo sleep!');
+        return;
+    }
+    
     if (pet.isSleeping) {
         showNotification('💤 Your pet is sleeping!');
         return;
@@ -559,6 +596,12 @@ function handleLocalBattle() {
 
 // Handle online battle
 function handleOnlineBattle() {
+    // Prevent actions during hibernation
+    if (hibernationManager && hibernationManager.shouldFreezePet()) {
+        showNotification('❄️ Pet is in cryo sleep!');
+        return;
+    }
+    
     if (!serverConnection.connected) {
         showNotification('❌ Not connected to server!');
         return;
