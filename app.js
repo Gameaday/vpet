@@ -1,5 +1,5 @@
 // Main application logic - Refactored with Modular Architecture
-/* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager, SocialFeatures, AppConfig, BackupManager, HibernationManager */
+/* global SoundManager, VibrationManager, UIManager, MilestoneManager, SocialFeatures, AppConfig, BackupManager, HibernationManager */
 
 let pet = null;
 let currentBattle = null;
@@ -13,7 +13,6 @@ let updateInterval = null;
 let soundManager = null;
 let vibrationManager = null;
 let uiManager = null;
-let battleUIManager = null;
 let milestoneManager = null;
 let socialFeatures = null;
 
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     soundManager = new SoundManager(AppConfig);
     vibrationManager = new VibrationManager(AppConfig);
     uiManager = new UIManager(AppConfig);
-    battleUIManager = new BattleUIManager();
     milestoneManager = new MilestoneManager(AppConfig);
     socialFeatures = new SocialFeatures();
     
