@@ -260,6 +260,16 @@ class Pet {
         return true;
     }
 
+    // Wake up the pet (explicit method for clarity)
+    wakeUp() {
+        if (this.isSleeping) {
+            this.isSleeping = false;
+            showNotification('☀️ Your pet woke up!');
+            this.save();
+        }
+        return true;
+    }
+
     // Train the pet
     train() {
         if (this.isSleeping) {
@@ -488,7 +498,12 @@ class Pet {
 
 // Notification helper function
 function showNotification(message, type = 'info') {
+    // Check if DOM element exists (for testing environment compatibility)
+    if (typeof document === 'undefined') return;
+    
     const notification = document.getElementById('notification');
+    if (!notification) return;
+    
     notification.textContent = message;
     
     // Remove previous type classes
@@ -501,4 +516,9 @@ function showNotification(message, type = 'info') {
     setTimeout(() => {
         notification.classList.remove('show');
     }, 3000);
+}
+
+// Export for testing
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { Pet };
 }

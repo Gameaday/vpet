@@ -1,0 +1,26 @@
+{
+  "name": "vpet",
+  "version": "1.0.0",
+  "description": "A cross-platform virtual pet application inspired by Digimon and traditional virtual pets",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "vpet",
+    "virtual-pet",
+    "game",
+    "tamagotchi",
+    "digimon"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.2.0",
+    "happy-dom": "^12.10.3",
+    "vitest": "^1.2.0"
+  }
+}
