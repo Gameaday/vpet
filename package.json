@@ -29,10 +29,10 @@
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@vitest/coverage-v8": "^1.2.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^10.0.0",
     "happy-dom": "^20.0.0",
-    "vitest": "^1.2.0"
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.2",
