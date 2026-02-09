@@ -7,6 +7,10 @@ class ServerConnection {
         this.onBattleRequest = null;
         this.onBattleUpdate = null;
         this.currentBattleId = null;
+        this.reconnectAttempts = 0;
+        this.maxReconnectAttempts = 5;
+        this.reconnectDelay = 1000; // Start with 1 second
+        this.reconnectTimer = null;
     }
 
     // Get server URL from localStorage or default
@@ -32,6 +36,7 @@ class ServerConnection {
                 
                 this.ws.onopen = () => {
                     this.connected = true;
+                    this.reconnectAttempts = 0; // Reset on successful connection
                     this.updateConnectionStatus(true);
                     console.log('Connected to server');
                     resolve();
@@ -41,6 +46,9 @@ class ServerConnection {
                     this.connected = false;
                     this.updateConnectionStatus(false);
                     console.log('Disconnected from server');
+                    
+                    // Attempt reconnection with exponential backoff
+                    this.attemptReconnect();
                 };
                 
                 this.ws.onerror = (error) => {
@@ -68,8 +76,47 @@ class ServerConnection {
         });
     }
 
+    // Attempt to reconnect with exponential backoff
+    attemptReconnect() {
+        // Clear any existing reconnect timer
+        if (this.reconnectTimer) {
+            clearTimeout(this.reconnectTimer);
+        }
+
+        // Don't reconnect if we've exceeded max attempts
+        if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+            console.log('Max reconnection attempts reached. Manual reconnection required.');
+            showNotification('❌ Connection lost. Please reconnect manually from settings.', 'error');
+            return;
+        }
+
+        // Calculate delay with exponential backoff
+        const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts);
+        this.reconnectAttempts++;
+
+        console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
+        showNotification(`🔄 Reconnecting in ${Math.round(delay/1000)}s...`, 'info');
+
+        this.reconnectTimer = setTimeout(() => {
+            console.log('Attempting to reconnect...');
+            this.connect().then(() => {
+                showNotification('✅ Reconnected to server!', 'success');
+            }).catch((error) => {
+                console.error('Reconnection failed:', error);
+                // The onclose handler will trigger another reconnect attempt
+            });
+        }, delay);
+    }
+
     // Disconnect from server
     disconnect() {
+        // Clear reconnect timer when manually disconnecting
+        if (this.reconnectTimer) {
+            clearTimeout(this.reconnectTimer);
+            this.reconnectTimer = null;
+        }
+        this.reconnectAttempts = this.maxReconnectAttempts; // Prevent auto-reconnect
+        
         if (this.ws) {
             this.ws.close();
             this.ws = null;
