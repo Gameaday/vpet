@@ -25,6 +25,9 @@ Thumbs.db
 dist/
 build/
 coverage/
+www/
+android/
+ios/
 
 # Temporary files
 tmp/

@@ -1,0 +1,6 @@
+{
+  "appId": "com.gameaday.vpet",
+  "appName": "VPet",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}

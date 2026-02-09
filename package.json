@@ -7,7 +7,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "serve": "python -m http.server 8000"
+    "serve": "python -m http.server 8000",
+    "build": "mkdir -p www && cp -r index.html style.css pet.js battle.js server.js app.js premium.js manifest.json sw.js icons www/",
+    "android:build": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
+    "android:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease"
   },
   "keywords": [
     "vpet",
@@ -22,5 +25,11 @@
     "@vitest/coverage-v8": "^1.2.0",
     "happy-dom": "^20.0.0",
     "vitest": "^1.2.0"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.2",
+    "@capacitor/cli": "^8.0.2",
+    "@capacitor/core": "^8.0.2",
+    "stripe": "^20.3.1"
   }
 }

@@ -2,9 +2,20 @@
 let pet = null;
 let currentBattle = null;
 let serverConnection = null;
+let premiumManager = null;
 let updateInterval = null;
 let soundEnabled = localStorage.getItem('soundEnabled') !== 'false'; // Default true
+let vibrationEnabled = localStorage.getItem('vibrationEnabled') !== 'false'; // Default true
 let currentTheme = localStorage.getItem('theme') || 'dark'; // dark, light, or retro
+
+// Vibration patterns for different actions
+const vibrationPatterns = {
+    light: 10,     // Quick tap
+    medium: 25,    // Button press
+    heavy: 50,     // Important action
+    success: [10, 50, 10], // Pattern for success
+    error: [50, 50, 50]    // Pattern for error
+};
 
 // Reusable AudioContext for sound effects
 let audioContext = null;
@@ -50,6 +61,17 @@ function playTone(frequencies, duration) {
     });
 }
 
+// Vibration feedback for mobile devices
+function vibrate(pattern = 'light') {
+    if (!vibrationEnabled) return;
+    
+    // Check if vibration API is available
+    if ('vibrate' in navigator) {
+        const vibrationPattern = vibrationPatterns[pattern] || pattern;
+        navigator.vibrate(vibrationPattern);
+    }
+}
+
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
     // Apply saved theme
@@ -57,6 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Create pet instance
     pet = new Pet();
+    
+    // Create premium manager
+    premiumManager = new PremiumManager();
     
     // Create server connection
     serverConnection = new ServerConnection();
@@ -101,6 +126,9 @@ function setupEventListeners() {
     document.getElementById('settingsBtn').addEventListener('click', openSettings);
     document.getElementById('helpBtn').addEventListener('click', openHelp);
     document.getElementById('resetBtn').addEventListener('click', handleReset);
+    document.getElementById('premiumCtaBtn').addEventListener('click', () => {
+        premiumManager.openPremiumModal();
+    });
     
     // Modal close buttons
     document.getElementById('closeBattleModal').addEventListener('click', closeBattleModal);
@@ -139,11 +167,56 @@ function setupEventListeners() {
         }
     });
     
+    document.getElementById('premiumModal').addEventListener('click', (e) => {
+        if (e.target.id === 'premiumModal') {
+            premiumManager.closePremiumModal();
+        }
+    });
+    
     // Keyboard shortcuts
     document.addEventListener('keydown', handleKeyboardShortcut);
     
+    // Touch gestures for mobile
+    setupTouchGestures();
+    
     // Show tutorial on first visit
     checkFirstVisit();
+}
+
+// Setup touch gestures for mobile devices
+function setupTouchGestures() {
+    let touchStartY = 0;
+    let touchStartX = 0;
+    const swipeThreshold = 50; // minimum distance for swipe
+    
+    // Handle swipe down to close modals
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        // Use passive: true to improve scrolling performance
+        // This means we cannot call preventDefault() but we don't need to for gesture detection
+        modal.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+        
+        modal.addEventListener('touchend', (e) => {
+            if (e.target.classList.contains('modal')) {
+                const touchEndY = e.changedTouches[0].clientY;
+                const touchEndX = e.changedTouches[0].clientX;
+                const deltaY = touchEndY - touchStartY;
+                const deltaX = touchEndX - touchStartX;
+                
+                // Swipe down to close (more vertical than horizontal)
+                if (deltaY > swipeThreshold && Math.abs(deltaY) > Math.abs(deltaX)) {
+                    // Close the appropriate modal
+                    if (modal.id === 'battleModal') closeBattleModal();
+                    else if (modal.id === 'settingsModal') closeSettingsModal();
+                    else if (modal.id === 'helpModal') closeHelp();
+                    else if (modal.id === 'premiumModal') premiumManager.closePremiumModal();
+                }
+            }
+        }, { passive: true });
+    });
 }
 
 // Show achievement notification
@@ -492,6 +565,7 @@ function updateStat(statName, value) {
 // Handle feed action
 function handleFeed() {
     if (pet.feed()) {
+        vibrate('medium');
         soundEffects.feed();
         checkMilestones('feed');
         updateUI();
@@ -502,6 +576,7 @@ function handleFeed() {
 // Handle play action
 function handlePlay() {
     if (pet.play()) {
+        vibrate('medium');
         pet.updatePersonality('play'); // Update personality based on action
         soundEffects.play();
         checkMilestones('play');
@@ -512,6 +587,7 @@ function handlePlay() {
 
 // Handle sleep action
 function handleSleep() {
+    vibrate('light');
     soundEffects.sleep();
     pet.sleep();
     updateUI();
@@ -522,6 +598,7 @@ function handleSleep() {
 function handleTrain() {
     const prevLevel = Math.floor(pet.level);
     if (pet.train()) {
+        vibrate('heavy');
         pet.updatePersonality('train'); // Update personality based on action
         soundEffects.train();
         checkMilestones('train');
@@ -529,6 +606,7 @@ function handleTrain() {
         // Check for level up
         const newLevel = Math.floor(pet.level);
         if (newLevel > prevLevel) {
+            vibrate('success');
             checkMilestones('level');
         }
         
@@ -790,6 +868,7 @@ function openSettings() {
     document.getElementById('petNameInput').value = pet.name;
     document.getElementById('serverUrlInput').value = serverConnection.serverUrl;
     document.getElementById('soundToggle').checked = soundEnabled;
+    document.getElementById('vibrationToggle').checked = vibrationEnabled;
     document.getElementById('themeSelect').value = currentTheme;
     
     // Update battle history
@@ -843,6 +922,7 @@ function saveSettings() {
     const newName = document.getElementById('petNameInput').value.trim();
     const newServerUrl = document.getElementById('serverUrlInput').value.trim();
     const newSoundEnabled = document.getElementById('soundToggle').checked;
+    const newVibrationEnabled = document.getElementById('vibrationToggle').checked;
     const newTheme = document.getElementById('themeSelect').value;
     
     if (newName && newName !== pet.name) {
@@ -865,6 +945,13 @@ function saveSettings() {
         soundEnabled = newSoundEnabled;
         localStorage.setItem('soundEnabled', soundEnabled);
         showNotification(`🔊 Sound ${soundEnabled ? 'enabled' : 'disabled'}`);
+    }
+    
+    // Save vibration preference
+    if (newVibrationEnabled !== vibrationEnabled) {
+        vibrationEnabled = newVibrationEnabled;
+        localStorage.setItem('vibrationEnabled', vibrationEnabled);
+        showNotification(`📳 Vibration ${vibrationEnabled ? 'enabled' : 'disabled'}`);
     }
     
     // Save theme preference
@@ -906,6 +993,28 @@ function showSaveIndicator() {
     setTimeout(() => {
         indicator.classList.remove('show');
     }, 2000);
+}
+
+// Show toast notification (used by premium system and other features)
+function showToast(message, type = 'info', duration = 3000) {
+    // Create toast if it doesn't exist
+    let toast = document.getElementById('globalToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'globalToast';
+        toast.className = 'global-toast';
+        document.body.appendChild(toast);
+    }
+    
+    // Set message and type
+    toast.textContent = message;
+    toast.className = `global-toast ${type}`;
+    toast.classList.add('show');
+    
+    // Auto-hide after duration
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, duration);
 }
 
 // Show time away modal

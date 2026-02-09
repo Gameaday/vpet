@@ -178,12 +178,24 @@
                     </div>
                     
                     <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="vibrationToggle" checked />
+                            📳 Vibration Feedback
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
                         <label for="themeSelect">🎨 Theme:</label>
                         <select id="themeSelect">
                             <option value="dark">Dark Mode</option>
                             <option value="light">Light Mode</option>
                             <option value="retro">Retro LCD</option>
                         </select>
+                    </div>
+                    
+                    <!-- Premium Section -->
+                    <div class="setting-item premium-section">
+                        <button class="premium-cta-btn" id="premiumCtaBtn">⭐ Upgrade to Premium</button>
                     </div>
                     
                     <!-- Battle History Section -->
@@ -289,9 +301,22 @@
         </div>
     </div>
 
+    <!-- Premium Modal -->
+    <div id="premiumModal" class="modal">
+        <div id="premiumModalContent">
+            <!-- Content will be dynamically populated by premium.js -->
+        </div>
+    </div>
+
+    <!-- Save Indicator -->
+    <div class="save-indicator" id="saveIndicator">
+        Saved
+    </div>
+
     <script src="pet.js"></script>
     <script src="battle.js"></script>
     <script src="server.js"></script>
+    <script src="premium.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
