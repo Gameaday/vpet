@@ -921,6 +921,28 @@ function showSaveIndicator() {
     }, 2000);
 }
 
+// Show toast notification (used by premium system and other features)
+function showToast(message, type = 'info', duration = 3000) {
+    // Create toast if it doesn't exist
+    let toast = document.getElementById('globalToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'globalToast';
+        toast.className = 'global-toast';
+        document.body.appendChild(toast);
+    }
+    
+    // Set message and type
+    toast.textContent = message;
+    toast.className = `global-toast ${type}`;
+    toast.classList.add('show');
+    
+    // Auto-hide after duration
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, duration);
+}
+
 // Show time away modal
 function showTimeAwayModal(timeAwayInfo) {
     const modal = document.getElementById('timeAwayModal');

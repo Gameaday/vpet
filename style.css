@@ -1444,3 +1444,47 @@ body.theme-retro select {
     border-top: 2px solid #333;
     border-bottom: 2px solid #333;
 }
+
+/* Global Toast Notification */
+.global-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(26, 26, 26, 0.95);
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-size: 1em;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+    max-width: 300px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 2px solid #4ade80;
+}
+
+.global-toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.global-toast.info {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(26, 26, 26, 0.95) 100%);
+}
+
+.global-toast.success {
+    border-color: #4ade80;
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(26, 26, 26, 0.95) 100%);
+}
+
+.global-toast.warning {
+    border-color: #fbbf24;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(26, 26, 26, 0.95) 100%);
+}
+
+.global-toast.error {
+    border-color: #ef4444;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(26, 26, 26, 0.95) 100%);
+}
