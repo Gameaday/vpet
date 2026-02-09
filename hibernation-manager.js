@@ -147,8 +147,9 @@ class HibernationManager {
         if (durationDays > limits.maxDuration) {
             if (typeof showToast === 'function') {
                 const tierName = this.premiumManager.subscriptionTier;
+                const maxDaysText = limits.maxDuration === Infinity ? 'unlimited' : `${limits.maxDuration} day${limits.maxDuration > 1 ? 's' : ''}`;
                 showToast(
-                    `❌ Maximum hibernation is ${limits.maxDuration} day${limits.maxDuration > 1 ? 's' : ''} for ${tierName} tier`,
+                    `❌ Maximum hibernation is ${maxDaysText} for ${tierName} tier`,
                     'error',
                     4000
                 );

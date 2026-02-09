@@ -67,7 +67,7 @@ class BackupManager {
 
             // Create downloadable file
             const dataStr = JSON.stringify(backup, null, 2);
-            const dataBlob = new window.Blob([dataStr], { type: 'application/json' });
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             
             const link = document.createElement('a');

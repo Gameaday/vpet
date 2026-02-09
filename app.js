@@ -1,6 +1,5 @@
 // Main application logic - Refactored with Modular Architecture
-/* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager, SocialFeatures */
-/* global AppConfig, BackupManager, HibernationManager */
+/* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager, SocialFeatures, AppConfig, BackupManager, HibernationManager */
 
 let pet = null;
 let currentBattle = null;
