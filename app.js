@@ -623,7 +623,7 @@ function handleTrain() {
 function handleClean() {
     if (pet.clean()) {
         vibrate('medium');
-        soundEffects.play(); // Use play sound for cleaning
+        soundEffects.play(); // Play success sound effect for cleaning action
         checkMilestones('clean');
         updateUI();
         showSaveIndicator();
