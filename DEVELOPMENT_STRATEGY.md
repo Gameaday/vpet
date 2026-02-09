@@ -2,23 +2,43 @@
 
 **Strategic Plan for Project Completion & Market Success**
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Date:** 2026-02-09  
 **Status:** Active Development
+
+---
+
+## 📐 Architecture Overview
+
+VPet is built on a **local-first, cost-optimized architecture**. See [ARCHITECTURE.md](ARCHITECTURE.md) for complete details.
+
+**Key Design Principles:**
+- 🏠 **Local-First:** All data stored client-side (localStorage)
+- 🔌 **Server-Optional:** Multiplayer is optional, not required
+- ⚡ **Power-Efficient:** 10-second update interval, conditional animations
+- 💰 **Zero Cost for Free Users:** No server storage or processing
+- 📦 **Portable:** Pure vanilla JS, runs anywhere
+
+**Cost Profile:**
+- Free users: $0 server cost (100% client-side)
+- Server cost at 10k users: <$10/month (battles only)
+- Bandwidth per battle: ~1 KB
+- Storage per user: ~20 KB (client localStorage)
 
 ---
 
 ## 🎯 Vision & Goals
 
 ### Primary Vision
-Create a **compelling, marketable virtual pet game** that captures the nostalgia of Digimon and Tamagotchi while leveraging modern web technologies for a seamless, fun experience across all devices.
+Create a **compelling, marketable virtual pet game** that captures the nostalgia of Digimon and Tamagotchi while leveraging modern web technologies for a seamless, fun experience across all devices—**without compromising simplicity or efficiency**.
 
 ### Success Criteria
 1. **Engaging Gameplay:** Players return daily for 30+ days
 2. **Viral Potential:** Players share pets and battles on social media
 3. **Monetizable:** Clear path to revenue without compromising free play
-4. **Technically Sound:** <5% error rate, 90+ Lighthouse score
-5. **Community-Driven:** Active Discord/forum with regular updates
+4. **Technically Sound:** <5% error rate, 90+ Lighthouse score, power-efficient
+5. **Cost-Effective:** <$0.001/user/month infrastructure cost
+6. **Community-Driven:** Active Discord/forum with regular updates
 
 ---
 

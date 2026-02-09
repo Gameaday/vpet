@@ -17,6 +17,7 @@ A cross-platform virtual pet application inspired by Digimon and traditional vir
 - 🚀 **[QUICKSTART.md](QUICKSTART.md)** - Get playing in 30 seconds
 
 **For Developers:**
+- 🏗️ **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design, power efficiency, cost optimization
 - 🤝 **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to VPet
 - 🔧 **[TECHNICAL_DEBT.md](TECHNICAL_DEBT.md)** - Known issues and priorities
 - 🗺️ **[ROADMAP.md](ROADMAP.md)** - Future features and improvements
