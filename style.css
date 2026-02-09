@@ -306,18 +306,21 @@ main {
     border-radius: 8px;
 }
 
-/* Stat warning states */
+/* Stat warning states with color transitions */
 .progress-fill.critical {
     animation: pulse-red 1.5s infinite;
-    box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
+    background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%) !important;
 }
 
 .progress-fill.warning {
-    box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+    background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%) !important;
 }
 
 .progress-fill.excellent {
-    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.6);
+    background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%) !important;
 }
 
 @keyframes pulse-red {
@@ -377,7 +380,14 @@ main {
 
 .action-btn:hover {
     background: #444;
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-color: #667eea;
+}
+
+.action-btn:hover .btn-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s;
 }
 
 .action-btn:active {
@@ -1205,4 +1215,232 @@ body.theme-retro select {
     color: #fff;
     font-family: 'Courier New', monospace;
     cursor: pointer;
+}
+
+/* Premium Features Styles */
+.premium-badge {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #1a1a1a;
+    font-weight: bold;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 10px rgba(251, 191, 36, 0.4);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { box-shadow: 0 2px 10px rgba(251, 191, 36, 0.4); }
+    50% { box-shadow: 0 2px 15px rgba(251, 191, 36, 0.7); }
+}
+
+.premium-user .container {
+    border: 2px solid #fbbf24;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+/* Premium Modal */
+#premiumModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+#premiumModalContent {
+    background: #2a2a2a;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 700px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+#premiumModalContent h2 {
+    color: #fff;
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+#premiumModalContent > p {
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.premium-tier {
+    background: #1a1a1a;
+    border: 2px solid #444;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+}
+
+.premium-tier:hover {
+    border-color: #fbbf24;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(251, 191, 36, 0.2);
+}
+
+.premium-tier.premium-plus {
+    border-color: #8b5cf6;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+}
+
+.premium-tier.premium-plus:hover {
+    border-color: #a78bfa;
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+}
+
+.premium-tier h3 {
+    color: #fff;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.premium-price {
+    color: #fbbf24;
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.premium-plus .premium-price {
+    color: #a78bfa;
+}
+
+.premium-features {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.premium-features li {
+    color: #ccc;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    font-size: 1em;
+}
+
+.premium-features li:last-child {
+    border-bottom: none;
+}
+
+.premium-purchase-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    color: #1a1a1a;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Courier New', monospace;
+}
+
+.premium-purchase-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(251, 191, 36, 0.5);
+}
+
+.premium-purchase-btn.premium-btn {
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+    color: #fff;
+}
+
+.premium-purchase-btn.premium-btn:hover {
+    box-shadow: 0 5px 20px rgba(139, 92, 246, 0.5);
+}
+
+/* Premium locked features */
+.theme-option.premium.locked::after {
+    content: '🔒';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    opacity: 0.8;
+}
+
+.theme-option.premium.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Auto-save indicator */
+.save-indicator {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(26, 26, 26, 0.95);
+    color: #4ade80;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 2px solid #4ade80;
+    font-size: 0.9em;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.save-indicator.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.save-indicator::before {
+    content: '💾 ';
+}
+
+/* Premium CTA Button in Settings */
+.premium-cta-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    color: #1a1a1a;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Courier New', monospace;
+    margin: 10px 0;
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+}
+
+.premium-cta-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.5);
+}
+
+.premium-section {
+    margin: 20px 0;
+    padding: 20px 0;
+    border-top: 2px solid #333;
+    border-bottom: 2px solid #333;
 }

@@ -2,6 +2,7 @@
 let pet = null;
 let currentBattle = null;
 let serverConnection = null;
+let premiumManager = null;
 let updateInterval = null;
 let soundEnabled = localStorage.getItem('soundEnabled') !== 'false'; // Default true
 let currentTheme = localStorage.getItem('theme') || 'dark'; // dark, light, or retro
@@ -58,6 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create pet instance
     pet = new Pet();
     
+    // Create premium manager
+    premiumManager = new PremiumManager();
+    
     // Create server connection
     serverConnection = new ServerConnection();
     
@@ -101,6 +105,9 @@ function setupEventListeners() {
     document.getElementById('settingsBtn').addEventListener('click', openSettings);
     document.getElementById('helpBtn').addEventListener('click', openHelp);
     document.getElementById('resetBtn').addEventListener('click', handleReset);
+    document.getElementById('premiumCtaBtn').addEventListener('click', () => {
+        premiumManager.openPremiumModal();
+    });
     
     // Modal close buttons
     document.getElementById('closeBattleModal').addEventListener('click', closeBattleModal);
@@ -136,6 +143,12 @@ function setupEventListeners() {
     document.getElementById('helpModal').addEventListener('click', (e) => {
         if (e.target.id === 'helpModal') {
             closeHelp();
+        }
+    });
+    
+    document.getElementById('premiumModal').addEventListener('click', (e) => {
+        if (e.target.id === 'premiumModal') {
+            premiumManager.closePremiumModal();
         }
     });
     

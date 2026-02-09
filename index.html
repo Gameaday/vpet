@@ -186,6 +186,11 @@
                         </select>
                     </div>
                     
+                    <!-- Premium Section -->
+                    <div class="setting-item premium-section">
+                        <button class="premium-cta-btn" id="premiumCtaBtn">⭐ Upgrade to Premium</button>
+                    </div>
+                    
                     <!-- Battle History Section -->
                     <div class="battle-history-section">
                         <h3>⚔️ Battle History</h3>
@@ -289,9 +294,22 @@
         </div>
     </div>
 
+    <!-- Premium Modal -->
+    <div id="premiumModal" class="modal">
+        <div id="premiumModalContent">
+            <!-- Content will be dynamically populated by premium.js -->
+        </div>
+    </div>
+
+    <!-- Save Indicator -->
+    <div class="save-indicator" id="saveIndicator">
+        Saved
+    </div>
+
     <script src="pet.js"></script>
     <script src="battle.js"></script>
     <script src="server.js"></script>
+    <script src="premium.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
