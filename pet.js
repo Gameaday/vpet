@@ -108,11 +108,15 @@ class Pet {
         const hungerDecay = 0.5;
         const happinessDecay = 0.3;
         const energyDecay = 0.2;
+        const cleanlinessDecay = 0.4; // Cleanliness decays over time
+        const disciplineDecay = 0.1; // Discipline decays slowly over time
         
         if (!this.isSleeping) {
             this.hunger = Math.max(0, this.hunger - (minutesPassed * hungerDecay));
             this.happiness = Math.max(0, this.happiness - (minutesPassed * happinessDecay));
             this.energy = Math.max(0, this.energy - (minutesPassed * energyDecay));
+            this.cleanliness = Math.max(0, this.cleanliness - (minutesPassed * cleanlinessDecay));
+            this.discipline = Math.max(0, this.discipline - (minutesPassed * disciplineDecay));
         } else {
             // Restore energy while sleeping
             this.energy = Math.min(100, this.energy + (minutesPassed * 1));
@@ -256,6 +260,16 @@ class Pet {
         return true;
     }
 
+    // Wake up the pet (explicit method for clarity)
+    wakeUp() {
+        if (this.isSleeping) {
+            this.isSleeping = false;
+            showNotification('☀️ Your pet woke up!');
+            this.save();
+        }
+        return true;
+    }
+
     // Train the pet
     train() {
         if (this.isSleeping) {
@@ -384,10 +398,12 @@ class Pet {
     
     // Check for and handle sickness
     checkSickness() {
-        // Pet can get sick if stats are very low
+        // Pet can get sick if stats are very low or if cleanliness is very low
         if (!this.isSick) {
             const avgStats = (this.health + this.hunger + this.happiness + this.energy) / 4;
-            const sicknessChance = avgStats < 20 ? 0.3 : avgStats < 30 ? 0.1 : 0;
+            // Low cleanliness increases sickness chance
+            const cleanlinessModifier = this.cleanliness < 30 ? 0.15 : 0;
+            const sicknessChance = (avgStats < 20 ? 0.3 : avgStats < 30 ? 0.1 : 0) + cleanlinessModifier;
             
             if (Math.random() < sicknessChance) {
                 this.isSick = true;
@@ -482,7 +498,12 @@ class Pet {
 
 // Notification helper function
 function showNotification(message, type = 'info') {
+    // Check if DOM element exists (for testing environment compatibility)
+    if (typeof document === 'undefined') return;
+    
     const notification = document.getElementById('notification');
+    if (!notification) return;
+    
     notification.textContent = message;
     
     // Remove previous type classes
@@ -495,4 +516,9 @@ function showNotification(message, type = 'info') {
     setTimeout(() => {
         notification.classList.remove('show');
     }, 3000);
+}
+
+// Export for testing
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { Pet };
 }

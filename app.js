@@ -73,6 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up periodic updates
     updateInterval = setInterval(() => {
         pet.updateStatsFromTimePassed();
+        pet.checkSickness(); // Check for illness
+        pet.recordStatsSnapshot(); // Record stats for history
         updateUI();
     }, 10000); // Update every 10 seconds
     
@@ -500,6 +502,7 @@ function handleFeed() {
 // Handle play action
 function handlePlay() {
     if (pet.play()) {
+        pet.updatePersonality('play'); // Update personality based on action
         soundEffects.play();
         checkMilestones('play');
         updateUI();
@@ -519,6 +522,7 @@ function handleSleep() {
 function handleTrain() {
     const prevLevel = Math.floor(pet.level);
     if (pet.train()) {
+        pet.updatePersonality('train'); // Update personality based on action
         soundEffects.train();
         checkMilestones('train');
         
@@ -616,7 +620,8 @@ function closeBattleModal() {
     
     if (currentBattle && !currentBattle.isActive) {
         // Battle ended, update pet with opponent name
-        const opponentName = currentBattle.opponent.name || 'Opponent';
+        const opponentName = currentBattle.opponentPet.name || 'Opponent';
+        pet.updatePersonality('battle'); // Update personality based on battle
         pet.updateAfterBattle(currentBattle.playerWon(), opponentName);
         updateUI();
     }

@@ -7,6 +7,10 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# Set minimal permissions for security
+permissions:
+  contents: read
+
 jobs:
   validate-client:
     name: Validate Client Code
@@ -152,10 +156,48 @@ jobs:
           config-file: '.github/workflows/mlc_config.json'
         continue-on-error: true
 
+  run-tests:
+    name: Run Automated Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🧪 Run tests
+        run: npm test
+
+      - name: 📊 Run tests with coverage
+        run: npm run test:coverage
+
+      - name: 📈 Generate test summary
+        if: always()
+        run: |
+          echo "### 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Test suite completed!**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See job output for detailed coverage report." >> $GITHUB_STEP_SUMMARY
+
+      - name: 📤 Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ github.sha }}
+          path: coverage/
+          retention-days: 30
+
   summary:
     name: Generate Summary
     runs-on: ubuntu-latest
-    needs: [validate-client, validate-server, validate-docs]
+    needs: [validate-client, validate-server, validate-docs, run-tests]
     if: always()
     steps:
       - name: 📋 Overall Status
@@ -168,3 +210,4 @@ jobs:
           echo "- ✅ Client validation: ${{ needs.validate-client.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Server validation: ${{ needs.validate-server.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Documentation check: ${{ needs.validate-docs.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Automated tests: ${{ needs.run-tests.result }}" >> $GITHUB_STEP_SUMMARY
