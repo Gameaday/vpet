@@ -238,6 +238,18 @@ class Pet {
     onEvolution() {
         this.level++;
         showNotification(`🎉 Your pet evolved to ${this.stage}!`, 'success');
+        
+        // Trigger evolution particle effects
+        if (typeof window !== 'undefined' && window.particleEffects) {
+            const petSprite = document.getElementById('petSprite');
+            if (petSprite) {
+                const rect = petSprite.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                window.particleEffects.showEvolution(x, y);
+            }
+        }
+        
         this.save();
     }
 

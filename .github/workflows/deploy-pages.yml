@@ -110,7 +110,6 @@ jobs:
       - name: 📤 Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          name: vpet-website
           retention-days: 30
 
   deploy:
