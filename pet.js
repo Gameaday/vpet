@@ -184,6 +184,8 @@ class Pet {
         let decayMultiplier = 1.0;
         if (minutesPassed > 60) {
             // Use logarithmic decay reduction: starts at 1.0, approaches 0.2 for very long periods
+            // The coefficient 0.35 was chosen to balance meaningful short-term gameplay
+            // with forgiveness for 8-10 hour absences (sleep, work, school)
             // At 60 min: multiplier = 1.0
             // At 120 min: multiplier ≈ 0.76
             // At 360 min (6h): multiplier ≈ 0.37
@@ -200,7 +202,9 @@ class Pet {
             this.discipline = Math.max(0, this.discipline - (minutesPassed * disciplineDecay * decayMultiplier));
         } else {
             // Restore energy while sleeping, but slower during long periods away
-            // This simulates the pet naturally waking up and not sleeping the entire time
+            // After 2 hours (120 min), reduce restore rate from 1.0 to 0.5 per minute
+            // This simulates the pet naturally waking up and not sleeping continuously
+            // for the entire extended absence (prevents energy from maxing out unrealistically)
             const sleepRestoreRate = minutesPassed > 120 ? 0.5 : 1.0;
             this.energy = Math.min(100, this.energy + (minutesPassed * sleepRestoreRate));
             
