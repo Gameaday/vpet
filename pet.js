@@ -171,27 +171,53 @@ class Pet {
             energy: this.energy
         };
         
-        // Decay rates per minute
+        // Base decay rates per minute
         const hungerDecay = 0.5;
         const happinessDecay = 0.3;
         const energyDecay = 0.2;
-        const cleanlinessDecay = 0.4; // Cleanliness decays over time
-        const disciplineDecay = 0.1; // Discipline decays slowly over time
+        const cleanlinessDecay = 0.4;
+        const disciplineDecay = 0.1;
+        
+        // Calculate diminishing decay factor for long absences
+        // This makes the game more forgiving when users are away for extended periods
+        // After 60 minutes, decay starts to slow down logarithmically
+        let decayMultiplier = 1.0;
+        if (minutesPassed > 60) {
+            // Use logarithmic decay reduction: starts at 1.0, approaches 0.2 for very long periods
+            // The coefficient 0.35 was chosen to balance meaningful short-term gameplay
+            // with forgiveness for 8-10 hour absences (sleep, work, school)
+            // At 60 min: multiplier = 1.0
+            // At 120 min: multiplier ≈ 0.76
+            // At 360 min (6h): multiplier ≈ 0.37
+            // At 600 min (10h): multiplier ≈ 0.20 (minimum)
+            // At 1440 min (24h): multiplier ≈ 0.20 (minimum)
+            decayMultiplier = Math.max(0.2, 1.0 - (Math.log(minutesPassed / 60) * 0.35));
+        }
         
         if (!this.isSleeping) {
-            this.hunger = Math.max(0, this.hunger - (minutesPassed * hungerDecay));
-            this.happiness = Math.max(0, this.happiness - (minutesPassed * happinessDecay));
-            this.energy = Math.max(0, this.energy - (minutesPassed * energyDecay));
-            this.cleanliness = Math.max(0, this.cleanliness - (minutesPassed * cleanlinessDecay));
-            this.discipline = Math.max(0, this.discipline - (minutesPassed * disciplineDecay));
+            this.hunger = Math.max(0, this.hunger - (minutesPassed * hungerDecay * decayMultiplier));
+            this.happiness = Math.max(0, this.happiness - (minutesPassed * happinessDecay * decayMultiplier));
+            this.energy = Math.max(0, this.energy - (minutesPassed * energyDecay * decayMultiplier));
+            this.cleanliness = Math.max(0, this.cleanliness - (minutesPassed * cleanlinessDecay * decayMultiplier));
+            this.discipline = Math.max(0, this.discipline - (minutesPassed * disciplineDecay * decayMultiplier));
         } else {
-            // Restore energy while sleeping
-            this.energy = Math.min(100, this.energy + (minutesPassed * 1));
+            // Restore energy while sleeping, but slower during long periods away
+            // After 2 hours (120 min), reduce restore rate from 1.0 to 0.5 per minute
+            // This simulates the pet naturally waking up and not sleeping continuously
+            // for the entire extended absence (prevents energy from maxing out unrealistically)
+            const sleepRestoreRate = minutesPassed > 120 ? 0.5 : 1.0;
+            this.energy = Math.min(100, this.energy + (minutesPassed * sleepRestoreRate));
+            
+            // When sleeping, other stats decay at 50% rate (pet is resting, not as active)
+            this.hunger = Math.max(0, this.hunger - (minutesPassed * hungerDecay * 0.5 * decayMultiplier));
+            this.happiness = Math.max(0, this.happiness - (minutesPassed * happinessDecay * 0.5 * decayMultiplier));
+            this.cleanliness = Math.max(0, this.cleanliness - (minutesPassed * cleanlinessDecay * 0.5 * decayMultiplier));
+            this.discipline = Math.max(0, this.discipline - (minutesPassed * disciplineDecay * 0.5 * decayMultiplier));
         }
         
         // Health decreases if hunger is too low
         if (this.hunger < 30) {
-            this.health = Math.max(0, this.health - (minutesPassed * 0.5));
+            this.health = Math.max(0, this.health - (minutesPassed * 0.5 * decayMultiplier));
         }
         
         // Update age
@@ -362,6 +388,7 @@ class Pet {
         }
         
         this.level += 0.1;
+        this.discipline = Math.min(100, this.discipline + 5);
         this.energy = Math.max(0, this.energy - 25);
         this.hunger = Math.max(0, this.hunger - 20);
         this.happiness = Math.max(0, this.happiness - 5);
