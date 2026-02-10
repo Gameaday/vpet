@@ -7,6 +7,7 @@ class BattleUIManager {
     constructor(config = {}) {
         this.config = config;
         this.currentBattle = null;
+        this.onBattleEnd = null; // Callback for when battle ends
     }
     
     /**
@@ -35,43 +36,64 @@ class BattleUIManager {
         
         // Clear log
         const logElement = document.getElementById('battleLog');
-        if (logElement) logElement.innerHTML = '';
+        if (logElement) logElement.innerHTML = '<p>Battle started!</p>';
         
         // Hide finish button, show action buttons
         document.getElementById('finishBattleBtn').style.display = 'none';
+        const battleActions = document.getElementById('battleActions');
+        if (battleActions) battleActions.style.display = 'grid';
         this.enableActionButtons();
         
         // Show modal
         modal.style.display = 'flex';
+        modal.classList.add('active');
     }
     
     /**
      * Close battle modal
+     * @param {Function} onClose - Optional callback to execute on close
      */
-    closeModal() {
+    closeModal(onClose) {
         const modal = document.getElementById('battleModal');
         if (modal) {
             modal.style.display = 'none';
+            modal.classList.remove('active');
         }
+        
+        // Execute callback if battle ended and callback provided
+        if (this.currentBattle && !this.currentBattle.isActive && onClose) {
+            onClose(this.currentBattle);
+        }
+        
+        // Execute registered onBattleEnd callback
+        if (this.currentBattle && !this.currentBattle.isActive && this.onBattleEnd) {
+            this.onBattleEnd(this.currentBattle);
+        }
+        
         this.currentBattle = null;
     }
     
     /**
      * Update battle UI with current state
+     * @param {object} soundManager - Sound manager instance for audio
+     * @param {object} milestoneManager - Milestone manager for achievements
+     * @param {object} uiManager - UI manager for showing achievements
+     * @param {object} pet - Player's pet for milestone checking
      */
-    update() {
+    update(soundManager, milestoneManager, uiManager, pet) {
         if (!this.currentBattle) return;
         
-        this._updateHealthBars();
+        this._updateHealthBarsWithEffects(soundManager);
         this._updateBattleLog();
-        this._checkBattleEnd();
+        this._checkBattleEnd(soundManager, milestoneManager, uiManager, pet);
     }
     
     /**
-     * Update health bars
+     * Update health bars with damage effects and animations
+     * @param {object} soundManager - Sound manager for audio
      * @private
      */
-    _updateHealthBars() {
+    _updateHealthBarsWithEffects(soundManager) {
         const playerHPPercent = (this.currentBattle.playerStats.currentHP / 
                                 this.currentBattle.playerStats.maxHP) * 100;
         const opponentHPPercent = (this.currentBattle.opponentStats.currentHP / 
@@ -80,8 +102,55 @@ class BattleUIManager {
         const playerBar = document.getElementById('battleYourHp');
         const opponentBar = document.getElementById('battleOpponentHp');
         
-        if (playerBar) playerBar.style.width = Math.max(0, playerHPPercent) + '%';
-        if (opponentBar) opponentBar.style.width = Math.max(0, opponentHPPercent) + '%';
+        if (!playerBar || !opponentBar) return;
+        
+        // Initialize HP tracking on first update
+        if (!playerBar.dataset.hp) {
+            playerBar.dataset.hp = 100;
+            opponentBar.dataset.hp = 100;
+        }
+        
+        // Track previous HP for damage calculation
+        const prevPlayerHP = parseFloat(playerBar.dataset.hp);
+        const prevOpponentHP = parseFloat(opponentBar.dataset.hp);
+        
+        // Check for damage and add flash animation + damage numbers
+        if (prevPlayerHP > playerHPPercent) {
+            const damage = this.calculateDamage(prevPlayerHP, playerHPPercent, this.currentBattle.playerStats.maxHP);
+            playerBar.classList.add('damage-flash');
+            this.showDamageNumber(damage, true);
+            if (soundManager) soundManager.play('hit');
+            setTimeout(() => playerBar.classList.remove('damage-flash'), 300);
+            
+            // Add shake to player sprite
+            const playerSprite = document.querySelector('.battle-pet:first-child .battle-sprite');
+            if (playerSprite) {
+                playerSprite.classList.add('taking-damage');
+                setTimeout(() => playerSprite.classList.remove('taking-damage'), 300);
+            }
+        }
+        
+        if (prevOpponentHP > opponentHPPercent) {
+            const damage = this.calculateDamage(prevOpponentHP, opponentHPPercent, this.currentBattle.opponentStats.maxHP);
+            opponentBar.classList.add('damage-flash');
+            this.showDamageNumber(damage, false);
+            if (soundManager) soundManager.play('hit');
+            setTimeout(() => opponentBar.classList.remove('damage-flash'), 300);
+            
+            // Add shake to opponent sprite
+            const opponentSprite = document.querySelector('.battle-pet:last-child .battle-sprite');
+            if (opponentSprite) {
+                opponentSprite.classList.add('taking-damage');
+                setTimeout(() => opponentSprite.classList.remove('taking-damage'), 300);
+            }
+        }
+        
+        playerBar.style.width = Math.max(0, playerHPPercent) + '%';
+        opponentBar.style.width = Math.max(0, opponentHPPercent) + '%';
+        
+        // Store current HP for next comparison
+        playerBar.dataset.hp = playerHPPercent;
+        opponentBar.dataset.hp = opponentHPPercent;
     }
     
     /**
@@ -92,25 +161,50 @@ class BattleUIManager {
         const logElement = document.getElementById('battleLog');
         if (!logElement) return;
         
-        const lastEntry = this.currentBattle.log[this.currentBattle.log.length - 1];
-        if (lastEntry && !logElement.textContent.includes(lastEntry)) {
-            const logEntry = document.createElement('div');
-            logEntry.className = 'battle-log-entry';
-            logEntry.textContent = lastEntry;
-            logElement.appendChild(logEntry);
+        const logs = this.currentBattle.getLog ? this.currentBattle.getLog() : this.currentBattle.log;
+        if (Array.isArray(logs)) {
+            logElement.innerHTML = logs.map(log => `<p>${log}</p>`).join('');
             logElement.scrollTop = logElement.scrollHeight;
         }
     }
     
     /**
-     * Check if battle has ended
+     * Check if battle has ended and handle victory/defeat
+     * @param {object} soundManager - Sound manager for audio
+     * @param {object} milestoneManager - Milestone manager for achievements
+     * @param {object} uiManager - UI manager for showing achievements
+     * @param {object} pet - Player's pet for milestone checking
      * @private
      */
-    _checkBattleEnd() {
+    _checkBattleEnd(soundManager, milestoneManager, uiManager, pet) {
         if (!this.currentBattle.isActive) {
             this.disableActionButtons();
+            
+            // Hide action buttons, show finish button
+            const battleActions = document.getElementById('battleActions');
+            if (battleActions) battleActions.style.display = 'none';
+            
             const finishBtn = document.getElementById('finishBattleBtn');
             if (finishBtn) finishBtn.style.display = 'block';
+            
+            // Add victory animation to winner
+            if (this.currentBattle.playerWon()) {
+                const playerSprite = document.querySelector('.battle-pet:first-child .battle-sprite');
+                if (playerSprite) {
+                    playerSprite.classList.add('victory');
+                }
+                if (soundManager) soundManager.play('win');
+                if (milestoneManager && uiManager && pet) {
+                    milestoneManager.check('battle', pet, uiManager.showAchievement.bind(uiManager));
+                    milestoneManager.check('win', pet, uiManager.showAchievement.bind(uiManager));
+                }
+            } else {
+                const opponentSprite = document.querySelector('.battle-pet:last-child .battle-sprite');
+                if (opponentSprite) {
+                    opponentSprite.classList.add('victory');
+                }
+                if (soundManager) soundManager.play('lose');
+            }
         }
     }
     
@@ -141,30 +235,34 @@ class BattleUIManager {
      * @param {boolean} isCrit - Whether it's a critical hit
      */
     showDamageNumber(damage, isPlayer, isCrit = false) {
-        const damageDiv = document.createElement('div');
-        damageDiv.className = `damage-number ${isPlayer ? 'player-damage' : 'opponent-damage'} ${isCrit ? 'critical' : ''}`;
-        damageDiv.textContent = `-${damage}`;
+        const container = isPlayer ? 
+            document.querySelector('.battle-your-pet') || document.querySelector('.battle-pet:first-child') : 
+            document.querySelector('.battle-opponent-pet') || document.querySelector('.battle-pet:last-child');
         
-        const targetClass = isPlayer ? '.your-pet' : '.opponent-pet';
-        const target = document.querySelector(targetClass);
+        if (!container) return;
         
-        if (target) {
-            target.appendChild(damageDiv);
-            setTimeout(() => damageDiv.remove(), 1000);
-        }
+        const damageNum = document.createElement('div');
+        damageNum.className = `damage-number ${isCrit ? 'crit' : ''}`;
+        if (isPlayer) damageNum.classList.add('player-damage');
+        if (!isPlayer) damageNum.classList.add('opponent-damage');
+        damageNum.textContent = `-${damage}`;
+        
+        container.style.position = 'relative';
+        container.appendChild(damageNum);
+        
+        // Remove after animation
+        setTimeout(() => damageNum.remove(), 1000);
     }
     
     /**
      * Calculate damage from HP change
-     * @param {number} prevHP - Previous HP
-     * @param {number} currentHP - Current HP
-     * @param {number} maxHP - Maximum HP
+     * @param {number} prevHP - Previous HP percentage
+     * @param {number} currentHP - Current HP percentage
+     * @param {number} maxHP - Maximum HP value
      * @returns {number} Damage amount
      */
     calculateDamage(prevHP, currentHP, maxHP) {
-        const prevHPValue = (prevHP / 100) * maxHP;
-        const currentHPValue = (currentHP / 100) * maxHP;
-        return Math.round(prevHPValue - currentHPValue);
+        return Math.round((prevHP - currentHP) / 100 * maxHP);
     }
 }
 
