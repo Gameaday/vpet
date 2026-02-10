@@ -247,6 +247,7 @@ describe('Pet Class', () => {
       // Run check multiple times since it's probabilistic
       let gotSick = false;
       for (let i = 0; i < 10; i++) {
+        pet.isSick = false; // Reset to ensure each iteration is a real check
         pet.checkSickness();
         if (pet.isSick) {
           gotSick = true;
@@ -281,6 +282,7 @@ describe('Pet Class', () => {
       
       let gotSick = false;
       for (let i = 0; i < 20; i++) {
+        pet.isSick = false; // Reset to ensure each iteration is a real check
         pet.checkSickness();
         if (pet.isSick) {
           gotSick = true;
