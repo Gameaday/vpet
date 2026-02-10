@@ -414,6 +414,10 @@ main {
     background: linear-gradient(90deg, #06b6d4 0%, #0891b2 100%);
 }
 
+.progress-fill.warmth {
+    background: linear-gradient(90deg, #f97316 0%, #ea580c 100%);
+}
+
 .stat-info {
     display: flex;
     justify-content: space-around;
@@ -496,6 +500,29 @@ main {
 
 .clean-btn {
     border-color: #06b6d4;
+}
+
+.warm-btn {
+    border-color: #f97316;
+}
+
+.hatch-btn {
+    border-color: #84cc16;
+}
+
+.hatch-btn.ready-to-hatch {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(132, 204, 22, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(132, 204, 22, 0);
+    }
 }
 
 /* Battle Panel */

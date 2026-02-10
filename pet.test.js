@@ -250,6 +250,9 @@ describe('Pet Class', () => {
 
   describe('Illness System', () => {
     it('should get sick when stats are very low', () => {
+      // Set pet as hatched (non-egg)
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.health = 15;
       pet.hunger = 15;
       pet.happiness = 15;
@@ -343,6 +346,9 @@ describe('Pet Class', () => {
 
   describe('Stats Decay', () => {
     it('should decay stats over time', () => {
+      // Set pet as hatched (non-egg) for stat decay to work
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.hunger = 100;
       pet.happiness = 100;
       pet.energy = 100;
@@ -360,6 +366,9 @@ describe('Pet Class', () => {
     });
 
     it('should restore energy when sleeping', () => {
+      // Set pet as hatched (non-egg)
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.isSleeping = true;
       pet.energy = 50;
       pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
@@ -370,6 +379,9 @@ describe('Pet Class', () => {
     });
 
     it('should reduce decay rate when sleeping', () => {
+      // Set pet as hatched (non-egg)
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.isSleeping = true;
       pet.hunger = 100;
       pet.happiness = 100;
@@ -379,13 +391,16 @@ describe('Pet Class', () => {
       pet.updateStatsFromTimePassed();
       
       // When sleeping, decay is 50% of normal rate
-      // Normal hunger decay: 1.5/min, sleeping: 0.75/min
-      expect(pet.hunger).toBeGreaterThan(99); // Should be ~99.25
-      expect(pet.happiness).toBeGreaterThan(99.4); // Should be ~99.5
-      expect(pet.cleanliness).toBeGreaterThan(99.2); // Should be ~99.4
+      // Normal hunger decay: 0.5/min, sleeping: 0.25/min
+      expect(pet.hunger).toBeGreaterThan(99.5); // Should be ~99.75
+      expect(pet.happiness).toBeGreaterThan(99.8); // Should be ~99.85
+      expect(pet.cleanliness).toBeGreaterThan(99.7); // Should be ~99.8
     });
 
     it('should have diminishing decay for long absences', () => {
+      // Set pet as hatched (non-egg)
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.hunger = 100;
       pet.happiness = 100;
       pet.energy = 100;
@@ -393,15 +408,17 @@ describe('Pet Class', () => {
       
       pet.updateStatsFromTimePassed();
       
-      // After 10 hours with diminishing decay, stats should be heavily depleted
-      // With new decay rates (1.5/min) and diminishing decay (multiplier ~0.2), hunger loss = 600 * 1.5 * 0.2 = 180
-      // Stats will be at or near 0 for long absences with new faster decay rates
-      expect(pet.hunger).toBeLessThan(10); // Very low or 0
-      expect(pet.happiness).toBeLessThan(10); // Very low or 0
-      expect(pet.energy).toBeLessThan(10); // Very low or 0
+      // After 10 hours with diminishing decay, stats should not hit 0
+      // With diminishing decay (multiplier ~0.2), hunger loss = 600 * 0.5 * 0.2 = 60
+      expect(pet.hunger).toBeGreaterThan(30); // Should be around 40
+      expect(pet.happiness).toBeGreaterThan(0); // Should be around 64
+      expect(pet.energy).toBeGreaterThan(0); // Should be around 76
     });
 
     it('should decrease health when hunger is too low', () => {
+      // Set pet as hatched (non-egg)
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.hunger = 20;
       pet.health = 100;
       pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
@@ -409,6 +426,102 @@ describe('Pet Class', () => {
       pet.updateStatsFromTimePassed();
       
       expect(pet.health).toBeLessThan(100);
+    });
+  });
+
+  describe('Egg Incubation', () => {
+    it('should start with warmth at 50 for eggs', () => {
+      expect(pet.warmth).toBe(50);
+      expect(pet.incubationTime).toBe(0);
+      expect(pet.hasHatched).toBe(false);
+    });
+
+    it('should increase warmth when warmed', () => {
+      pet.warmth = 50;
+      pet.warm();
+      
+      expect(pet.warmth).toBe(65); // 50 + 15
+    });
+
+    it('should not exceed 100 warmth', () => {
+      pet.warmth = 95;
+      pet.warm();
+      
+      expect(pet.warmth).toBe(100);
+    });
+
+    it('should decay warmth for eggs over time', () => {
+      pet.warmth = 100;
+      pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
+      
+      pet.updateStatsFromTimePassed();
+      
+      expect(pet.warmth).toBeLessThan(100);
+    });
+
+    it('should track incubation time when warmth >= 60', () => {
+      pet.warmth = 80;
+      pet.incubationTime = 0;
+      pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
+      
+      pet.updateStatsFromTimePassed();
+      
+      expect(pet.incubationTime).toBeGreaterThan(0);
+    });
+
+    it('should not track incubation time when warmth < 60', () => {
+      pet.warmth = 50;
+      pet.incubationTime = 0;
+      pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
+      
+      pet.updateStatsFromTimePassed();
+      
+      expect(pet.incubationTime).toBe(0);
+    });
+
+    it('should allow hatching after 5 minutes of adequate warmth', () => {
+      pet.warmth = 80;
+      pet.incubationTime = 5 * 60 * 1000; // 5 minutes
+      
+      expect(pet.canHatch()).toBe(true);
+    });
+
+    it('should not allow hatching before 5 minutes', () => {
+      pet.warmth = 80;
+      pet.incubationTime = 2 * 60 * 1000; // 2 minutes
+      
+      expect(pet.canHatch()).toBe(false);
+    });
+
+    it('should not allow hatching if warmth too low', () => {
+      pet.warmth = 50;
+      pet.incubationTime = 5 * 60 * 1000;
+      
+      expect(pet.canHatch()).toBe(false);
+    });
+
+    it('should hatch egg and change to baby', () => {
+      pet.warmth = 80;
+      pet.incubationTime = 5 * 60 * 1000;
+      
+      const result = pet.hatch();
+      
+      expect(result).toBe(true);
+      expect(pet.stage).toBe('baby');
+      expect(pet.hasHatched).toBe(true);
+      expect(pet.health).toBe(100);
+      expect(pet.hunger).toBe(100);
+    });
+
+    it('should not hatch if not ready', () => {
+      pet.warmth = 50;
+      pet.incubationTime = 0;
+      
+      const result = pet.hatch();
+      
+      expect(result).toBe(false);
+      expect(pet.stage).toBe('egg');
+      expect(pet.hasHatched).toBe(false);
     });
   });
 

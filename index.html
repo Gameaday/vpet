@@ -86,6 +86,17 @@
                     </div>
                 </div>
 
+                <!-- Egg-only stat -->
+                <div class="stat-bar egg-only" id="warmthStat" style="display: none;" data-tooltip="">
+                    <div class="stat-label">
+                        <span>🔥 Warmth</span>
+                        <span id="warmthValue">50</span>
+                    </div>
+                    <div class="progress-bar" id="warmthBarContainer">
+                        <div class="progress-fill warmth" id="warmthBar"></div>
+                    </div>
+                </div>
+
                 <div class="stat-info">
                     <div>Age: <span id="petAge">0</span></div>
                     <div>Level: <span id="petLevel">1</span></div>
@@ -93,8 +104,20 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="action-panel">
+            <!-- Egg Action Buttons (shown only for eggs) -->
+            <div class="action-panel egg-only" id="eggActionPanel" style="display: none;">
+                <button class="action-btn warm-btn" id="warmBtn">
+                    <span class="btn-icon">🔥</span>
+                    <span>Warm Egg</span>
+                </button>
+                <button class="action-btn hatch-btn" id="hatchBtn" disabled>
+                    <span class="btn-icon">🐣</span>
+                    <span>Hatch</span>
+                </button>
+            </div>
+
+            <!-- Action Buttons (hidden for eggs) -->
+            <div class="action-panel non-egg" id="normalActionPanel">
                 <button class="action-btn feed-btn" id="feedBtn">
                     <span class="btn-icon">🍖</span>
                     <span>Feed</span>

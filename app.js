@@ -90,6 +90,10 @@ function setupEventListeners() {
     document.getElementById('trainBtn').addEventListener('click', handleTrain);
     document.getElementById('cleanBtn').addEventListener('click', handleClean);
     
+    // Egg-specific buttons
+    document.getElementById('warmBtn').addEventListener('click', handleWarm);
+    document.getElementById('hatchBtn').addEventListener('click', handleHatch);
+    
     // Battle buttons
     document.getElementById('battleBtn').addEventListener('click', handleLocalBattle);
     document.getElementById('onlineBattleBtn').addEventListener('click', handleOnlineBattle);
@@ -334,38 +338,80 @@ function updateUI() {
         petAnimation.classList.add('sleeping');
     }
     
-    // Update stats using UI manager
-    uiManager.updateStat('health', pet.health);
-    uiManager.updateStat('hunger', pet.hunger);
-    uiManager.updateStat('happiness', pet.happiness);
-    uiManager.updateStat('energy', pet.energy);
-    uiManager.updateStat('cleanliness', pet.cleanliness);
+    // Handle egg-specific UI
+    const isEgg = pet.stage === 'egg' && !pet.hasHatched;
+    
+    // Show/hide egg-specific elements
+    document.getElementById('warmthStat').style.display = isEgg ? 'block' : 'none';
+    document.getElementById('eggActionPanel').style.display = isEgg ? 'flex' : 'none';
+    document.getElementById('normalActionPanel').style.display = isEgg ? 'none' : 'flex';
+    
+    // Hide normal stats for eggs
+    const normalStats = ['health', 'hunger', 'happiness', 'energy', 'cleanliness'];
+    normalStats.forEach(stat => {
+        const statBar = document.getElementById(`${stat}Value`).closest('.stat-bar');
+        if (statBar) {
+            statBar.style.display = isEgg ? 'none' : 'block';
+        }
+    });
+    
+    if (isEgg) {
+        // Update warmth stat
+        uiManager.updateStat('warmth', pet.warmth);
+        document.getElementById('warmthValue').textContent = Math.floor(pet.warmth);
+        
+        // Update hatch button state
+        const hatchBtn = document.getElementById('hatchBtn');
+        if (pet.canHatch()) {
+            hatchBtn.disabled = false;
+            hatchBtn.classList.add('ready-to-hatch');
+        } else {
+            hatchBtn.disabled = true;
+            hatchBtn.classList.remove('ready-to-hatch');
+        }
+    } else {
+        // Update stats using UI manager (for non-eggs)
+        uiManager.updateStat('health', pet.health);
+        uiManager.updateStat('hunger', pet.hunger);
+        uiManager.updateStat('happiness', pet.happiness);
+        uiManager.updateStat('energy', pet.energy);
+        uiManager.updateStat('cleanliness', pet.cleanliness);
+    }
     
     // Update info
-    document.getElementById('petAge').textContent = pet.getAgeDisplay();
+    document.getElementById('petAge').textContent = isEgg ? 'Egg' : (pet.getAgeDisplay ? pet.getAgeDisplay() : pet.age + ' days');
     document.getElementById('petLevel').textContent = Math.floor(pet.level);
     document.getElementById('petWins').textContent = pet.wins;
     
-    // Update sleep button text
-    const sleepBtn = document.getElementById('sleepBtn');
-    const sleepBtnText = sleepBtn.querySelector('span:last-child');
-    sleepBtnText.textContent = pet.isSleeping ? 'Wake' : 'Sleep';
+    // Update sleep button text (only for non-eggs)
+    if (!isEgg) {
+        const sleepBtn = document.getElementById('sleepBtn');
+        const sleepBtnText = sleepBtn.querySelector('span:last-child');
+        sleepBtnText.textContent = pet.isSleeping ? 'Wake' : 'Sleep';
+        
+        // Disable actions if sleeping or hibernating
+        const actionsDisabled = pet.isSleeping || isHibernating;
+        document.getElementById('feedBtn').disabled = actionsDisabled;
+        document.getElementById('playBtn').disabled = actionsDisabled;
+        document.getElementById('trainBtn').disabled = actionsDisabled;
+        document.getElementById('cleanBtn').disabled = actionsDisabled;
+        document.getElementById('battleBtn').disabled = actionsDisabled;
+        document.getElementById('sleepBtn').disabled = isHibernating;
+    }
     
-    // Disable actions if sleeping or hibernating
-    const actionsDisabled = pet.isSleeping || isHibernating;
-    document.getElementById('feedBtn').disabled = actionsDisabled;
-    document.getElementById('playBtn').disabled = actionsDisabled;
-    document.getElementById('trainBtn').disabled = actionsDisabled;
-    document.getElementById('cleanBtn').disabled = actionsDisabled;
-    document.getElementById('battleBtn').disabled = actionsDisabled;
-    document.getElementById('sleepBtn').disabled = isHibernating;
+    // Update evolution preview (hide for eggs)
+    const evolutionPreview = document.getElementById('evolutionPreview');
+    if (isEgg) {
+        evolutionPreview.style.display = 'none';
+    } else {
+        updateEvolutionPreview();
+    }
     
-    // Update evolution preview
-    updateEvolutionPreview();
-    
-    // Update mood indicator
-    const avgStats = (pet.health + pet.hunger + pet.happiness + pet.energy) / 4;
-    uiManager.updateMoodIndicator(avgStats);
+    // Update mood indicator (only for non-eggs)
+    if (!isEgg) {
+        const avgStats = (pet.health + pet.hunger + pet.happiness + pet.energy) / 4;
+        uiManager.updateMoodIndicator(avgStats);
+    }
     
     // Update stat tooltips
     updateStatTooltips();
@@ -468,6 +514,46 @@ function updateStatTooltips() {
 }
 
 // Update individual stat bar
+
+// Handle warm egg action
+function handleWarm() {
+    if (pet.warm()) {
+        vibrationManager.vibrate('medium');
+        soundManager.play('feed');
+        
+        // Show particle effects
+        const petSprite = document.getElementById('petSprite');
+        if (petSprite && particleEffects) {
+            const rect = petSprite.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            particleEffects.showHearts(x, y);
+        }
+        
+        updateUI();
+        uiManager.showSaveIndicator();
+    }
+}
+
+// Handle hatch egg action
+function handleHatch() {
+    if (pet.hatch()) {
+        vibrationManager.vibrate('heavy');
+        soundManager.play('evolution');
+        
+        // Show evolution particle effects
+        const petSprite = document.getElementById('petSprite');
+        if (petSprite && particleEffects) {
+            const rect = petSprite.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            particleEffects.showEvolution(x, y);
+        }
+        
+        updateUI();
+        uiManager.showSaveIndicator();
+    }
+}
 
 // Handle feed action
 function handleFeed() {
