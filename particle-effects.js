@@ -9,6 +9,7 @@ class ParticleEffects {
         this.config = config;
         this.enabled = true;
         this.container = null;
+        this.FRAME_DELTA = 0.016; // Time delta for 60 FPS (1/60 second)
         this.init();
     }
 
@@ -115,9 +116,9 @@ class ParticleEffects {
             // Apply gravity
             currentVy += options.gravity;
             
-            // Update position
-            const currentX = parseFloat(particle.style.left) + vx * 0.016;
-            const currentY = parseFloat(particle.style.top) + currentVy * 0.016;
+            // Update position using frame delta for consistent 60 FPS animation
+            const currentX = parseFloat(particle.style.left) + vx * this.FRAME_DELTA;
+            const currentY = parseFloat(particle.style.top) + currentVy * this.FRAME_DELTA;
             
             particle.style.left = `${currentX}px`;
             particle.style.top = `${currentY}px`;
@@ -244,8 +245,8 @@ class ParticleEffects {
      * Show evolution effect
      */
     showEvolution(x, y) {
-        // Multiple waves of sparkles
-        setTimeout(() => this.showSparkles(x, y), 0);
+        // Multiple waves of sparkles for dramatic effect
+        this.showSparkles(x, y);
         setTimeout(() => this.showSparkles(x, y), 200);
         setTimeout(() => this.showSparkles(x, y), 400);
         setTimeout(() => this.showStarBurst(x, y), 600);
