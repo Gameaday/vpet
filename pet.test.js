@@ -369,6 +369,37 @@ describe('Pet Class', () => {
       expect(pet.energy).toBeGreaterThan(50);
     });
 
+    it('should reduce decay rate when sleeping', () => {
+      pet.isSleeping = true;
+      pet.hunger = 100;
+      pet.happiness = 100;
+      pet.cleanliness = 100;
+      pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
+      
+      pet.updateStatsFromTimePassed();
+      
+      // When sleeping, decay is 50% of normal rate
+      // Normal hunger decay: 0.5/min, sleeping: 0.25/min
+      expect(pet.hunger).toBeGreaterThan(99.5); // Should be ~99.75
+      expect(pet.happiness).toBeGreaterThan(99.8); // Should be ~99.85
+      expect(pet.cleanliness).toBeGreaterThan(99.7); // Should be ~99.8
+    });
+
+    it('should have diminishing decay for long absences', () => {
+      pet.hunger = 100;
+      pet.happiness = 100;
+      pet.energy = 100;
+      pet.lastUpdateTime = Date.now() - (600 * 60 * 1000); // 10 hours ago
+      
+      pet.updateStatsFromTimePassed();
+      
+      // After 10 hours with diminishing decay, stats should not hit 0
+      // With diminishing decay (multiplier ~0.2), hunger loss = 600 * 0.5 * 0.2 = 60
+      expect(pet.hunger).toBeGreaterThan(30); // Should be around 40
+      expect(pet.happiness).toBeGreaterThan(0); // Should be around 64
+      expect(pet.energy).toBeGreaterThan(0); // Should be around 76
+    });
+
     it('should decrease health when hunger is too low', () => {
       pet.hunger = 20;
       pet.health = 100;
