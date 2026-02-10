@@ -108,7 +108,7 @@ jobs:
           echo "🔗 **Live URL**: Will be available after deployment" >> $GITHUB_STEP_SUMMARY
 
       - name: 📤 Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           retention-days: 30
 
