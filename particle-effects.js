@@ -2,6 +2,7 @@
  * Particle Effects Manager
  * Creates visual particle effects for various pet interactions
  */
+/* global requestAnimationFrame */
 
 class ParticleEffects {
     constructor(config = {}) {

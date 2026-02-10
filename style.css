@@ -113,6 +113,52 @@ main {
     border-radius: 50%;
     animation: bounce 2s infinite;
     box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+    position: relative;
+}
+
+/* Pet eyes for more life-like appearance */
+.pet-animation::before,
+.pet-animation::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    top: 40%;
+    animation: blink 4s infinite;
+}
+
+.pet-animation::before {
+    left: 35%;
+}
+
+.pet-animation::after {
+    right: 35%;
+}
+
+/* Hide eyes for egg stage */
+.pet-animation.egg::before,
+.pet-animation.egg::after {
+    display: none;
+}
+
+/* Larger eyes for adult stage */
+.pet-animation.adult::before,
+.pet-animation.adult::after {
+    width: 10px;
+    height: 10px;
+}
+
+@keyframes blink {
+    0%, 48%, 52%, 100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scaleY(0.1);
+        opacity: 0.8;
+    }
 }
 
 /* Different pet stages */
@@ -184,6 +230,20 @@ main {
     0%, 100% { transform: translateX(0) scale(1); }
     25% { transform: translateX(-2px) scale(0.98); }
     75% { transform: translateX(2px) scale(0.98); }
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+    75% { transform: rotate(-3deg); }
+}
+
+@keyframes wave {
+    0%, 100% { transform: translateY(0) scale(1); }
+    25% { transform: translateY(-10px) scale(1.05); }
+    50% { transform: translateY(-5px) scale(0.95); }
+    75% { transform: translateY(-15px) scale(1.05); }
 }
 
 .pet-name {
