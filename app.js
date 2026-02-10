@@ -360,6 +360,38 @@ function updateUI() {
         uiManager.updateStat('warmth', pet.warmth);
         document.getElementById('warmthValue').textContent = Math.floor(pet.warmth);
         
+        // Add warmth-based visual classes to egg
+        petAnimation.classList.remove('warm', 'very-warm', 'hot');
+        if (pet.warmth >= 80) {
+            petAnimation.classList.add('hot');
+        } else if (pet.warmth >= 60) {
+            petAnimation.classList.add('very-warm');
+        } else if (pet.warmth >= 40) {
+            petAnimation.classList.add('warm');
+        }
+        
+        // Update warmth status display
+        const warmthStatus = document.getElementById('warmthStatus');
+        if (warmthStatus) {
+            warmthStatus.className = 'warmth-status';
+            if (pet.warmth >= 90) {
+                warmthStatus.textContent = '🔥 Very Hot - Perfect for hatching!';
+                warmthStatus.classList.add('very-hot');
+            } else if (pet.warmth >= 70) {
+                warmthStatus.textContent = '🌡️ Hot - Good warmth level';
+                warmthStatus.classList.add('hot');
+            } else if (pet.warmth >= 50) {
+                warmthStatus.textContent = '☀️ Warm - Keep warming';
+                warmthStatus.classList.add('warm');
+            } else if (pet.warmth >= 30) {
+                warmthStatus.textContent = '🌤️ Cool - Needs more warmth';
+                warmthStatus.classList.add('cool');
+            } else {
+                warmthStatus.textContent = '❄️ Cold - Warm up quickly!';
+                warmthStatus.classList.add('cold');
+            }
+        }
+        
         // Update hatch button state
         const hatchBtn = document.getElementById('hatchBtn');
         if (pet.canHatch()) {
@@ -520,6 +552,15 @@ function handleWarm() {
     if (pet.warm()) {
         vibrationManager.vibrate('medium');
         soundManager.play('feed');
+        
+        // Add warming animation to egg
+        const petAnimation = document.querySelector('.pet-animation');
+        if (petAnimation) {
+            petAnimation.classList.add('warming-up');
+            setTimeout(() => {
+                petAnimation.classList.remove('warming-up');
+            }, 800);
+        }
         
         // Show particle effects
         const petSprite = document.getElementById('petSprite');
