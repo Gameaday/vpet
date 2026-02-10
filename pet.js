@@ -172,11 +172,12 @@ class Pet {
         };
         
         // Base decay rates per minute
-        const hungerDecay = 0.5;
-        const happinessDecay = 0.3;
-        const energyDecay = 0.2;
-        const cleanlinessDecay = 0.4;
-        const disciplineDecay = 0.1;
+        // Increased rates to make stat changes more visible to users
+        const hungerDecay = 1.5;    // ~1.5 points per minute (was 0.5)
+        const happinessDecay = 1.0;  // ~1.0 point per minute (was 0.3)
+        const energyDecay = 0.8;     // ~0.8 points per minute (was 0.2)
+        const cleanlinessDecay = 1.2; // ~1.2 points per minute (was 0.4)
+        const disciplineDecay = 0.3;  // ~0.3 points per minute (was 0.1)
         
         // Calculate diminishing decay factor for long absences
         // This makes the game more forgiving when users are away for extended periods
@@ -277,6 +278,28 @@ class Pet {
         }
         
         this.save();
+    }
+
+    // Get a user-friendly age display
+    getAgeDisplay() {
+        const totalMinutes = (Date.now() - this.birthTime) / (1000 * 60);
+        const days = Math.floor(totalMinutes / (60 * 24));
+        const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+        const minutes = Math.floor(totalMinutes % 60);
+        
+        // For pets less than 1 day old, show hours and minutes
+        if (days === 0) {
+            if (hours === 0) {
+                return `${minutes}m`;
+            }
+            return `${hours}h ${minutes}m`;
+        }
+        
+        // For older pets, show days and hours
+        if (hours > 0) {
+            return `${days}d ${hours}h`;
+        }
+        return `${days}d`;
     }
 
     // Get evolution progress information

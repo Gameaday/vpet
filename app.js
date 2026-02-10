@@ -342,7 +342,7 @@ function updateUI() {
     uiManager.updateStat('cleanliness', pet.cleanliness);
     
     // Update info
-    document.getElementById('petAge').textContent = pet.age;
+    document.getElementById('petAge').textContent = pet.getAgeDisplay();
     document.getElementById('petLevel').textContent = Math.floor(pet.level);
     document.getElementById('petWins').textContent = pet.wins;
     
