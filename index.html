@@ -86,15 +86,39 @@
                     </div>
                 </div>
 
+                <!-- Egg-only stat -->
+                <div class="stat-bar egg-only" id="warmthStat" style="display: none;" data-tooltip="">
+                    <div class="stat-label">
+                        <span>🔥 Warmth</span>
+                        <span id="warmthValue">50</span>
+                    </div>
+                    <div class="progress-bar" id="warmthBarContainer">
+                        <div class="progress-fill warmth" id="warmthBar"></div>
+                    </div>
+                    <div class="warmth-status" id="warmthStatus"></div>
+                </div>
+
                 <div class="stat-info">
-                    <div>Age: <span id="petAge">0</span> days</div>
+                    <div>Age: <span id="petAge">0</span></div>
                     <div>Level: <span id="petLevel">1</span></div>
                     <div>Wins: <span id="petWins">0</span></div>
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="action-panel">
+            <!-- Egg Action Buttons (shown only for eggs) -->
+            <div class="action-panel egg-only" id="eggActionPanel" style="display: none;">
+                <button class="action-btn warm-btn" id="warmBtn">
+                    <span class="btn-icon">🔥</span>
+                    <span>Warm Egg</span>
+                </button>
+                <button class="action-btn hatch-btn" id="hatchBtn" disabled>
+                    <span class="btn-icon">🐣</span>
+                    <span>Hatch</span>
+                </button>
+            </div>
+
+            <!-- Action Buttons (hidden for eggs) -->
+            <div class="action-panel non-egg" id="normalActionPanel">
                 <button class="action-btn feed-btn" id="feedBtn">
                     <span class="btn-icon">🍖</span>
                     <span>Feed</span>
@@ -286,20 +310,22 @@
                     <h3>📊 Stats Guide</h3>
                     <ul>
                         <li><strong>❤️ Health</strong> - Keep hunger high to maintain health</li>
-                        <li><strong>🍔 Hunger</strong> - Decreases over time (~0.5/min)</li>
-                        <li><strong>😊 Happiness</strong> - Decreases over time (~0.3/min)</li>
-                        <li><strong>⚡ Energy</strong> - Used by activities, restored by sleep</li>
+                        <li><strong>🍔 Hunger</strong> - Decreases over time (~1.5/min)</li>
+                        <li><strong>😊 Happiness</strong> - Decreases over time (~1.0/min)</li>
+                        <li><strong>⚡ Energy</strong> - Decreases over time (~0.8/min), restored by sleep</li>
+                        <li><strong>🧹 Cleanliness</strong> - Decreases over time (~1.2/min)</li>
                     </ul>
                     <p><strong>Tip:</strong> Stat bars glow red when critical (&lt;30%), yellow when low (&lt;50%), and green when excellent (≥90%)</p>
+                    <p><strong>Time:</strong> All time is in real-world time. Your pet ages in real-time even when you're away!</p>
                 </div>
                 
                 <div class="help-section">
                     <h3>🌱 Evolution</h3>
-                    <p>Your pet evolves through 5 stages based on age:</p>
+                    <p>Your pet evolves through 5 stages based on age (real-time):</p>
                     <ul>
-                        <li>🥚 Egg → 👶 Baby → 🧒 Child → 🧑 Teen → 👨 Adult</li>
+                        <li>🥚 Egg (0-15min) → 👶 Baby (15min-1.0hr) → 🧒 Child (1.0-2.4hr) → 🧑 Teen (2.4-5.0hr) → 👨 Adult (5hr+)</li>
                     </ul>
-                    <p>Check the evolution preview to see time until next stage!</p>
+                    <p>Check the evolution preview to see exact time until next stage!</p>
                 </div>
                 
                 <div class="help-section">

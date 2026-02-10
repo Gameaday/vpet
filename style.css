@@ -166,6 +166,63 @@ main {
     background: linear-gradient(135deg, #f3f4f6 0%, #d1d5db 100%);
     border-radius: 50% 50% 45% 45%;
     box-shadow: 0 5px 20px rgba(209, 213, 219, 0.5);
+    position: relative;
+}
+
+/* Warmth visual indicator for eggs */
+.pet-animation.egg.warm {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    box-shadow: 0 5px 30px rgba(251, 191, 36, 0.6);
+    animation: egg-warm-glow 2s ease-in-out infinite;
+}
+
+.pet-animation.egg.very-warm {
+    background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+    box-shadow: 0 5px 40px rgba(249, 115, 22, 0.7);
+    animation: egg-warm-glow 1.5s ease-in-out infinite;
+}
+
+.pet-animation.egg.hot {
+    background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+    box-shadow: 0 5px 50px rgba(239, 68, 68, 0.8);
+    animation: egg-warm-glow 1s ease-in-out infinite;
+}
+
+@keyframes egg-warm-glow {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.1);
+    }
+}
+
+/* Warming animation when warm button is clicked */
+.pet-animation.warming-up {
+    animation: warming-pulse 0.8s ease-out;
+}
+
+@keyframes warming-pulse {
+    0% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    25% {
+        transform: scale(1.1);
+        filter: brightness(1.3) hue-rotate(-15deg);
+    }
+    50% {
+        transform: scale(1.05);
+        filter: brightness(1.2) hue-rotate(-10deg);
+    }
+    75% {
+        transform: scale(1.08);
+        filter: brightness(1.25) hue-rotate(-5deg);
+    }
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
 }
 
 .pet-animation.baby {
@@ -414,6 +471,89 @@ main {
     background: linear-gradient(90deg, #06b6d4 0%, #0891b2 100%);
 }
 
+.progress-fill.warmth {
+    background: linear-gradient(90deg, #f97316 0%, #ea580c 100%);
+    position: relative;
+    overflow: hidden;
+    animation: warmth-glow 2s ease-in-out infinite;
+}
+
+.progress-fill.warmth::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: warmth-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes warmth-glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(249, 115, 22, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(249, 115, 22, 0.8);
+    }
+}
+
+@keyframes warmth-shimmer {
+    0% {
+        left: -100%;
+    }
+    50%, 100% {
+        left: 100%;
+    }
+}
+
+.warmth-status {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 0.85em;
+    color: #aaa;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.warmth-status.cold {
+    color: #93c5fd;
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.warmth-status.cool {
+    color: #bfdbfe;
+    background: rgba(96, 165, 250, 0.2);
+}
+
+.warmth-status.warm {
+    color: #fde68a;
+    background: rgba(251, 191, 36, 0.2);
+}
+
+.warmth-status.hot {
+    color: #fed7aa;
+    background: rgba(249, 115, 22, 0.2);
+}
+
+.warmth-status.very-hot {
+    color: #fecaca;
+    background: rgba(239, 68, 68, 0.2);
+    animation: blink-status 1.5s ease-in-out infinite;
+}
+
+@keyframes blink-status {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
 .stat-info {
     display: flex;
     justify-content: space-around;
@@ -496,6 +636,68 @@ main {
 
 .clean-btn {
     border-color: #06b6d4;
+}
+
+.warm-btn {
+    border-color: #f97316;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.warm-btn:hover {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(249, 115, 22, 0.4);
+}
+
+.warm-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.warm-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.warm-btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.hatch-btn {
+    border-color: #84cc16;
+    transition: all 0.3s ease;
+}
+
+.hatch-btn:not(:disabled):hover {
+    background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(132, 204, 22, 0.4);
+}
+
+.hatch-btn.ready-to-hatch {
+    animation: pulse 1.5s ease-in-out infinite;
+    background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(132, 204, 22, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(132, 204, 22, 0);
+    }
 }
 
 /* Battle Panel */

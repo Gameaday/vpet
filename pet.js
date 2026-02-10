@@ -26,6 +26,11 @@ class Pet {
         this.discipline = 100; // New stat for training effectiveness
         this.cleanliness = 100; // New stat for hygiene
         
+        // Egg incubation system
+        this.warmth = 50; // Warmth stat for eggs (0-100)
+        this.incubationTime = 0; // Time in milliseconds with proper warmth
+        this.hasHatched = false; // Track if egg has hatched
+        
         // Load saved pet or create new one
         this.load();
     }
@@ -38,8 +43,10 @@ class Pet {
         this.energy = Math.max(0, Math.min(100, this.energy));
         this.discipline = Math.max(0, Math.min(100, this.discipline));
         this.cleanliness = Math.max(0, Math.min(100, this.cleanliness));
+        this.warmth = Math.max(0, Math.min(100, this.warmth));
         this.level = Math.max(1, this.level);
         this.wins = Math.max(0, this.wins);
+        this.incubationTime = Math.max(0, this.incubationTime);
         
         // Validate stage
         const validStages = ['egg', 'baby', 'child', 'teen', 'adult'];
@@ -73,7 +80,10 @@ class Pet {
                 sicknessDuration: this.sicknessDuration || 0,
                 personalityTraits: this.personalityTraits || {brave: 50, friendly: 50, energetic: 50, disciplined: 50},
                 discipline: this.discipline || 100,
-                cleanliness: this.cleanliness || 100
+                cleanliness: this.cleanliness || 100,
+                warmth: this.warmth || 50,
+                incubationTime: this.incubationTime || 0,
+                hasHatched: this.hasHatched || false
             };
             
             // Check if localStorage is available and has space
@@ -140,6 +150,9 @@ class Pet {
                     this.personalityTraits = petData.personalityTraits || {brave: 50, friendly: 50, energetic: 50, disciplined: 50};
                     this.discipline = Number(petData.discipline) || 100;
                     this.cleanliness = Number(petData.cleanliness) || 100;
+                    this.warmth = Number(petData.warmth) || 50;
+                    this.incubationTime = Number(petData.incubationTime) || 0;
+                    this.hasHatched = Boolean(petData.hasHatched);
                     
                     // Validate all stats are in proper ranges
                     this.validateStats();
@@ -171,7 +184,23 @@ class Pet {
             energy: this.energy
         };
         
-        // Base decay rates per minute
+        // Eggs only decay warmth, not other stats
+        if (this.stage === 'egg' && !this.hasHatched) {
+            // Warmth decays slowly for eggs (0.3 per minute)
+            const warmthDecay = 0.3;
+            this.warmth = Math.max(0, this.warmth - (minutesPassed * warmthDecay));
+            
+            // Track incubation time if warmth is adequate (>= 60)
+            if (this.warmth >= 60) {
+                this.incubationTime += timePassed;
+            }
+            
+            this.lastUpdateTime = now;
+            this.save();
+            return null;
+        }
+        
+        // Base decay rates per minute (for non-egg pets)
         const hungerDecay = 0.5;
         const happinessDecay = 0.3;
         const energyDecay = 0.2;
@@ -308,6 +337,71 @@ class Pet {
             progress: Math.min(100, Math.max(0, progress)),
             timeRemaining: Math.max(0, timeRemaining)
         };
+    }
+
+    // Warm the egg (only for egg stage)
+    warm() {
+        if (this.stage !== 'egg' || this.hasHatched) {
+            showNotification('This action is only for eggs!', 'warning');
+            return false;
+        }
+        
+        // Increase warmth by 15 points
+        this.warmth = Math.min(100, this.warmth + 15);
+        
+        // Check if egg can hatch (requires 5 minutes of adequate warmth)
+        const requiredIncubationTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+        
+        if (this.incubationTime >= requiredIncubationTime && this.warmth >= 60) {
+            showNotification('🔥 Your egg is warm and ready to hatch!', 'success');
+        } else {
+            showNotification('🔥 You warmed the egg!', 'success');
+        }
+        
+        this.save();
+        return true;
+    }
+
+    // Check if egg is ready to hatch
+    canHatch() {
+        const requiredIncubationTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+        return this.stage === 'egg' && 
+               !this.hasHatched && 
+               this.warmth >= 60 && 
+               this.incubationTime >= requiredIncubationTime;
+    }
+
+    // Hatch the egg
+    hatch() {
+        if (!this.canHatch()) {
+            if (this.stage !== 'egg') {
+                showNotification('Your pet has already hatched!', 'info');
+            } else if (this.warmth < 60) {
+                showNotification('🌡️ Keep the egg warm (≥60) to hatch!', 'warning');
+            } else {
+                const timeRemaining = Math.ceil((5 * 60 * 1000 - this.incubationTime) / 1000 / 60);
+                showNotification(`⏱️ Keep warmth high for ${timeRemaining} more minutes!`, 'info');
+            }
+            return false;
+        }
+        
+        // Hatch the egg!
+        this.hasHatched = true;
+        this.stage = 'baby';
+        this.birthTime = Date.now(); // Reset birth time for accurate age tracking
+        this.age = 0;
+        
+        // Initialize stats for the hatched pet
+        this.health = 100;
+        this.hunger = 100;
+        this.happiness = 100;
+        this.energy = 100;
+        this.cleanliness = 100;
+        this.discipline = 100;
+        
+        showNotification('🎉 Your egg hatched into a baby pet!', 'success');
+        this.save();
+        return true;
     }
 
     // Feed the pet

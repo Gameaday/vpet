@@ -250,6 +250,9 @@ describe('Pet Class', () => {
 
   describe('Illness System', () => {
     it('should get sick when stats are very low', () => {
+      // Set pet as hatched (non-egg)
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.health = 15;
       pet.hunger = 15;
       pet.happiness = 15;
@@ -343,6 +346,9 @@ describe('Pet Class', () => {
 
   describe('Stats Decay', () => {
     it('should decay stats over time', () => {
+      // Set pet as hatched (non-egg) for stat decay to work
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.hunger = 100;
       pet.happiness = 100;
       pet.energy = 100;
@@ -360,6 +366,9 @@ describe('Pet Class', () => {
     });
 
     it('should restore energy when sleeping', () => {
+      // Set pet as hatched (non-egg)
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.isSleeping = true;
       pet.energy = 50;
       pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
@@ -370,6 +379,9 @@ describe('Pet Class', () => {
     });
 
     it('should reduce decay rate when sleeping', () => {
+      // Set pet as hatched (non-egg)
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.isSleeping = true;
       pet.hunger = 100;
       pet.happiness = 100;
@@ -386,6 +398,9 @@ describe('Pet Class', () => {
     });
 
     it('should have diminishing decay for long absences', () => {
+      // Set pet as hatched (non-egg)
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.hunger = 100;
       pet.happiness = 100;
       pet.energy = 100;
@@ -401,6 +416,9 @@ describe('Pet Class', () => {
     });
 
     it('should decrease health when hunger is too low', () => {
+      // Set pet as hatched (non-egg)
+      pet.stage = 'baby';
+      pet.hasHatched = true;
       pet.hunger = 20;
       pet.health = 100;
       pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
@@ -408,6 +426,102 @@ describe('Pet Class', () => {
       pet.updateStatsFromTimePassed();
       
       expect(pet.health).toBeLessThan(100);
+    });
+  });
+
+  describe('Egg Incubation', () => {
+    it('should start with warmth at 50 for eggs', () => {
+      expect(pet.warmth).toBe(50);
+      expect(pet.incubationTime).toBe(0);
+      expect(pet.hasHatched).toBe(false);
+    });
+
+    it('should increase warmth when warmed', () => {
+      pet.warmth = 50;
+      pet.warm();
+      
+      expect(pet.warmth).toBe(65); // 50 + 15
+    });
+
+    it('should not exceed 100 warmth', () => {
+      pet.warmth = 95;
+      pet.warm();
+      
+      expect(pet.warmth).toBe(100);
+    });
+
+    it('should decay warmth for eggs over time', () => {
+      pet.warmth = 100;
+      pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
+      
+      pet.updateStatsFromTimePassed();
+      
+      expect(pet.warmth).toBeLessThan(100);
+    });
+
+    it('should track incubation time when warmth >= 60', () => {
+      pet.warmth = 80;
+      pet.incubationTime = 0;
+      pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
+      
+      pet.updateStatsFromTimePassed();
+      
+      expect(pet.incubationTime).toBeGreaterThan(0);
+    });
+
+    it('should not track incubation time when warmth < 60', () => {
+      pet.warmth = 50;
+      pet.incubationTime = 0;
+      pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
+      
+      pet.updateStatsFromTimePassed();
+      
+      expect(pet.incubationTime).toBe(0);
+    });
+
+    it('should allow hatching after 5 minutes of adequate warmth', () => {
+      pet.warmth = 80;
+      pet.incubationTime = 5 * 60 * 1000; // 5 minutes
+      
+      expect(pet.canHatch()).toBe(true);
+    });
+
+    it('should not allow hatching before 5 minutes', () => {
+      pet.warmth = 80;
+      pet.incubationTime = 2 * 60 * 1000; // 2 minutes
+      
+      expect(pet.canHatch()).toBe(false);
+    });
+
+    it('should not allow hatching if warmth too low', () => {
+      pet.warmth = 50;
+      pet.incubationTime = 5 * 60 * 1000;
+      
+      expect(pet.canHatch()).toBe(false);
+    });
+
+    it('should hatch egg and change to baby', () => {
+      pet.warmth = 80;
+      pet.incubationTime = 5 * 60 * 1000;
+      
+      const result = pet.hatch();
+      
+      expect(result).toBe(true);
+      expect(pet.stage).toBe('baby');
+      expect(pet.hasHatched).toBe(true);
+      expect(pet.health).toBe(100);
+      expect(pet.hunger).toBe(100);
+    });
+
+    it('should not hatch if not ready', () => {
+      pet.warmth = 50;
+      pet.incubationTime = 0;
+      
+      const result = pet.hatch();
+      
+      expect(result).toBe(false);
+      expect(pet.stage).toBe('egg');
+      expect(pet.hasHatched).toBe(false);
     });
   });
 
