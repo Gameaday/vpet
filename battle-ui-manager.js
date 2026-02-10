@@ -51,7 +51,7 @@ class BattleUIManager {
     
     /**
      * Close battle modal
-     * @param {Function} onClose - Optional callback to execute on close
+     * @param {Function} onClose - Optional callback to execute on close (for backward compatibility)
      */
     closeModal(onClose) {
         const modal = document.getElementById('battleModal');
@@ -60,14 +60,16 @@ class BattleUIManager {
             modal.classList.remove('active');
         }
         
-        // Execute callback if battle ended and callback provided
-        if (this.currentBattle && !this.currentBattle.isActive && onClose) {
-            onClose(this.currentBattle);
-        }
-        
-        // Execute registered onBattleEnd callback
-        if (this.currentBattle && !this.currentBattle.isActive && this.onBattleEnd) {
-            this.onBattleEnd(this.currentBattle);
+        // Execute callbacks if battle ended
+        // onClose is for inline callbacks (backward compatibility)
+        // onBattleEnd is for registered callbacks (preferred for reusable logic)
+        if (this.currentBattle && !this.currentBattle.isActive) {
+            if (onClose) {
+                onClose(this.currentBattle);
+            }
+            if (this.onBattleEnd && this.onBattleEnd !== onClose) {
+                this.onBattleEnd(this.currentBattle);
+            }
         }
         
         this.currentBattle = null;
@@ -75,10 +77,10 @@ class BattleUIManager {
     
     /**
      * Update battle UI with current state
-     * @param {object} soundManager - Sound manager instance for audio
-     * @param {object} milestoneManager - Milestone manager for achievements
-     * @param {object} uiManager - UI manager for showing achievements
-     * @param {object} pet - Player's pet for milestone checking
+     * @param {object} soundManager - Sound manager instance for audio (optional)
+     * @param {object} milestoneManager - Milestone manager for achievements (optional)
+     * @param {object} uiManager - UI manager for showing achievements (optional)
+     * @param {object} pet - Player's pet for milestone checking (optional)
      */
     update(soundManager, milestoneManager, uiManager, pet) {
         if (!this.currentBattle) return;
@@ -90,7 +92,7 @@ class BattleUIManager {
     
     /**
      * Update health bars with damage effects and animations
-     * @param {object} soundManager - Sound manager for audio
+     * @param {object} soundManager - Sound manager for audio (optional)
      * @private
      */
     _updateHealthBarsWithEffects(soundManager) {
@@ -170,10 +172,10 @@ class BattleUIManager {
     
     /**
      * Check if battle has ended and handle victory/defeat
-     * @param {object} soundManager - Sound manager for audio
-     * @param {object} milestoneManager - Milestone manager for achievements
-     * @param {object} uiManager - UI manager for showing achievements
-     * @param {object} pet - Player's pet for milestone checking
+     * @param {object} soundManager - Sound manager for audio (optional)
+     * @param {object} milestoneManager - Milestone manager for achievements (optional)
+     * @param {object} uiManager - UI manager for showing achievements (optional)
+     * @param {object} pet - Player's pet for milestone checking (optional)
      * @private
      */
     _checkBattleEnd(soundManager, milestoneManager, uiManager, pet) {
@@ -235,9 +237,10 @@ class BattleUIManager {
      * @param {boolean} isCrit - Whether it's a critical hit
      */
     showDamageNumber(damage, isPlayer, isCrit = false) {
+        // Try primary selectors first, then fallback selectors
         const container = isPlayer ? 
-            document.querySelector('.battle-your-pet') || document.querySelector('.battle-pet:first-child') : 
-            document.querySelector('.battle-opponent-pet') || document.querySelector('.battle-pet:last-child');
+            (document.querySelector('.battle-your-pet') || document.querySelector('.battle-pet:first-child')) : 
+            (document.querySelector('.battle-opponent-pet') || document.querySelector('.battle-pet:last-child'));
         
         if (!container) return;
         
@@ -247,7 +250,10 @@ class BattleUIManager {
         if (!isPlayer) damageNum.classList.add('opponent-damage');
         damageNum.textContent = `-${damage}`;
         
-        container.style.position = 'relative';
+        // Ensure container is positioned for absolute positioning of damage numbers
+        if (window.getComputedStyle(container).position === 'static') {
+            container.style.position = 'relative';
+        }
         container.appendChild(damageNum);
         
         // Remove after animation
