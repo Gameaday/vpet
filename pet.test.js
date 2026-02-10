@@ -174,11 +174,22 @@ describe('Pet Class', () => {
     it('should increase discipline stat', () => {
       pet.energy = 50;
       pet.hunger = 50;
+      pet.discipline = 50; // Start with a non-maxed value
       const initialDiscipline = pet.discipline;
       
       pet.train();
       
-      expect(pet.discipline).toBeGreaterThanOrEqual(initialDiscipline);
+      expect(pet.discipline).toBeGreaterThan(initialDiscipline);
+    });
+
+    it('should cap discipline at 100', () => {
+      pet.energy = 50;
+      pet.hunger = 50;
+      pet.discipline = 98;
+      
+      pet.train();
+      
+      expect(pet.discipline).toBeLessThanOrEqual(100);
     });
   });
 

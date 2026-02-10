@@ -362,6 +362,7 @@ class Pet {
         }
         
         this.level += 0.1;
+        this.discipline = Math.min(100, this.discipline + 5);
         this.energy = Math.max(0, this.energy - 25);
         this.hunger = Math.max(0, this.hunger - 20);
         this.happiness = Math.max(0, this.happiness - 5);
