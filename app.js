@@ -1,5 +1,5 @@
 // Main application logic - Refactored with Modular Architecture
-/* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager, SocialFeatures, AppConfig, BackupManager, HibernationManager */
+/* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager, SocialFeatures, AppConfig, BackupManager, HibernationManager, ParticleEffects */
 
 let pet = null;
 let currentBattle = null;
@@ -16,6 +16,7 @@ let uiManager = null;
 let battleUIManager = null;
 let milestoneManager = null;
 let socialFeatures = null;
+let particleEffects = null;
 
 // Theme management
 let currentTheme = localStorage.getItem('theme') || 'dark';
@@ -29,6 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
     battleUIManager = new BattleUIManager(AppConfig);
     milestoneManager = new MilestoneManager(AppConfig);
     socialFeatures = new SocialFeatures();
+    particleEffects = new ParticleEffects(AppConfig);
+    
+    // Make particleEffects globally accessible for pet.js
+    window.particleEffects = particleEffects;
     
     // Apply saved theme
     uiManager.applyTheme(currentTheme);
@@ -476,6 +481,17 @@ function handleFeed() {
         vibrationManager.vibrate('medium');
         soundManager.play('feed');
         milestoneManager.check('feed', pet, uiManager.showAchievement.bind(uiManager));
+        
+        // Show particle effects
+        const petSprite = document.getElementById('petSprite');
+        if (petSprite && particleEffects) {
+            const rect = petSprite.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            particleEffects.showFood(x, y);
+            setTimeout(() => particleEffects.showHearts(x, y), 300);
+        }
+        
         updateUI();
         uiManager.showSaveIndicator();
     }
@@ -494,6 +510,16 @@ function handlePlay() {
         pet.updatePersonality('play');
         soundManager.play('play');
         milestoneManager.check('play', pet, uiManager.showAchievement.bind(uiManager));
+        
+        // Show particle effects
+        const petSprite = document.getElementById('petSprite');
+        if (petSprite && particleEffects) {
+            const rect = petSprite.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            particleEffects.showPlay(x, y);
+        }
+        
         updateUI();
         uiManager.showSaveIndicator();
     }
@@ -510,6 +536,16 @@ function handleSleep() {
     vibrationManager.vibrate('light');
     soundManager.play('sleep');
     pet.sleep();
+    
+    // Show particle effects
+    const petSprite = document.getElementById('petSprite');
+    if (petSprite && particleEffects) {
+        const rect = petSprite.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        particleEffects.showSleep(x, y);
+    }
+    
     updateUI();
     uiManager.showSaveIndicator();
 }
@@ -529,11 +565,28 @@ function handleTrain() {
         soundManager.play('train');
         milestoneManager.check('train', pet, uiManager.showAchievement.bind(uiManager));
         
+        // Show particle effects
+        const petSprite = document.getElementById('petSprite');
+        if (petSprite && particleEffects) {
+            const rect = petSprite.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            particleEffects.showTraining(x, y);
+        }
+        
         // Check for level up
         const newLevel = Math.floor(pet.level);
         if (newLevel > prevLevel) {
             vibrationManager.vibrate('success');
             milestoneManager.check('level', pet, uiManager.showAchievement.bind(uiManager));
+            
+            // Show star burst for level up
+            if (petSprite && particleEffects) {
+                const rect = petSprite.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                setTimeout(() => particleEffects.showStarBurst(x, y), 500);
+            }
         }
         
         updateUI();
@@ -553,6 +606,16 @@ function handleClean() {
         vibrationManager.vibrate('medium');
         soundManager.play('play'); // Play success sound effect for cleaning action
         milestoneManager.check('clean', pet, uiManager.showAchievement.bind(uiManager));
+        
+        // Show particle effects (sparkles for cleaning)
+        const petSprite = document.getElementById('petSprite');
+        if (petSprite && particleEffects) {
+            const rect = petSprite.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            particleEffects.showSparkles(x, y);
+        }
+        
         updateUI();
         uiManager.showSaveIndicator();
     }
