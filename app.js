@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     soundManager = new SoundManager(AppConfig);
     vibrationManager = new VibrationManager(AppConfig);
     uiManager = new UIManager(AppConfig);
-    battleUIManager = new BattleUIManager();
+    battleUIManager = new BattleUIManager(AppConfig);
     milestoneManager = new MilestoneManager(AppConfig);
     socialFeatures = new SocialFeatures();
     
@@ -582,16 +582,19 @@ function handleLocalBattle() {
     // Start battle
     currentBattle = new Battle(pet, opponent);
     
+    // Set battle in UI manager
+    battleUIManager.setBattle(currentBattle);
+    
     // Set callback for turn completion
     currentBattle.onTurnComplete = () => {
-        updateBattleUI();
+        battleUIManager.update(soundManager, milestoneManager, uiManager, pet);
         if (currentBattle.turn === 'player' && currentBattle.isActive) {
-            enableBattleButtons();
+            battleUIManager.enableActionButtons();
         }
     };
     
-    // Show battle modal
-    openBattleModal(opponent);
+    // Show battle modal using manager
+    battleUIManager.openModal(opponent);
 }
 
 // Handle online battle
@@ -621,41 +624,14 @@ function handleOnlineBattle() {
     serverConnection.requestBattle(pet.toJSON());
 }
 
-// Open battle modal
-function openBattleModal(opponent) {
-    const modal = document.getElementById('battleModal');
-    modal.classList.add('active');
-    
-    // Set pet names
-    document.getElementById('battleYourName').textContent = pet.name;
-    document.getElementById('battleOpponentName').textContent = opponent.name;
-    
-    // Reset HP bars
-    document.getElementById('battleYourHp').style.width = '100%';
-    document.getElementById('battleOpponentHp').style.width = '100%';
-    
-    // Clear battle log
-    const battleLog = document.getElementById('battleLog');
-    battleLog.innerHTML = '<p>Battle started!</p>';
-    
-    // Show action buttons
-    document.getElementById('battleActions').style.display = 'grid';
-    document.getElementById('finishBattleBtn').style.display = 'none';
-    
-    // Enable buttons
-    enableBattleButtons();
-}
-
 // Close battle modal
 function closeBattleModal() {
-    const modal = document.getElementById('battleModal');
-    modal.classList.remove('active');
-    
-    if (currentBattle && !currentBattle.isActive) {
+    // Use BattleUIManager's closeModal with business logic callback
+    battleUIManager.closeModal((battle) => {
         // Battle ended, update pet with opponent name
-        const opponentName = currentBattle.opponentPet.name || 'Opponent';
+        const opponentName = battle.opponentPet.name || 'Opponent';
         pet.updatePersonality('battle'); // Update personality based on battle
-        pet.updateAfterBattle(currentBattle.playerWon(), opponentName);
+        pet.updateAfterBattle(battle.playerWon(), opponentName);
         
         // Update leaderboard after battle
         if (socialFeatures) {
@@ -663,7 +639,7 @@ function closeBattleModal() {
         }
         
         updateUI();
-    }
+    });
     
     currentBattle = null;
 }
@@ -674,7 +650,7 @@ function handleBattleAction(action) {
     if (currentBattle.turn !== 'player') return;
     
     // Disable buttons during action
-    disableBattleButtons();
+    battleUIManager.disableActionButtons();
     
     // Execute action
     switch (action) {
@@ -689,135 +665,13 @@ function handleBattleAction(action) {
             break;
     }
     
-    // Update battle UI
-    updateBattleUI();
+    // Update battle UI using manager
+    battleUIManager.update(soundManager, milestoneManager, uiManager, pet);
     
     // Enable buttons if it's player's turn
     if (currentBattle.turn === 'player' && currentBattle.isActive) {
-        enableBattleButtons();
+        battleUIManager.enableActionButtons();
     }
-}
-
-// Calculate damage from HP change
-function calculateDamage(prevHP, currentHP, maxHP) {
-    return Math.round((prevHP - currentHP) / 100 * maxHP);
-}
-
-// Show damage number in battle
-function showDamageNumber(damage, isPlayer, isCrit = false) {
-    const container = isPlayer ? document.querySelector('.battle-your-pet') : document.querySelector('.battle-opponent-pet');
-    if (!container) return;
-    
-    const damageNum = document.createElement('div');
-    damageNum.className = `damage-number ${isCrit ? 'crit' : ''}`;
-    damageNum.textContent = `-${damage}`;
-    
-    container.style.position = 'relative';
-    container.appendChild(damageNum);
-    
-    // Remove after animation
-    setTimeout(() => damageNum.remove(), 1000);
-}
-
-// Update battle UI
-function updateBattleUI() {
-    // Update HP bars with animation
-    const playerHPPercent = (currentBattle.playerStats.currentHP / currentBattle.playerStats.maxHP) * 100;
-    const opponentHPPercent = (currentBattle.opponentStats.currentHP / currentBattle.opponentStats.maxHP) * 100;
-    
-    const playerHPBar = document.getElementById('battleYourHp');
-    const opponentHPBar = document.getElementById('battleOpponentHp');
-    
-    // Initialize HP tracking on first update
-    if (!playerHPBar.dataset.hp) {
-        playerHPBar.dataset.hp = 100;
-        opponentHPBar.dataset.hp = 100;
-    }
-    
-    // Track previous HP for damage calculation
-    const prevPlayerHP = parseFloat(playerHPBar.dataset.hp);
-    const prevOpponentHP = parseFloat(opponentHPBar.dataset.hp);
-    
-    // Check for damage and add flash animation + damage numbers
-    if (prevPlayerHP > playerHPPercent) {
-        const damage = calculateDamage(prevPlayerHP, playerHPPercent, currentBattle.playerStats.maxHP);
-        playerHPBar.classList.add('damage-flash');
-        showDamageNumber(damage, true);
-        soundManager.play('hit');
-        setTimeout(() => playerHPBar.classList.remove('damage-flash'), 300);
-        
-        // Add shake to player sprite
-        const playerSprite = document.querySelector('.battle-pet:first-child .battle-sprite');
-        if (playerSprite) {
-            playerSprite.classList.add('taking-damage');
-            setTimeout(() => playerSprite.classList.remove('taking-damage'), 300);
-        }
-    }
-    
-    if (prevOpponentHP > opponentHPPercent) {
-        const damage = calculateDamage(prevOpponentHP, opponentHPPercent, currentBattle.opponentStats.maxHP);
-        opponentHPBar.classList.add('damage-flash');
-        showDamageNumber(damage, false);
-        soundManager.play('hit');
-        setTimeout(() => opponentHPBar.classList.remove('damage-flash'), 300);
-        
-        // Add shake to opponent sprite
-        const opponentSprite = document.querySelector('.battle-pet:last-child .battle-sprite');
-        if (opponentSprite) {
-            opponentSprite.classList.add('taking-damage');
-            setTimeout(() => opponentSprite.classList.remove('taking-damage'), 300);
-        }
-    }
-    
-    playerHPBar.style.width = playerHPPercent + '%';
-    opponentHPBar.style.width = opponentHPPercent + '%';
-    
-    // Store current HP for next comparison
-    playerHPBar.dataset.hp = playerHPPercent;
-    opponentHPBar.dataset.hp = opponentHPPercent;
-    
-    // Update battle log
-    const battleLog = document.getElementById('battleLog');
-    const logs = currentBattle.getLog();
-    battleLog.innerHTML = logs.map(log => `<p>${log}</p>`).join('');
-    battleLog.scrollTop = battleLog.scrollHeight;
-    
-    // Check if battle ended
-    if (!currentBattle.isActive) {
-        document.getElementById('battleActions').style.display = 'none';
-        document.getElementById('finishBattleBtn').style.display = 'block';
-        
-        // Add victory animation to winner
-        if (currentBattle.playerWon()) {
-            const playerSprite = document.querySelector('.battle-pet:first-child .battle-sprite');
-            if (playerSprite) {
-                playerSprite.classList.add('victory');
-            }
-            soundManager.play('win');
-            milestoneManager.check('battle', pet, uiManager.showAchievement.bind(uiManager));
-            milestoneManager.check('win', pet, uiManager.showAchievement.bind(uiManager));
-        } else {
-            const opponentSprite = document.querySelector('.battle-pet:last-child .battle-sprite');
-            if (opponentSprite) {
-                opponentSprite.classList.add('victory');
-            }
-            soundManager.play('lose');
-        }
-    }
-}
-
-// Enable battle buttons
-function enableBattleButtons() {
-    document.getElementById('attackBtn').disabled = false;
-    document.getElementById('defendBtn').disabled = false;
-    document.getElementById('specialBtn').disabled = false;
-}
-
-// Disable battle buttons
-function disableBattleButtons() {
-    document.getElementById('attackBtn').disabled = true;
-    document.getElementById('defendBtn').disabled = true;
-    document.getElementById('specialBtn').disabled = true;
 }
 
 // Open settings modal
