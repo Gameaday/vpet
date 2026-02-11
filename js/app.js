@@ -160,6 +160,9 @@ function setupEventListeners() {
     document.getElementById('warmBtn').addEventListener('click', handleWarm);
     document.getElementById('hatchBtn').addEventListener('click', handleHatch);
     
+    // Pet tap interaction for visual feedback
+    document.getElementById('petSprite').addEventListener('click', handlePetTap);
+    
     // Battle buttons
     document.getElementById('battleBtn').addEventListener('click', handleLocalBattle);
     document.getElementById('onlineBattleBtn').addEventListener('click', handleOnlineBattle);
@@ -387,6 +390,32 @@ function updateUI() {
     // Update pet sprite
     const petAnimation = document.querySelector('.pet-animation');
     petAnimation.className = `pet-animation ${pet.stage}`;
+    
+    // Apply appearance variations if pet has hatched
+    if (pet.appearance && pet.hasHatched) {
+        // Add eye shape class
+        if (pet.appearance.eyeShape !== 'round') {
+            petAnimation.classList.add(`eye-${pet.appearance.eyeShape}`);
+        }
+        
+        // Add eye color class
+        if (pet.appearance.eyeColor !== 'black') {
+            petAnimation.classList.add(`eye-color-${pet.appearance.eyeColor}`);
+        }
+        
+        // Add mouth shape class
+        petAnimation.classList.add(`mouth-${pet.appearance.mouthShape}`);
+        
+        // Add body color class
+        if (pet.appearance.bodyColor !== 'default') {
+            petAnimation.classList.add(`body-${pet.appearance.bodyColor}`);
+        }
+        
+        // Add body size class
+        if (pet.appearance.bodySize !== 'normal') {
+            petAnimation.classList.add(`size-${pet.appearance.bodySize}`);
+        }
+    }
     
     // Check hibernation status
     const isHibernating = hibernationManager && hibernationManager.shouldFreezePet();
@@ -703,6 +732,68 @@ function handleHatch() {
         
         updateUI();
         uiManager.showSaveIndicator();
+    }
+}
+
+// Handle pet tap interaction for feedback
+function handlePetTap() {
+    const petAnimation = document.querySelector('.pet-animation');
+    const petSprite = document.getElementById('petSprite');
+    
+    // Show different responses based on pet stage and state
+    if (pet.stage === 'egg' && !pet.hasHatched) {
+        // Egg responses
+        if (pet.canHatch()) {
+            showToast('🥚 Tap the "Hatch" button to meet your pet!', 'info', 2000);
+            petAnimation.classList.add('wiggle');
+            setTimeout(() => petAnimation.classList.remove('wiggle'), 500);
+        } else if (pet.warmth < 60) {
+            showToast('🌡️ Keep me warm! I need warmth to hatch.', 'info', 2000);
+        } else {
+            showToast('⏱️ Keep me warm... something is happening!', 'info', 2000);
+            petAnimation.classList.add('wiggle');
+            setTimeout(() => petAnimation.classList.remove('wiggle'), 500);
+        }
+        vibrationManager.vibrate('light');
+    } else {
+        // Non-egg pet responses based on happiness
+        const responses = [];
+        
+        if (pet.happiness > 80) {
+            responses.push('😊 I\'m so happy!', '❤️ You\'re the best!', '🎉 Life is great!');
+        } else if (pet.happiness > 50) {
+            responses.push('👋 Hey there!', '😊 Nice to see you!', '🐾 What\'s up?');
+        } else if (pet.happiness > 20) {
+            responses.push('😐 I\'m okay...', '🤔 Could be better.', '😕 I need attention.');
+        } else {
+            responses.push('😢 I\'m sad...', '💔 Please take care of me.', '😞 I need help.');
+        }
+        
+        // Add hunger/energy specific responses
+        if (pet.hunger < 30) {
+            responses.push('🍖 I\'m hungry!', '🍔 Feed me please!');
+        }
+        if (pet.energy < 30) {
+            responses.push('😴 I\'m tired...', '💤 Need rest...');
+        }
+        
+        // Show random response
+        const message = responses[Math.floor(Math.random() * responses.length)];
+        showToast(message, 'info', 2000);
+        
+        // Visual feedback - bounce animation
+        petAnimation.classList.add('wave');
+        setTimeout(() => petAnimation.classList.remove('wave'), 600);
+        
+        // Show hearts if happy
+        if (pet.happiness > 70 && petSprite && particleEffects) {
+            const rect = petSprite.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            particleEffects.showHearts(x, y);
+        }
+        
+        vibrationManager.vibrate('light');
     }
 }
 

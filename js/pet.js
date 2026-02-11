@@ -31,6 +31,15 @@ class Pet {
         this.incubationTime = 0; // Time in milliseconds with proper warmth
         this.hasHatched = false; // Track if egg has hatched
         
+        // Visual appearance traits - initialized on first hatch
+        this.appearance = {
+            eyeShape: 'round', // round, oval, star, heart
+            eyeColor: 'black', // black, blue, green, brown, purple
+            mouthShape: 'happy', // happy, neutral, sad, surprised
+            bodyColor: 'default', // default, golden, crimson, azure, emerald, violet
+            bodySize: 'normal' // normal, small, large (relative to stage)
+        };
+        
         // Load saved pet or create new one
         this.load();
     }
@@ -83,7 +92,8 @@ class Pet {
                 cleanliness: this.cleanliness || 100,
                 warmth: this.warmth || 50,
                 incubationTime: this.incubationTime || 0,
-                hasHatched: this.hasHatched || false
+                hasHatched: this.hasHatched || false,
+                appearance: this.appearance || {eyeShape: 'round', eyeColor: 'black', mouthShape: 'happy', bodyColor: 'default', bodySize: 'normal'}
             };
             
             // Check if localStorage is available and has space
@@ -153,6 +163,17 @@ class Pet {
                     this.warmth = Number(petData.warmth) || 50;
                     this.incubationTime = Number(petData.incubationTime) || 0;
                     this.hasHatched = Boolean(petData.hasHatched);
+                    
+                    // Load appearance traits or set defaults
+                    if (petData.appearance && typeof petData.appearance === 'object') {
+                        this.appearance = {
+                            eyeShape: petData.appearance.eyeShape || 'round',
+                            eyeColor: petData.appearance.eyeColor || 'black',
+                            mouthShape: petData.appearance.mouthShape || 'happy',
+                            bodyColor: petData.appearance.bodyColor || 'default',
+                            bodySize: petData.appearance.bodySize || 'normal'
+                        };
+                    }
                     
                     // Validate all stats are in proper ranges
                     this.validateStats();
@@ -293,7 +314,17 @@ class Pet {
     // Handle evolution event
     onEvolution() {
         this.level++;
-        showNotification(`🎉 Your pet evolved to ${this.stage}!`, 'success');
+        
+        // Enhanced notification with visual change description
+        const stageDescriptions = {
+            'baby': '🐣 Your egg hatched into a baby! It\'s small and adorable.',
+            'child': '🌱 Your baby grew into a child! It\'s getting bigger and more active.',
+            'teen': '⚡ Your child became a teen! It\'s developing its unique personality.',
+            'adult': '👑 Your teen evolved into an adult! It has reached full maturity!'
+        };
+        
+        const description = stageDescriptions[this.stage] || `🎉 Your pet evolved to ${this.stage}!`;
+        showNotification(description, 'success');
         
         // Trigger evolution particle effects
         if (typeof window !== 'undefined' && window.particleEffects) {
@@ -392,6 +423,9 @@ class Pet {
         this.birthTime = Date.now(); // Reset birth time for accurate age tracking
         this.age = 0;
         
+        // Generate random appearance traits for the newly hatched pet
+        this.generateRandomAppearance();
+        
         // Initialize stats for the hatched pet
         this.health = 100;
         this.hunger = 100;
@@ -403,6 +437,23 @@ class Pet {
         showNotification('🎉 Your egg hatched into a baby pet!', 'success');
         this.save();
         return true;
+    }
+    
+    // Generate random appearance traits for the pet
+    generateRandomAppearance() {
+        const eyeShapes = ['round', 'oval', 'star', 'heart'];
+        const eyeColors = ['black', 'blue', 'green', 'brown', 'purple'];
+        const mouthShapes = ['happy', 'neutral', 'sad', 'surprised'];
+        const bodyColors = ['default', 'golden', 'crimson', 'azure', 'emerald', 'violet'];
+        const bodySizes = ['normal', 'small', 'large'];
+        
+        this.appearance = {
+            eyeShape: eyeShapes[Math.floor(Math.random() * eyeShapes.length)],
+            eyeColor: eyeColors[Math.floor(Math.random() * eyeColors.length)],
+            mouthShape: mouthShapes[Math.floor(Math.random() * mouthShapes.length)],
+            bodyColor: bodyColors[Math.floor(Math.random() * bodyColors.length)],
+            bodySize: bodySizes[Math.floor(Math.random() * bodySizes.length)]
+        };
     }
 
     // Feed the pet

@@ -150,6 +150,16 @@ main {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.pet-sprite:hover {
+    transform: scale(1.05);
+}
+
+.pet-sprite:active {
+    transform: scale(0.95);
 }
 
 .pet-animation {
@@ -205,6 +215,106 @@ main {
         transform: scaleY(0.1);
         opacity: 0.8;
     }
+}
+
+/* Eye shape variations */
+.pet-animation.eye-oval::before,
+.pet-animation.eye-oval::after {
+    width: 10px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.pet-animation.eye-star::before,
+.pet-animation.eye-star::after {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    border-radius: 0;
+}
+
+.pet-animation.eye-heart::before,
+.pet-animation.eye-heart::after {
+    width: 10px;
+    height: 10px;
+    border-radius: 50% 50% 0 0;
+    transform: rotate(-45deg);
+}
+
+.pet-animation.eye-heart::before {
+    left: 33%;
+}
+
+.pet-animation.eye-heart::after {
+    right: 33%;
+}
+
+/* Eye color variations */
+.pet-animation.eye-color-blue::before,
+.pet-animation.eye-color-blue::after {
+    background: #3b82f6;
+}
+
+.pet-animation.eye-color-green::before,
+.pet-animation.eye-color-green::after {
+    background: #10b981;
+}
+
+.pet-animation.eye-color-brown::before,
+.pet-animation.eye-color-brown::after {
+    background: #92400e;
+}
+
+.pet-animation.eye-color-purple::before,
+.pet-animation.eye-color-purple::after {
+    background: #8b5cf6;
+}
+
+/* Pet mouth variations */
+.pet-mouth {
+    position: absolute;
+    bottom: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 10px;
+    display: none; /* Hidden for eggs */
+    z-index: 1;
+}
+
+/* Show mouth for non-egg stages */
+.pet-animation.baby .pet-mouth,
+.pet-animation.child .pet-mouth,
+.pet-animation.teen .pet-mouth,
+.pet-animation.adult .pet-mouth {
+    display: block;
+}
+
+/* Mouth shape variations */
+.pet-animation.mouth-happy .pet-mouth {
+    border: 2px solid rgba(0, 0, 0, 0.6);
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+}
+
+.pet-animation.mouth-neutral .pet-mouth {
+    width: 16px;
+    height: 2px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 2px;
+}
+
+.pet-animation.mouth-sad .pet-mouth {
+    border: 2px solid rgba(0, 0, 0, 0.6);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    bottom: 32%;
+}
+
+.pet-animation.mouth-surprised .pet-mouth {
+    width: 12px;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    bottom: 33%;
 }
 
 /* Different pet stages */
@@ -289,6 +399,58 @@ main {
 .pet-animation.adult {
     background: linear-gradient(135deg, #ec4899 0%, #d946ef 100%);
     box-shadow: 0 5px 20px rgba(236, 72, 153, 0.5);
+}
+
+/* Body color variations - override stage colors */
+.pet-animation.body-golden.baby,
+.pet-animation.body-golden.child,
+.pet-animation.body-golden.teen,
+.pet-animation.body-golden.adult {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    box-shadow: 0 5px 20px rgba(251, 191, 36, 0.5);
+}
+
+.pet-animation.body-crimson.baby,
+.pet-animation.body-crimson.child,
+.pet-animation.body-crimson.teen,
+.pet-animation.body-crimson.adult {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 5px 20px rgba(239, 68, 68, 0.5);
+}
+
+.pet-animation.body-azure.baby,
+.pet-animation.body-azure.child,
+.pet-animation.body-azure.teen,
+.pet-animation.body-azure.adult {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    box-shadow: 0 5px 20px rgba(6, 182, 212, 0.5);
+}
+
+.pet-animation.body-emerald.baby,
+.pet-animation.body-emerald.child,
+.pet-animation.body-emerald.teen,
+.pet-animation.body-emerald.adult {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 5px 20px rgba(16, 185, 129, 0.5);
+}
+
+.pet-animation.body-violet.baby,
+.pet-animation.body-violet.child,
+.pet-animation.body-violet.teen,
+.pet-animation.body-violet.adult {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    box-shadow: 0 5px 20px rgba(139, 92, 246, 0.5);
+}
+
+/* Body size variations */
+.pet-animation.size-small {
+    width: 80%;
+    height: 80%;
+}
+
+.pet-animation.size-large {
+    width: 120%;
+    height: 120%;
 }
 
 .pet-animation.sleeping {
