@@ -14,6 +14,30 @@ class GatewayManager {
         };
         
         this.setupEventListeners();
+        this.setupKeyboardAccessibility();
+    }
+    
+    // Enable keyboard accessibility for div elements with role="button"
+    setupKeyboardAccessibility() {
+        // Add keyboard support to card elements in gateway modals
+        const cardContainers = [
+            '.activities-grid',
+            '.rest-options',
+            '.grooming-options',
+            '.training-options'
+        ];
+        
+        cardContainers.forEach(selector => {
+            document.querySelectorAll(`${selector} [role="button"]`).forEach(element => {
+                element.addEventListener('keydown', (e) => {
+                    // Trigger click on Enter or Space
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        element.click();
+                    }
+                });
+            });
+        });
     }
     
     setupEventListeners() {
