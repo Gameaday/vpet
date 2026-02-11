@@ -1031,7 +1031,7 @@ main {
 /* Action Panel - Organic, intelligent layout that adapts to any screen size */
 .action-panel {
     display: grid;
-    /* Fixed 2-column grid for uniform button sizes on mobile */
+    /* Fixed 2-column grid for uniform button sizes across all viewports */
     grid-template-columns: repeat(2, 1fr);
     gap: clamp(8px, 2vw, 12px);
     margin: 0 auto 20px;
@@ -1817,15 +1817,14 @@ main {
         height: 120px;
     }
 
+    /* Adjust gap for better spacing on mobile */
     .action-panel {
-        grid-template-columns: repeat(2, 1fr);
         gap: clamp(10px, 2.5vw, 14px);
     }
     
     /* Uniform touch targets for mobile with consistent square sizing */
     .action-btn {
         padding: 12px 8px;
-        aspect-ratio: 1 / 1;
     }
     
     .online-battle-btn {
