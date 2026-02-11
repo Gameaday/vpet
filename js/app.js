@@ -185,8 +185,8 @@ function setupEventListeners() {
     document.getElementById('onlineBattleBtn')?.addEventListener('click', handleOnlineBattle);
     
     // QoL buttons
-    document.getElementById('hibernateBtn').addEventListener('click', openHibernationModal);
-    document.getElementById('backupBtn').addEventListener('click', openBackupModal);
+    document.getElementById('hibernateBtn')?.addEventListener('click', openHibernationModal);
+    document.getElementById('backupBtn')?.addEventListener('click', openBackupModal);
     
     // Settings buttons
     document.getElementById('settingsBtn')?.addEventListener('click', openSettings);
@@ -211,15 +211,15 @@ function setupEventListeners() {
     });
     
     // Modal close buttons
-    document.getElementById('closeBattleModal').addEventListener('click', closeBattleModal);
+    document.getElementById('closeBattleModal')?.addEventListener('click', closeBattleModal);
     document.getElementById('closeBattleGatewayModal')?.addEventListener('click', closeBattleGateway);
     document.getElementById('closeSocialGatewayModal')?.addEventListener('click', closeSocialGateway);
-    document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
-    document.getElementById('closeHelpModal').addEventListener('click', closeHelp);
-    document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
-    document.getElementById('closeLeaderboardModal').addEventListener('click', closeLeaderboard);
-    document.getElementById('closeHibernationModal').addEventListener('click', closeHibernationModal);
-    document.getElementById('closeBackupModal').addEventListener('click', closeBackupModal);
+    document.getElementById('closeSettingsModal')?.addEventListener('click', closeSettingsModal);
+    document.getElementById('closeHelpModal')?.addEventListener('click', closeHelp);
+    document.getElementById('closeHelpBtn')?.addEventListener('click', closeHelp);
+    document.getElementById('closeLeaderboardModal')?.addEventListener('click', closeLeaderboard);
+    document.getElementById('closeHibernationModal')?.addEventListener('click', closeHibernationModal);
+    document.getElementById('closeBackupModal')?.addEventListener('click', closeBackupModal);
     
     // Battle gateway cards
     document.getElementById('localBattleCard')?.addEventListener('click', () => {
@@ -252,59 +252,59 @@ function setupEventListeners() {
     });
     
     // Backup modal buttons
-    document.getElementById('exportBackupBtn').addEventListener('click', handleExportBackup);
-    document.getElementById('importBackupBtnTrigger').addEventListener('click', () => {
+    document.getElementById('exportBackupBtn')?.addEventListener('click', handleExportBackup);
+    document.getElementById('importBackupBtnTrigger')?.addEventListener('click', () => {
         document.getElementById('importBackupInput').click();
     });
-    document.getElementById('importBackupInput').addEventListener('change', handleImportBackup);
-    document.getElementById('saveToCloudBtn').addEventListener('click', handleSaveToCloud);
-    document.getElementById('loadFromCloudBtn').addEventListener('click', handleLoadFromCloud);
-    document.getElementById('autoCloudBackupToggle').addEventListener('change', handleAutoCloudBackupToggle);
+    document.getElementById('importBackupInput')?.addEventListener('change', handleImportBackup);
+    document.getElementById('saveToCloudBtn')?.addEventListener('click', handleSaveToCloud);
+    document.getElementById('loadFromCloudBtn')?.addEventListener('click', handleLoadFromCloud);
+    document.getElementById('autoCloudBackupToggle')?.addEventListener('change', handleAutoCloudBackupToggle);
     
     // Settings save
-    document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
+    document.getElementById('saveSettingsBtn')?.addEventListener('click', saveSettings);
     
     // Time away modal
-    document.getElementById('closeTimeAwayBtn').addEventListener('click', closeTimeAwayModal);
+    document.getElementById('closeTimeAwayBtn')?.addEventListener('click', closeTimeAwayModal);
     
     // Battle actions
-    document.getElementById('attackBtn').addEventListener('click', () => handleBattleAction('attack'));
-    document.getElementById('defendBtn').addEventListener('click', () => handleBattleAction('defend'));
-    document.getElementById('specialBtn').addEventListener('click', () => handleBattleAction('special'));
-    document.getElementById('finishBattleBtn').addEventListener('click', closeBattleModal);
+    document.getElementById('attackBtn')?.addEventListener('click', () => handleBattleAction('attack'));
+    document.getElementById('defendBtn')?.addEventListener('click', () => handleBattleAction('defend'));
+    document.getElementById('specialBtn')?.addEventListener('click', () => handleBattleAction('special'));
+    document.getElementById('finishBattleBtn')?.addEventListener('click', closeBattleModal);
     
     // Click outside modal to close
-    document.getElementById('battleModal').addEventListener('click', (e) => {
+    document.getElementById('battleModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'battleModal') {
             closeBattleModal();
         }
     });
     
-    document.getElementById('settingsModal').addEventListener('click', (e) => {
+    document.getElementById('settingsModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'settingsModal') {
             closeSettingsModal();
         }
     });
     
-    document.getElementById('helpModal').addEventListener('click', (e) => {
+    document.getElementById('helpModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'helpModal') {
             closeHelp();
         }
     });
     
-    document.getElementById('premiumModal').addEventListener('click', (e) => {
+    document.getElementById('premiumModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'premiumModal') {
             premiumManager.closePremiumModal();
         }
     });
     
-    document.getElementById('hibernationModal').addEventListener('click', (e) => {
+    document.getElementById('hibernationModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'hibernationModal') {
             closeHibernationModal();
         }
     });
     
-    document.getElementById('backupModal').addEventListener('click', (e) => {
+    document.getElementById('backupModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'backupModal') {
             closeBackupModal();
         }
