@@ -44,4 +44,5 @@ docker-compose.override.yml
 
 # Deployment
 _site/
+test_site/
 DEPLOY_INFO.txt
