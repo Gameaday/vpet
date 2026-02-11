@@ -164,12 +164,13 @@
         box-shadow: none;
     }
     
-    /* Panels have subtle elevation */
+    /* Bottom-sticky panels cast shadows upward to separate from content below them
+       This is intentional for sticky footers - they float above the scrolling content */
     .action-panel,
     .battle-panel,
     .settings-panel {
-        box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.1),
-                    0 -1px 2px -1px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 -2px 4px -1px rgba(0, 0, 0, 0.1),
+                    0 -1px 2px 0 rgba(0, 0, 0, 0.06);
         border-top: 1px solid var(--surface-2);
     }
     
