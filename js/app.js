@@ -744,6 +744,7 @@ function handlePetTap() {
     if (pet.stage === 'egg' && !pet.hasHatched) {
         // Egg responses
         if (pet.canHatch()) {
+            // Note: "Hatch" button text must match the button label in HTML (id="hatchBtn")
             showToast('🥚 Tap the "Hatch" button to meet your pet!', 'info', 2000);
             petAnimation.classList.add('wiggle');
             setTimeout(() => petAnimation.classList.remove('wiggle'), 500);

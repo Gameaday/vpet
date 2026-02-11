@@ -443,6 +443,7 @@ main {
 }
 
 /* Body size variations */
+/* Note: Minimum size still maintains adequate clickable area for touch devices */
 .pet-animation.size-small {
     width: 80%;
     height: 80%;

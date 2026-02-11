@@ -1,5 +1,14 @@
 // Pet class managing the virtual pet's state and behavior
 class Pet {
+    // Appearance trait options (single source of truth)
+    static APPEARANCE_OPTIONS = {
+        eyeShapes: ['round', 'oval', 'star', 'heart'],
+        eyeColors: ['black', 'blue', 'green', 'brown', 'purple'],
+        mouthShapes: ['happy', 'neutral', 'sad', 'surprised'],
+        bodyColors: ['default', 'golden', 'crimson', 'azure', 'emerald', 'violet'],
+        bodySizes: ['normal', 'small', 'large']
+    };
+    
     constructor() {
         this.name = '???'; // Egg starts with unknown name
         this.stage = 'egg'; // egg, baby, child, teen, adult
@@ -441,18 +450,14 @@ class Pet {
     
     // Generate random appearance traits for the pet
     generateRandomAppearance() {
-        const eyeShapes = ['round', 'oval', 'star', 'heart'];
-        const eyeColors = ['black', 'blue', 'green', 'brown', 'purple'];
-        const mouthShapes = ['happy', 'neutral', 'sad', 'surprised'];
-        const bodyColors = ['default', 'golden', 'crimson', 'azure', 'emerald', 'violet'];
-        const bodySizes = ['normal', 'small', 'large'];
+        const options = Pet.APPEARANCE_OPTIONS;
         
         this.appearance = {
-            eyeShape: eyeShapes[Math.floor(Math.random() * eyeShapes.length)],
-            eyeColor: eyeColors[Math.floor(Math.random() * eyeColors.length)],
-            mouthShape: mouthShapes[Math.floor(Math.random() * mouthShapes.length)],
-            bodyColor: bodyColors[Math.floor(Math.random() * bodyColors.length)],
-            bodySize: bodySizes[Math.floor(Math.random() * bodySizes.length)]
+            eyeShape: options.eyeShapes[Math.floor(Math.random() * options.eyeShapes.length)],
+            eyeColor: options.eyeColors[Math.floor(Math.random() * options.eyeColors.length)],
+            mouthShape: options.mouthShapes[Math.floor(Math.random() * options.mouthShapes.length)],
+            bodyColor: options.bodyColors[Math.floor(Math.random() * options.bodyColors.length)],
+            bodySize: options.bodySizes[Math.floor(Math.random() * options.bodySizes.length)]
         };
     }
 
