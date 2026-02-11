@@ -93,7 +93,7 @@ body {
     /* Compact button layout for mobile */
     .action-panel {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(60px, 100%), 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
         gap: clamp(4px, 1vw, 8px);
     }
     
@@ -194,7 +194,8 @@ body {
         position: sticky;
         bottom: 0;
         background: linear-gradient(180deg, transparent 0%, #1a1a1a 20%);
-        padding: max(8px, env(safe-area-inset-bottom, 8px)) 4% 8px;
+        padding: 8px 4% 8px;
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
         margin: 0 calc(-1 * 4%);
         border-top: 1px solid rgba(102, 126, 234, 0.2);
         display: flex;
