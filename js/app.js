@@ -167,13 +167,19 @@ function setupEventListeners() {
     // Pet tap interaction for visual feedback
     document.getElementById('petSprite').addEventListener('click', handlePetTap);
     
-    // Battle buttons
-    document.getElementById('battleBtn').addEventListener('click', handleLocalBattle);
-    document.getElementById('onlineBattleBtn').addEventListener('click', handleOnlineBattle);
+    // Gateway buttons
+    document.getElementById('battleGatewayBtn')?.addEventListener('click', openBattleGateway);
+    document.getElementById('socialGatewayBtn')?.addEventListener('click', openSocialGateway);
     
-    // Social buttons
-    document.getElementById('shareBtn').addEventListener('click', handleShare);
-    document.getElementById('leaderboardBtn').addEventListener('click', showLeaderboard);
+    // Social buttons (kept for backward compatibility, but hidden on main screen)
+    document.getElementById('shareBtn')?.addEventListener('click', handleShare);
+    document.getElementById('leaderboardBtn')?.addEventListener('click', showLeaderboard);
+    document.getElementById('friendsBtn')?.addEventListener('click', openFriendsModal);
+    document.getElementById('tournamentBtn')?.addEventListener('click', openTournamentModal);
+    
+    // Battle buttons (kept for backward compatibility)
+    document.getElementById('battleBtn')?.addEventListener('click', handleLocalBattle);
+    document.getElementById('onlineBattleBtn')?.addEventListener('click', handleOnlineBattle);
     
     // QoL buttons
     document.getElementById('hibernateBtn').addEventListener('click', openHibernationModal);
@@ -203,12 +209,44 @@ function setupEventListeners() {
     
     // Modal close buttons
     document.getElementById('closeBattleModal').addEventListener('click', closeBattleModal);
+    document.getElementById('closeBattleGatewayModal')?.addEventListener('click', closeBattleGateway);
+    document.getElementById('closeSocialGatewayModal')?.addEventListener('click', closeSocialGateway);
     document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
     document.getElementById('closeHelpModal').addEventListener('click', closeHelp);
     document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
     document.getElementById('closeLeaderboardModal').addEventListener('click', closeLeaderboard);
     document.getElementById('closeHibernationModal').addEventListener('click', closeHibernationModal);
     document.getElementById('closeBackupModal').addEventListener('click', closeBackupModal);
+    
+    // Battle gateway cards
+    document.getElementById('localBattleCard')?.addEventListener('click', () => {
+        closeBattleGateway();
+        handleLocalBattle();
+    });
+    document.getElementById('onlineBattleCard')?.addEventListener('click', () => {
+        if (!document.getElementById('onlineBattleCard').classList.contains('disabled')) {
+            closeBattleGateway();
+            handleOnlineBattle();
+        }
+    });
+    
+    // Social gateway cards
+    document.getElementById('shareCard')?.addEventListener('click', () => {
+        closeSocialGateway();
+        handleShare();
+    });
+    document.getElementById('leaderboardCard')?.addEventListener('click', () => {
+        closeSocialGateway();
+        showLeaderboard();
+    });
+    document.getElementById('friendsCard')?.addEventListener('click', () => {
+        closeSocialGateway();
+        openFriendsModal();
+    });
+    document.getElementById('tournamentCard')?.addEventListener('click', () => {
+        closeSocialGateway();
+        openTournamentModal();
+    });
     
     // Backup modal buttons
     document.getElementById('exportBackupBtn').addEventListener('click', handleExportBackup);
@@ -1753,6 +1791,42 @@ function handleAutoCloudBackupToggle(event) {
     } else {
         backupManager.disableCloudBackups();
     }
+}
+
+// Open battle gateway modal
+function openBattleGateway() {
+    const modal = document.getElementById('battleGatewayModal');
+    modal.classList.add('active');
+    soundManager.play('open');
+}
+
+// Close battle gateway modal
+function closeBattleGateway() {
+    const modal = document.getElementById('battleGatewayModal');
+    modal.classList.remove('active');
+}
+
+// Open social gateway modal
+function openSocialGateway() {
+    const modal = document.getElementById('socialGatewayModal');
+    modal.classList.add('active');
+    soundManager.play('open');
+}
+
+// Close social gateway modal
+function closeSocialGateway() {
+    const modal = document.getElementById('socialGatewayModal');
+    modal.classList.remove('active');
+}
+
+// Open friends modal (placeholder for future implementation)
+function openFriendsModal() {
+    showNotification('👥 Friends feature coming soon!', 'info', 3000);
+}
+
+// Open tournament modal (placeholder for future implementation)
+function openTournamentModal() {
+    showNotification('🏅 Tournament feature coming soon!', 'info', 3000);
 }
 
 // Clean up on page unload
