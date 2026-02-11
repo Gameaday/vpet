@@ -191,61 +191,58 @@
                 </div>
             </div>
 
-            <!-- Egg Action Buttons (shown only for eggs) -->
-            <div class="action-panel egg-only" id="eggActionPanel" style="display: none;">
-                <button class="action-btn warm-btn" id="warmBtn">
+            <!-- Unified Action Panel - Contextually shows appropriate buttons -->
+            <div class="action-panel" id="actionPanel">
+                <!-- Egg-only buttons -->
+                <button class="action-btn warm-btn egg-only" id="warmBtn" style="display: none;">
                     <span class="btn-icon">🔥</span>
                     <span>Incubate</span>
                 </button>
-                <button class="action-btn hatch-btn" id="hatchBtn" disabled>
+                <button class="action-btn hatch-btn egg-only" id="hatchBtn" disabled style="display: none;">
                     <span class="btn-icon">🐣</span>
                     <span>Hatch</span>
                 </button>
-            </div>
-
-            <!-- Action Buttons (hidden for eggs) -->
-            <div class="action-panel non-egg" id="normalActionPanel">
-                <button class="action-btn feed-btn" id="feedBtn" 
+                
+                <!-- Primary care buttons (non-egg) -->
+                <button class="action-btn feed-btn non-egg" id="feedBtn" 
                         aria-label="Feed your pet to restore hunger" 
                         title="Feed your pet">
                     <span class="btn-icon" aria-hidden="true">🍖</span>
                     <span>Feed</span>
                 </button>
-                <button class="action-btn play-btn" id="playBtn" 
+                <button class="action-btn play-btn non-egg" id="playBtn" 
                         aria-label="Play with your pet to increase happiness" 
                         title="Play with your pet">
                     <span class="btn-icon" aria-hidden="true">🎮</span>
                     <span>Play</span>
                 </button>
-                <button class="action-btn sleep-btn" id="sleepBtn" 
+                <button class="action-btn sleep-btn non-egg" id="sleepBtn" 
                         aria-label="Put your pet to sleep to restore energy" 
                         title="Put pet to sleep">
                     <span class="btn-icon" aria-hidden="true">💤</span>
                     <span>Sleep</span>
                 </button>
-                <button class="action-btn train-btn" id="trainBtn" 
+                <button class="action-btn train-btn non-egg" id="trainBtn" 
                         aria-label="Train your pet to increase level" 
                         title="Train your pet">
                     <span class="btn-icon" aria-hidden="true">💪</span>
                     <span>Train</span>
                 </button>
-                <button class="action-btn clean-btn" id="cleanBtn" 
+                <button class="action-btn clean-btn non-egg" id="cleanBtn" 
                         aria-label="Clean your pet to maintain hygiene" 
                         title="Clean your pet">
                     <span class="btn-icon" aria-hidden="true">🧹</span>
                     <span>Clean</span>
                 </button>
-            </div>
-
-            <!-- Battle and Social Buttons -->
-            <div class="action-panel secondary-actions non-egg" id="secondaryActionPanel">
-                <button class="action-btn battle-btn" id="battleGatewayBtn" 
+                
+                <!-- Secondary action buttons (non-egg) -->
+                <button class="action-btn battle-btn non-egg" id="battleGatewayBtn" 
                         aria-label="Battle Options" 
                         title="Battle Options">
                     <span class="btn-icon" aria-hidden="true">⚔️</span>
                     <span>Battle</span>
                 </button>
-                <button class="action-btn social-btn" id="socialGatewayBtn" 
+                <button class="action-btn social-btn non-egg" id="socialGatewayBtn" 
                         aria-label="Social Features" 
                         title="Social Features">
                     <span class="btn-icon" aria-hidden="true">👥</span>

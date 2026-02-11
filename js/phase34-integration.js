@@ -52,25 +52,25 @@ function initializePhase34Features() {
  */
 function setupPhase34EventListeners() {
     // Shop button
-    document.getElementById('shopBtn').addEventListener('click', openShop);
-    document.getElementById('closeShopModal').addEventListener('click', closeShop);
+    document.getElementById('shopBtn')?.addEventListener('click', openShop);
+    document.getElementById('closeShopModal')?.addEventListener('click', closeShop);
     
     // Inventory button
-    document.getElementById('inventoryBtn').addEventListener('click', openInventory);
-    document.getElementById('closeInventoryModal').addEventListener('click', closeInventory);
+    document.getElementById('inventoryBtn')?.addEventListener('click', openInventory);
+    document.getElementById('closeInventoryModal')?.addEventListener('click', closeInventory);
     
     // Mini-games button
-    document.getElementById('minigamesBtn').addEventListener('click', openMiniGames);
-    document.getElementById('closeMinigamesModal').addEventListener('click', closeMiniGames);
-    document.getElementById('playReactionBtn').addEventListener('click', () => startMiniGame('reaction'));
-    document.getElementById('playMemoryBtn').addEventListener('click', () => startMiniGame('memory'));
-    document.getElementById('playRhythmBtn').addEventListener('click', () => startMiniGame('rhythm'));
-    document.getElementById('endGameBtn').addEventListener('click', endMiniGame);
+    document.getElementById('minigamesBtn')?.addEventListener('click', openMiniGames);
+    document.getElementById('closeMinigamesModal')?.addEventListener('click', closeMiniGames);
+    document.getElementById('playReactionBtn')?.addEventListener('click', () => startMiniGame('reaction'));
+    document.getElementById('playMemoryBtn')?.addEventListener('click', () => startMiniGame('memory'));
+    document.getElementById('playRhythmBtn')?.addEventListener('click', () => startMiniGame('rhythm'));
+    document.getElementById('endGameBtn')?.addEventListener('click', endMiniGame);
     
     // Friends button
-    document.getElementById('friendsBtn').addEventListener('click', openFriends);
-    document.getElementById('closeFriendsModal').addEventListener('click', closeFriends);
-    document.getElementById('sendFriendRequestBtn').addEventListener('click', sendFriendRequest);
+    document.getElementById('friendsBtn')?.addEventListener('click', openFriends);
+    document.getElementById('closeFriendsModal')?.addEventListener('click', closeFriends);
+    document.getElementById('sendFriendRequestBtn')?.addEventListener('click', sendFriendRequest);
     
     // Friend tabs
     document.querySelectorAll('.friend-tabs .tab-btn').forEach(btn => {
@@ -78,8 +78,8 @@ function setupPhase34EventListeners() {
     });
     
     // Tournament button
-    document.getElementById('tournamentBtn').addEventListener('click', openTournament);
-    document.getElementById('closeTournamentModal').addEventListener('click', closeTournament);
+    document.getElementById('tournamentBtn')?.addEventListener('click', openTournament);
+    document.getElementById('closeTournamentModal')?.addEventListener('click', closeTournament);
     
     // Shop category buttons
     document.querySelectorAll('.category-btn').forEach(btn => {

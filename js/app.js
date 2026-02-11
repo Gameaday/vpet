@@ -185,8 +185,8 @@ function setupEventListeners() {
     document.getElementById('onlineBattleBtn')?.addEventListener('click', handleOnlineBattle);
     
     // QoL buttons
-    document.getElementById('hibernateBtn').addEventListener('click', openHibernationModal);
-    document.getElementById('backupBtn').addEventListener('click', openBackupModal);
+    document.getElementById('hibernateBtn')?.addEventListener('click', openHibernationModal);
+    document.getElementById('backupBtn')?.addEventListener('click', openBackupModal);
     
     // Settings buttons
     document.getElementById('settingsBtn')?.addEventListener('click', openSettings);
@@ -211,15 +211,15 @@ function setupEventListeners() {
     });
     
     // Modal close buttons
-    document.getElementById('closeBattleModal').addEventListener('click', closeBattleModal);
+    document.getElementById('closeBattleModal')?.addEventListener('click', closeBattleModal);
     document.getElementById('closeBattleGatewayModal')?.addEventListener('click', closeBattleGateway);
     document.getElementById('closeSocialGatewayModal')?.addEventListener('click', closeSocialGateway);
-    document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
-    document.getElementById('closeHelpModal').addEventListener('click', closeHelp);
-    document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
-    document.getElementById('closeLeaderboardModal').addEventListener('click', closeLeaderboard);
-    document.getElementById('closeHibernationModal').addEventListener('click', closeHibernationModal);
-    document.getElementById('closeBackupModal').addEventListener('click', closeBackupModal);
+    document.getElementById('closeSettingsModal')?.addEventListener('click', closeSettingsModal);
+    document.getElementById('closeHelpModal')?.addEventListener('click', closeHelp);
+    document.getElementById('closeHelpBtn')?.addEventListener('click', closeHelp);
+    document.getElementById('closeLeaderboardModal')?.addEventListener('click', closeLeaderboard);
+    document.getElementById('closeHibernationModal')?.addEventListener('click', closeHibernationModal);
+    document.getElementById('closeBackupModal')?.addEventListener('click', closeBackupModal);
     
     // Battle gateway cards
     document.getElementById('localBattleCard')?.addEventListener('click', () => {
@@ -252,59 +252,59 @@ function setupEventListeners() {
     });
     
     // Backup modal buttons
-    document.getElementById('exportBackupBtn').addEventListener('click', handleExportBackup);
-    document.getElementById('importBackupBtnTrigger').addEventListener('click', () => {
-        document.getElementById('importBackupInput').click();
+    document.getElementById('exportBackupBtn')?.addEventListener('click', handleExportBackup);
+    document.getElementById('importBackupBtnTrigger')?.addEventListener('click', () => {
+        document.getElementById('importBackupInput')?.click();
     });
-    document.getElementById('importBackupInput').addEventListener('change', handleImportBackup);
-    document.getElementById('saveToCloudBtn').addEventListener('click', handleSaveToCloud);
-    document.getElementById('loadFromCloudBtn').addEventListener('click', handleLoadFromCloud);
-    document.getElementById('autoCloudBackupToggle').addEventListener('change', handleAutoCloudBackupToggle);
+    document.getElementById('importBackupInput')?.addEventListener('change', handleImportBackup);
+    document.getElementById('saveToCloudBtn')?.addEventListener('click', handleSaveToCloud);
+    document.getElementById('loadFromCloudBtn')?.addEventListener('click', handleLoadFromCloud);
+    document.getElementById('autoCloudBackupToggle')?.addEventListener('change', handleAutoCloudBackupToggle);
     
     // Settings save
-    document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
+    document.getElementById('saveSettingsBtn')?.addEventListener('click', saveSettings);
     
     // Time away modal
-    document.getElementById('closeTimeAwayBtn').addEventListener('click', closeTimeAwayModal);
+    document.getElementById('closeTimeAwayBtn')?.addEventListener('click', closeTimeAwayModal);
     
     // Battle actions
-    document.getElementById('attackBtn').addEventListener('click', () => handleBattleAction('attack'));
-    document.getElementById('defendBtn').addEventListener('click', () => handleBattleAction('defend'));
-    document.getElementById('specialBtn').addEventListener('click', () => handleBattleAction('special'));
-    document.getElementById('finishBattleBtn').addEventListener('click', closeBattleModal);
+    document.getElementById('attackBtn')?.addEventListener('click', () => handleBattleAction('attack'));
+    document.getElementById('defendBtn')?.addEventListener('click', () => handleBattleAction('defend'));
+    document.getElementById('specialBtn')?.addEventListener('click', () => handleBattleAction('special'));
+    document.getElementById('finishBattleBtn')?.addEventListener('click', closeBattleModal);
     
     // Click outside modal to close
-    document.getElementById('battleModal').addEventListener('click', (e) => {
+    document.getElementById('battleModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'battleModal') {
             closeBattleModal();
         }
     });
     
-    document.getElementById('settingsModal').addEventListener('click', (e) => {
+    document.getElementById('settingsModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'settingsModal') {
             closeSettingsModal();
         }
     });
     
-    document.getElementById('helpModal').addEventListener('click', (e) => {
+    document.getElementById('helpModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'helpModal') {
             closeHelp();
         }
     });
     
-    document.getElementById('premiumModal').addEventListener('click', (e) => {
+    document.getElementById('premiumModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'premiumModal') {
             premiumManager.closePremiumModal();
         }
     });
     
-    document.getElementById('hibernationModal').addEventListener('click', (e) => {
+    document.getElementById('hibernationModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'hibernationModal') {
             closeHibernationModal();
         }
     });
     
-    document.getElementById('backupModal').addEventListener('click', (e) => {
+    document.getElementById('backupModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'backupModal') {
             closeBackupModal();
         }
@@ -495,16 +495,16 @@ function updateUI() {
     // Handle egg-specific UI
     const isEgg = pet.stage === 'egg' && !pet.hasHatched;
     
-    // Show/hide egg-specific elements
+    // Show/hide warmth stat for eggs
     document.getElementById('warmthStat').style.display = isEgg ? 'block' : 'none';
-    document.getElementById('eggActionPanel').style.display = isEgg ? 'flex' : 'none';
-    document.getElementById('normalActionPanel').style.display = isEgg ? 'none' : 'flex';
     
-    // Hide Battle/Social buttons during egg state
-    const secondaryPanel = document.getElementById('secondaryActionPanel');
-    if (secondaryPanel) {
-        secondaryPanel.style.display = isEgg ? 'none' : 'flex';
-    }
+    // Toggle button visibility based on stage (egg vs non-egg)
+    document.querySelectorAll('.action-btn.egg-only').forEach(btn => {
+        btn.style.display = isEgg ? '' : 'none';
+    });
+    document.querySelectorAll('.action-btn.non-egg').forEach(btn => {
+        btn.style.display = isEgg ? 'none' : '';
+    });
     
     // Hide normal stats for eggs
     const normalStats = ['health', 'hunger', 'happiness', 'energy', 'cleanliness'];
@@ -579,7 +579,12 @@ function updateUI() {
     }
     
     // Update info
-    document.getElementById('petAge').textContent = isEgg ? 'Egg' : (pet.getAgeDisplay ? pet.getAgeDisplay() : pet.age + ' days');
+    const ageText = isEgg
+        ? 'Egg'
+        : (pet && typeof pet.getAgeDisplay === 'function'
+            ? pet.getAgeDisplay()
+            : Math.floor(pet.age || 0) + ' days');
+    document.getElementById('petAge').textContent = ageText;
     document.getElementById('petLevel').textContent = Math.floor(pet.level);
     document.getElementById('petWins').textContent = pet.wins;
     
@@ -646,10 +651,24 @@ function updateEvolutionPreview() {
     
     const hours = Math.floor(evolutionInfo.timeRemaining / 60);
     const minutes = Math.floor(evolutionInfo.timeRemaining % 60);
-    const timeText = hours > 0
-        ? `${hours}h ${minutes}m until ${evolutionInfo.nextStage}`
-        : `${minutes}m until ${evolutionInfo.nextStage}`;
-    document.getElementById('evolutionTime').textContent = timeText;
+    
+    // If time is up, show "Ready to evolve!" message
+    if (evolutionInfo.timeRemaining <= 0) {
+        document.getElementById('evolutionTime').textContent = `Ready to evolve to ${evolutionInfo.nextStage}!`;
+        // Force evolution check and only update UI if stage actually changed
+        const oldStage = pet.stage;
+        pet.checkEvolution();
+        // Only schedule UI update if evolution occurred to avoid infinite loop
+        if (pet.stage !== oldStage) {
+            const EVOLUTION_UI_UPDATE_DELAY = 100; // milliseconds - allows evolution state to propagate
+            setTimeout(() => updateUI(), EVOLUTION_UI_UPDATE_DELAY);
+        }
+    } else {
+        const timeText = hours > 0
+            ? `${hours}h ${minutes}m until ${evolutionInfo.nextStage}`
+            : `${minutes}m until ${evolutionInfo.nextStage}`;
+        document.getElementById('evolutionTime').textContent = timeText;
+    }
 }
 
 // Update mood indicator based on pet stats
