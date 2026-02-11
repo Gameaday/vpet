@@ -196,6 +196,10 @@ function setupEventListeners() {
         closeSettingsModal();
         openHelp();
     });
+    document.getElementById('settingsHibernateBtn')?.addEventListener('click', () => {
+        closeSettingsModal();
+        openHibernationModal();
+    });
     
     // Modal close buttons
     document.getElementById('closeBattleModal').addEventListener('click', closeBattleModal);

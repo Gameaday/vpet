@@ -269,33 +269,8 @@
                 </button>
             </div>
 
-            <!-- Game Features Section -->
-            <div class="game-panel">
-                <button class="game-btn" id="shopBtn" title="Shop">
-                    <span class="btn-icon">🏪</span>
-                    <span>Shop</span>
-                </button>
-                <button class="game-btn" id="inventoryBtn" title="Inventory">
-                    <span class="btn-icon">🎒</span>
-                    <span>Inventory</span>
-                </button>
-                <button class="game-btn" id="minigamesBtn" title="Mini-Games">
-                    <span class="btn-icon">🎯</span>
-                    <span>Games</span>
-                </button>
-            </div>
-
-            <!-- Quality of Life Features Section -->
-            <div class="qol-panel">
-                <button class="qol-btn" id="hibernateBtn" title="Cryo Sleep">
-                    <span class="btn-icon">❄️</span>
-                    <span>Cryo Sleep</span>
-                </button>
-                <button class="qol-btn" id="backupBtn" title="Backup & Restore">
-                    <span class="btn-icon">💾</span>
-                    <span>Backup</span>
-                </button>
-            </div>
+            <!-- Shop/Inventory/Games removed - accessed via Feed/Play gateway modals -->
+            <!-- Backup/Cryo moved to settings to reduce clutter -->
 
             <!-- Settings FAB (Floating Action Button) -->
             <button class="settings-fab" id="settingsBtn" title="Settings" aria-label="Open Settings">
@@ -405,6 +380,10 @@
                     
                     <!-- Quick Actions Section -->
                     <div class="settings-quick-actions">
+                        <button class="quick-action-btn" id="settingsHibernateBtn">
+                            <span class="btn-icon">❄️</span>
+                            <span>Cryo Sleep</span>
+                        </button>
                         <button class="quick-action-btn" id="settingsBackupBtn">
                             <span class="btn-icon">💾</span>
                             <span>Backup Data</span>
