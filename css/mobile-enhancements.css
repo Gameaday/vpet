@@ -221,38 +221,31 @@ body {
         font-size: 1.25rem;
     }
     
-    .settings-btn,
-    .help-btn,
-    .reset-btn {
-        width: 48px !important;
-        height: 48px !important;
+    /* Use higher specificity instead of !important */
+    .settings-panel .settings-btn,
+    .settings-panel .help-btn,
+    .settings-panel .reset-btn {
+        width: 48px;
+        height: 48px;
         min-width: 48px;
         min-height: 48px;
-        font-size: 1.25rem !important;
-        background: rgba(102, 126, 234, 0.1) !important;
-        border: 1px solid rgba(102, 126, 234, 0.2) !important;
-        border-radius: 50% !important;
-        padding: 0 !important;
+        font-size: 1.25rem;
+        background: rgba(102, 126, 234, 0.1);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 50%;
+        padding: 0;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex !important;
+        display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        flex: 0 0 auto !important;
+        flex: 0 0 auto;
     }
     
-    .settings-btn:hover {
-        background: rgba(102, 126, 234, 0.2) !important;
-        transform: scale(1.05);
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-    }
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    
-    .settings-btn:hover {
+    .settings-panel .settings-btn:hover {
         background: rgba(102, 126, 234, 0.2);
         transform: scale(1.05);
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
     }
     
     /* Hide help and reset buttons on mobile - accessible via More menu */
