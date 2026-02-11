@@ -38,9 +38,10 @@
     <div class="container">
         <header>
             <h1>🐾 Virtual Pet</h1>
-            <div class="server-status" id="serverStatus">
+            <div class="server-status" id="serverStatus" title="Click to retry connection">
                 <span class="status-dot offline"></span>
-                <span>Offline</span>
+                <span class="status-text">Offline</span>
+                <span class="status-retry" style="display: none;">🔄</span>
             </div>
         </header>
 
@@ -310,6 +311,10 @@
                         <div class="battle-hp-bar">
                             <div class="battle-hp-fill" id="battleYourHp"></div>
                         </div>
+                        <div class="battle-stats">
+                            <div class="battle-stat">⚔️ <span id="battleYourAttack">0</span></div>
+                            <div class="battle-stat">🛡️ <span id="battleYourDefense">0</span></div>
+                        </div>
                     </div>
                     <div class="vs-text">VS</div>
                     <div class="battle-pet opponent-pet">
@@ -317,6 +322,10 @@
                         <div class="battle-pet-name" id="battleOpponentName">Opponent</div>
                         <div class="battle-hp-bar">
                             <div class="battle-hp-fill" id="battleOpponentHp"></div>
+                        </div>
+                        <div class="battle-stats">
+                            <div class="battle-stat">⚔️ <span id="battleOpponentAttack">0</span></div>
+                            <div class="battle-stat">🛡️ <span id="battleOpponentDefense">0</span></div>
                         </div>
                     </div>
                 </div>
