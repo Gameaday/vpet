@@ -14,6 +14,21 @@ class GatewayManager {
         };
         
         this.setupEventListeners();
+        this.setupKeyboardAccessibility();
+    }
+    
+    // Enable keyboard accessibility for div elements with role="button"
+    setupKeyboardAccessibility() {
+        // Add keyboard support to all elements with role="button"
+        document.querySelectorAll('[role="button"]').forEach(element => {
+            element.addEventListener('keydown', (e) => {
+                // Trigger click on Enter or Space
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    element.click();
+                }
+            });
+        });
     }
     
     setupEventListeners() {

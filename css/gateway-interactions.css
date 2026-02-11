@@ -145,11 +145,16 @@
 .activity-card:hover,
 .rest-option-card:hover,
 .grooming-card:hover,
-.training-card:hover {
+.training-card:hover,
+.activity-card:focus,
+.rest-option-card:focus,
+.grooming-card:focus,
+.training-card:focus {
     background: var(--surface-2, #333);
     border-color: rgba(102, 126, 234, 0.5);
     transform: translateY(-4px);
     box-shadow: var(--elevation-2, 0 4px 8px rgba(0, 0, 0, 0.2));
+    outline: none;
 }
 
 .activity-card:active,
