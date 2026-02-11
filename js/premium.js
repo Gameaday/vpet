@@ -254,8 +254,14 @@ class PremiumManager {
         
         if (!modalContent) return;
 
-        let html = '<h2>Upgrade to Premium</h2>';
+        let html = '<div class="premium-modal-header">';
+        html += '<h2>⭐ Upgrade to Premium</h2>';
         html += '<p>Unlock exclusive features and support VPet development!</p>';
+        html += '<button class="modal-close-btn" onclick="premiumManager.closePremiumModal()">×</button>';
+        html += '</div>';
+        
+        // Premium tiers container
+        html += '<div class="premium-tiers-container">';
         
         // Basic tier
         html += '<div class="premium-tier">';
@@ -271,6 +277,7 @@ class PremiumManager {
 
         // Premium tier
         html += '<div class="premium-tier premium-plus">';
+        html += '<div class="popular-badge">🏆 Most Popular</div>';
         html += `<h3>${features.premium.name}</h3>`;
         html += `<div class="premium-price">${features.premium.price}</div>`;
         html += '<ul class="premium-features">';
@@ -279,6 +286,25 @@ class PremiumManager {
         });
         html += '</ul>';
         html += '<button class="premium-purchase-btn premium-btn" data-tier="premium">Get Premium Plus</button>';
+        html += '</div>';
+        
+        html += '</div>'; // Close tiers container
+        
+        // Add feature comparison table
+        html += '<div class="premium-comparison-section">';
+        html += this.getComparisonTable();
+        html += '</div>';
+        
+        // Add benefits and FAQ
+        html += '<div class="premium-benefits">';
+        html += '<h3>💎 Why Go Premium?</h3>';
+        html += '<div class="benefits-grid">';
+        html += '<div class="benefit-item">🚀 <strong>Faster Progress</strong><br>Earn coins and XP faster</div>';
+        html += '<div class="benefit-item">🎨 <strong>Exclusive Content</strong><br>Unique themes and evolutions</div>';
+        html += '<div class="benefit-item">☁️ <strong>Never Lose Progress</strong><br>Cloud backup protection</div>';
+        html += '<div class="benefit-item">💤 <strong>Extended Breaks</strong><br>Pause your pet worry-free</div>';
+        html += '</div>';
+        html += '<p class="premium-note">✨ All core features remain free forever. Premium just enhances your experience!</p>';
         html += '</div>';
 
         modalContent.innerHTML = html;
@@ -340,6 +366,39 @@ class PremiumManager {
         const now = new Date();
         const diff = this.premiumExpiry - now;
         return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+    }
+
+    /**
+     * Get comparison table HTML
+     * @returns {string}
+     */
+    getComparisonTable() {
+        return `
+            <div class="premium-comparison">
+                <h3>📊 Feature Comparison</h3>
+                <table class="feature-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Free</th>
+                            <th>Basic<br><small>$2.99/mo</small></th>
+                            <th>Plus<br><small>$4.99/mo</small></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Pet Care & Evolution</td><td>✅</td><td>✅</td><td>✅</td></tr>
+                        <tr><td>All Battles & Mini-Games</td><td>✅</td><td>✅</td><td>✅</td></tr>
+                        <tr><td>Coin Earning Rate</td><td>1x</td><td>2x</td><td>3x</td></tr>
+                        <tr><td>Exclusive Themes</td><td>❌</td><td>✅</td><td>✅</td></tr>
+                        <tr><td>Cloud Backup</td><td>❌</td><td>✅</td><td>✅</td></tr>
+                        <tr><td>Cryo Sleep Duration</td><td>1 day</td><td>1 week</td><td>Unlimited</td></tr>
+                        <tr><td>Exclusive Evolutions</td><td>❌</td><td>❌</td><td>✅</td></tr>
+                        <tr><td>Rare Cosmetics</td><td>❌</td><td>❌</td><td>✅</td></tr>
+                        <tr><td>Analytics Dashboard</td><td>❌</td><td>❌</td><td>✅</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
     }
 
     /**
