@@ -3,6 +3,13 @@
    Enhanced modals for main action buttons
    ================================================ */
 
+/* CSS Custom Properties for Gateway System */
+:root {
+    --gateway-card-min-width: 140px;
+    --gateway-card-min-width-mobile: 120px;
+    --gateway-food-min-width: 100px;
+}
+
 /* Gateway Modal Base Styles */
 .gateway-modal {
     max-width: 520px;
@@ -86,7 +93,7 @@
 .grooming-options,
 .training-options {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(var(--gateway-card-min-width), 1fr));
     gap: 16px;
     margin-bottom: 20px;
 }
@@ -224,7 +231,7 @@
 
 /* Food Grid Specific */
 .food-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(var(--gateway-food-min-width), 1fr));
 }
 
 .food-item-card {
@@ -275,6 +282,10 @@
 
 /* Mobile Optimizations */
 @media (max-width: 768px) {
+    :root {
+        --gateway-card-min-width: var(--gateway-card-min-width-mobile);
+    }
+    
     .gateway-modal {
         max-width: 100%;
         max-height: 95vh;
@@ -303,7 +314,6 @@
     .rest-options,
     .grooming-options,
     .training-options {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         gap: 12px;
     }
     

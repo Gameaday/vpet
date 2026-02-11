@@ -188,8 +188,9 @@ class GatewayManager {
         
         foodGrid.innerHTML = foodItems.map(([id, data]) => {
             const item = window.itemSystem.items[id];
+            const safeId = id.replace(/['"<>&]/g, ''); // Sanitize ID
             return `
-                <div class="food-item-card" onclick="gatewayManager.useFood('${id}')">
+                <div class="food-item-card" data-item-id="${safeId}">
                     <div class="food-item-icon">${item.icon}</div>
                     <div class="food-item-name">${item.name}</div>
                     <div class="food-item-effect">+${item.hunger || 20} Hunger</div>
@@ -197,6 +198,16 @@ class GatewayManager {
                 </div>
             `;
         }).join('');
+        
+        // Add event delegation for food item clicks
+        foodGrid.querySelectorAll('.food-item-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const itemId = card.dataset.itemId;
+                if (itemId) {
+                    this.useFood(itemId);
+                }
+            });
+        });
     }
     
     useFood(itemId) {
@@ -259,8 +270,16 @@ class GatewayManager {
     
     deepSleep() {
         if (window.pet) {
-            window.pet.energy = Math.min(100, window.pet.energy + 100);
+            const maxEnergy = 100;
+            window.pet.energy = Math.min(maxEnergy, window.pet.energy + maxEnergy);
             window.pet.isSleeping = true;
+            // Wake up after a timeout
+            setTimeout(() => {
+                if (window.pet) {
+                    window.pet.isSleeping = false;
+                    window.updateDisplay?.();
+                }
+            }, 2000); // Wake up after 2 seconds
             window.updateDisplay?.();
             this.closeModal('rest');
             if (window.showNotification) {
