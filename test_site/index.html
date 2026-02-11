@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Virtual Pet - VPet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐾 Virtual Pet</h1>
+            <div class="server-status" id="serverStatus">
+                <span class="status-dot offline"></span>
+                <span>Offline</span>
+            </div>
+        </header>
+
+        <main>
+            <!-- Pet Display Area -->
+            <div class="pet-display">
+                <div class="mood-indicator" id="moodIndicator">😊</div>
+                <div class="pet-sprite" id="petSprite">
+                    <div class="pet-animation"></div>
+                </div>
+                <div class="pet-name" id="petName">My Pet</div>
+                <div class="pet-stage" id="petStage">Egg</div>
+                <div class="evolution-preview" id="evolutionPreview" style="display: none;">
+                    <div class="evolution-progress-text">Next Evolution</div>
+                    <div class="evolution-progress-bar">
+                        <div class="evolution-progress-fill" id="evolutionProgressFill"></div>
+                    </div>
+                    <div class="evolution-time" id="evolutionTime"></div>
+                </div>
+            </div>
+
+            <!-- Stats Display -->
+            <div class="stats-panel">
+                <div class="stat-bar" data-tooltip="">
+                    <div class="stat-label">
+                        <span>❤️ Health</span>
+                        <span id="healthValue">100</span>
+                    </div>
+                    <div class="progress-bar" id="healthBarContainer">
+                        <div class="progress-fill health" id="healthBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill health" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="healthCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="healthCircleValue">100</div>
+                    </div>
+                </div>
+
+                <div class="stat-bar" data-tooltip="">
+                    <div class="stat-label">
+                        <span>🍔 Hunger</span>
+                        <span id="hungerValue">100</span>
+                    </div>
+                    <div class="progress-bar" id="hungerBarContainer">
+                        <div class="progress-fill hunger" id="hungerBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill hunger" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="hungerCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="hungerCircleValue">100</div>
+                    </div>
+                </div>
+
+                <div class="stat-bar" data-tooltip="">
+                    <div class="stat-label">
+                        <span>😊 Happiness</span>
+                        <span id="happinessValue">100</span>
+                    </div>
+                    <div class="progress-bar" id="happinessBarContainer">
+                        <div class="progress-fill happiness" id="happinessBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill happiness" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="happinessCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="happinessCircleValue">100</div>
+                    </div>
+                </div>
+
+                <div class="stat-bar" data-tooltip="">
+                    <div class="stat-label">
+                        <span>⚡ Energy</span>
+                        <span id="energyValue">100</span>
+                    </div>
+                    <div class="progress-bar" id="energyBarContainer">
+                        <div class="progress-fill energy" id="energyBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill energy" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="energyCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="energyCircleValue">100</div>
+                    </div>
+                </div>
+
+                <div class="stat-bar" data-tooltip="">
+                    <div class="stat-label">
+                        <span>🧹 Cleanliness</span>
+                        <span id="cleanlinessValue">100</span>
+                    </div>
+                    <div class="progress-bar" id="cleanlinessBarContainer">
+                        <div class="progress-fill cleanliness" id="cleanlinessBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill cleanliness" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="cleanlinessCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="cleanlinessCircleValue">100</div>
+                    </div>
+                </div>
+
+                <!-- Egg-only stat -->
+                <div class="stat-bar egg-only" id="warmthStat" style="display: none;" data-tooltip="">
+                    <div class="stat-label">
+                        <span>🔥 Warmth</span>
+                        <span id="warmthValue">50</span>
+                    </div>
+                    <div class="progress-bar" id="warmthBarContainer">
+                        <div class="progress-fill warmth" id="warmthBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill warmth" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="warmthCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="warmthCircleValue">50</div>
+                    </div>
+                    <div class="warmth-status" id="warmthStatus"></div>
+                </div>
+
+                <div class="stat-info">
+                    <div>Age: <span id="petAge">0</span></div>
+                    <div>Level: <span id="petLevel">1</span></div>
+                    <div>Wins: <span id="petWins">0</span></div>
+                    <div>Coins: <span id="petCoins">0</span> 💰</div>
+                </div>
+            </div>
+
+            <!-- Egg Action Buttons (shown only for eggs) -->
+            <div class="action-panel egg-only" id="eggActionPanel" style="display: none;">
+                <button class="action-btn warm-btn" id="warmBtn">
+                    <span class="btn-icon">🔥</span>
+                    <span>Warm Egg</span>
+                </button>
+                <button class="action-btn hatch-btn" id="hatchBtn" disabled>
+                    <span class="btn-icon">🐣</span>
+                    <span>Hatch</span>
+                </button>
+            </div>
+
+            <!-- Action Buttons (hidden for eggs) -->
+            <div class="action-panel non-egg" id="normalActionPanel">
+                <button class="action-btn feed-btn" id="feedBtn">
+                    <span class="btn-icon">🍖</span>
+                    <span>Feed</span>
+                </button>
+                <button class="action-btn play-btn" id="playBtn">
+                    <span class="btn-icon">🎮</span>
+                    <span>Play</span>
+                </button>
+                <button class="action-btn sleep-btn" id="sleepBtn">
+                    <span class="btn-icon">💤</span>
+                    <span>Sleep</span>
+                </button>
+                <button class="action-btn train-btn" id="trainBtn">
+                    <span class="btn-icon">💪</span>
+                    <span>Train</span>
+                </button>
+                <button class="action-btn clean-btn" id="cleanBtn">
+                    <span class="btn-icon">🧹</span>
+                    <span>Clean</span>
+                </button>
+            </div>
+
+            <!-- Battle Section -->
+            <div class="battle-panel">
+                <button class="battle-btn" id="battleBtn">
+                    <span class="btn-icon">⚔️</span>
+                    <span>Battle</span>
+                </button>
+                <button class="online-battle-btn" id="onlineBattleBtn" disabled>
+                    <span class="btn-icon">🌐</span>
+                    <span>Online Battle</span>
+                </button>
+            </div>
+
+            <!-- Social Features Section -->
+            <div class="social-panel">
+                <button class="social-btn" id="shareBtn" title="Share your pet">
+                    <span class="btn-icon">📤</span>
+                    <span>Share</span>
+                </button>
+                <button class="social-btn" id="leaderboardBtn" title="View leaderboard">
+                    <span class="btn-icon">🏆</span>
+                    <span>Leaderboard</span>
+                </button>
+                <button class="social-btn" id="friendsBtn" title="Manage friends">
+                    <span class="btn-icon">👥</span>
+                    <span>Friends</span>
+                </button>
+                <button class="social-btn" id="tournamentBtn" title="Tournaments">
+                    <span class="btn-icon">🏅</span>
+                    <span>Tournament</span>
+                </button>
+            </div>
+
+            <!-- Game Features Section -->
+            <div class="game-panel">
+                <button class="game-btn" id="shopBtn" title="Shop">
+                    <span class="btn-icon">🏪</span>
+                    <span>Shop</span>
+                </button>
+                <button class="game-btn" id="inventoryBtn" title="Inventory">
+                    <span class="btn-icon">🎒</span>
+                    <span>Inventory</span>
+                </button>
+                <button class="game-btn" id="minigamesBtn" title="Mini-Games">
+                    <span class="btn-icon">🎯</span>
+                    <span>Games</span>
+                </button>
+            </div>
+
+            <!-- Quality of Life Features Section -->
+            <div class="qol-panel">
+                <button class="qol-btn" id="hibernateBtn" title="Cryo Sleep">
+                    <span class="btn-icon">❄️</span>
+                    <span>Cryo Sleep</span>
+                </button>
+                <button class="qol-btn" id="backupBtn" title="Backup & Restore">
+                    <span class="btn-icon">💾</span>
+                    <span>Backup</span>
+                </button>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="settings-panel">
+                <button class="settings-btn" id="settingsBtn">⚙️</button>
+                <button class="help-btn" id="helpBtn">❓</button>
+                <button class="reset-btn" id="resetBtn">🔄</button>
+            </div>
+        </main>
+
+        <!-- Modal for Battle -->
+        <div class="modal" id="battleModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeBattleModal">&times;</span>
+                <h2>Battle Arena</h2>
+                <div class="battle-arena">
+                    <div class="battle-pet your-pet">
+                        <div class="battle-sprite"></div>
+                        <div class="battle-pet-name" id="battleYourName">Your Pet</div>
+                        <div class="battle-hp-bar">
+                            <div class="battle-hp-fill" id="battleYourHp"></div>
+                        </div>
+                    </div>
+                    <div class="vs-text">VS</div>
+                    <div class="battle-pet opponent-pet">
+                        <div class="battle-sprite"></div>
+                        <div class="battle-pet-name" id="battleOpponentName">Opponent</div>
+                        <div class="battle-hp-bar">
+                            <div class="battle-hp-fill" id="battleOpponentHp"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="battle-log" id="battleLog"></div>
+                <div class="battle-actions" id="battleActions">
+                    <button class="battle-action-btn" id="attackBtn">Attack</button>
+                    <button class="battle-action-btn" id="defendBtn">Defend</button>
+                    <button class="battle-action-btn" id="specialBtn">Special</button>
+                </div>
+                <button class="battle-action-btn finish-btn" id="finishBattleBtn" style="display: none;">Finish</button>
+            </div>
+        </div>
+
+        <!-- Modal for Settings -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeSettingsModal">&times;</span>
+                <h2>Settings</h2>
+                <div class="settings-content">
+                    <div class="setting-item">
+                        <label for="petNameInput">Pet Name:</label>
+                        <input type="text" id="petNameInput" maxlength="15" />
+                    </div>
+                    <div class="setting-item">
+                        <label for="serverUrlInput">Server URL:</label>
+                        <input type="text" id="serverUrlInput" placeholder="ws://localhost:3000" />
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="soundToggle" checked />
+                            🔊 Sound Effects
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="vibrationToggle" checked />
+                            📳 Vibration Feedback
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="themeSelect">🎨 Theme:</label>
+                        <select id="themeSelect">
+                            <option value="dark">Dark Mode</option>
+                            <option value="light">Light Mode</option>
+                            <option value="retro">Retro LCD</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="statDisplaySelect">📊 Stat Display:</label>
+                        <select id="statDisplaySelect">
+                            <option value="bars">Horizontal Bars</option>
+                            <option value="circular">Circular Gauges</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Premium Section -->
+                    <div class="setting-item premium-section">
+                        <button class="premium-cta-btn" id="premiumCtaBtn">⭐ Upgrade to Premium</button>
+                    </div>
+                    
+                    <!-- Battle History Section -->
+                    <div class="battle-history-section">
+                        <h3>⚔️ Battle History</h3>
+                        <div id="battleHistoryList" class="battle-history-list">
+                            <p class="no-history">No battles yet</p>
+                        </div>
+                    </div>
+                    
+                    <button class="save-settings-btn" id="saveSettingsBtn">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div class="notification" id="notification"></div>
+        
+        <!-- Auto-save Indicator -->
+        <div class="save-indicator" id="saveIndicator">Saved ✓</div>
+        
+        <!-- Time Away Modal -->
+        <div class="modal" id="timeAwayModal">
+            <div class="modal-content">
+                <h2>Welcome Back!</h2>
+                <div class="time-away-content" id="timeAwayContent"></div>
+                <button class="battle-action-btn finish-btn" id="closeTimeAwayBtn">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help/Tutorial Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-overlay">
+            <div class="modal-content help-modal-content">
+                <span class="close-btn" id="closeHelpModal">×</span>
+                <h2>How to Play VPet 🐾</h2>
+                
+                <div class="help-section">
+                    <h3>📚 Pet Care</h3>
+                    <ul>
+                        <li><strong>🍖 Feed (F)</strong> - Restore hunger and health</li>
+                        <li><strong>🎮 Play (P)</strong> - Increase happiness (uses energy)</li>
+                        <li><strong>💤 Sleep (S)</strong> - Restore energy over time</li>
+                        <li><strong>💪 Train (T)</strong> - Increase level (requires energy)</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>📊 Stats Guide</h3>
+                    <ul>
+                        <li><strong>❤️ Health</strong> - Keep hunger high to maintain health</li>
+                        <li><strong>🍔 Hunger</strong> - Decreases over time (~1.5/min)</li>
+                        <li><strong>😊 Happiness</strong> - Decreases over time (~1.0/min)</li>
+                        <li><strong>⚡ Energy</strong> - Decreases over time (~0.8/min), restored by sleep</li>
+                        <li><strong>🧹 Cleanliness</strong> - Decreases over time (~1.2/min)</li>
+                    </ul>
+                    <p><strong>Tip:</strong> Stat bars glow red when critical (&lt;30%), yellow when low (&lt;50%), and green when excellent (≥90%)</p>
+                    <p><strong>Time:</strong> All time is in real-world time. Your pet ages in real-time even when you're away!</p>
+                </div>
+                
+                <div class="help-section">
+                    <h3>🌱 Evolution</h3>
+                    <p>Your pet evolves through 5 stages based on age (real-time):</p>
+                    <ul>
+                        <li>🥚 Egg (0-15min) → 👶 Baby (15min-1.0hr) → 🧒 Child (1.0-2.4hr) → 🧑 Teen (2.4-5.0hr) → 👨 Adult (5hr+)</li>
+                    </ul>
+                    <p>Check the evolution preview to see exact time until next stage!</p>
+                </div>
+                
+                <div class="help-section">
+                    <h3>⚔️ Battles (B)</h3>
+                    <ul>
+                        <li><strong>Attack</strong> - Deal damage to opponent</li>
+                        <li><strong>Defend</strong> - Reduce incoming damage</li>
+                        <li><strong>Special</strong> - High risk, high reward move</li>
+                    </ul>
+                    <p>Battles require 30 energy. Win to gain experience and levels!</p>
+                </div>
+                
+                <div class="help-section">
+                    <h3>⌨️ Keyboard Shortcuts</h3>
+                    <ul>
+                        <li><strong>F</strong> - Feed</li>
+                        <li><strong>P</strong> - Play</li>
+                        <li><strong>S</strong> - Sleep</li>
+                        <li><strong>T</strong> - Train</li>
+                        <li><strong>B</strong> - Battle</li>
+                        <li><strong>ESC</strong> - Close modals</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>💡 Pro Tips</h3>
+                    <ul>
+                        <li>Hover over stat bars for detailed information</li>
+                        <li>Watch the mood indicator (😊) above your pet</li>
+                        <li>Data is auto-saved after every action</li>
+                        <li>Your pet continues to age even when you're away!</li>
+                    </ul>
+                </div>
+                
+                <button class="battle-action-btn finish-btn" id="closeHelpBtn">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Modal -->
+    <div id="premiumModal" class="modal">
+        <div id="premiumModalContent">
+            <!-- Content will be dynamically populated by premium.js -->
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div class="modal" id="leaderboardModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeLeaderboardModal">×</span>
+            <h2>🏆 Leaderboard</h2>
+            <div class="leaderboard-content" id="leaderboardContent">
+                <div class="loading">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hibernation Modal -->
+    <div class="modal" id="hibernationModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeHibernationModal">×</span>
+            <h2>❄️ Cryo Sleep</h2>
+            <div class="hibernation-content">
+                <p>Put your pet into suspended animation when you need a break!</p>
+                <div class="hibernation-status" id="hibernationStatus">
+                    <!-- Status will be populated dynamically -->
+                </div>
+                <div class="hibernation-controls" id="hibernationControls">
+                    <!-- Controls will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backup Modal -->
+    <div class="modal" id="backupModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeBackupModal">×</span>
+            <h2>💾 Backup & Restore</h2>
+            <div class="backup-content">
+                <p>Save and restore your pet's progress!</p>
+                <div class="backup-section">
+                    <h3>Local Backup (All Users)</h3>
+                    <button class="action-btn" id="exportBackupBtn">
+                        <span class="btn-icon">💾</span>
+                        <span>Export Backup</span>
+                    </button>
+                    <div class="file-input-wrapper">
+                        <button class="action-btn" id="importBackupBtnTrigger">
+                            <span class="btn-icon">📥</span>
+                            <span>Import Backup</span>
+                        </button>
+                        <input type="file" id="importBackupInput" accept=".json" style="display: none;" />
+                    </div>
+                    <div class="backup-info" id="localBackupInfo">
+                        Last backup: <span id="lastBackupTime">Never</span>
+                    </div>
+                </div>
+                <div class="backup-section cloud-backup">
+                    <h3>☁️ Cloud Backup (Premium Only)</h3>
+                    <button class="action-btn" id="saveToCloudBtn">
+                        <span class="btn-icon">☁️</span>
+                        <span>Save to Cloud</span>
+                    </button>
+                    <button class="action-btn" id="loadFromCloudBtn">
+                        <span class="btn-icon">📥</span>
+                        <span>Load from Cloud</span>
+                    </button>
+                    <div class="backup-toggle">
+                        <label>
+                            <input type="checkbox" id="autoCloudBackupToggle" />
+                            Automatic cloud backups
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shop Modal -->
+    <div class="modal" id="shopModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeShopModal">×</span>
+            <h2>🏪 Shop</h2>
+            <div class="shop-content">
+                <div class="coin-display">Coins: <span id="coinBalance">0</span> 💰</div>
+                <div class="shop-categories">
+                    <button class="category-btn active" data-category="all">All</button>
+                    <button class="category-btn" data-category="food">Food</button>
+                    <button class="category-btn" data-category="medicine">Medicine</button>
+                    <button class="category-btn" data-category="battle">Battle</button>
+                    <button class="category-btn" data-category="evolution">Evolution</button>
+                    <button class="category-btn" data-category="cosmetic">Cosmetic</button>
+                </div>
+                <div class="shop-items" id="shopItems">
+                    <!-- Items will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div class="modal" id="inventoryModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeInventoryModal">×</span>
+            <h2>🎒 Inventory</h2>
+            <div class="inventory-content">
+                <div class="inventory-items" id="inventoryItems">
+                    <!-- Items will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini-Games Modal -->
+    <div class="modal" id="minigamesModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeMinigamesModal">×</span>
+            <h2>🎯 Mini-Games</h2>
+            <div class="minigames-menu" id="minigamesMenu">
+                <div class="game-card">
+                    <h3>🎯 Reaction Game</h3>
+                    <p>Catch falling items before they hit the ground!</p>
+                    <p class="high-score">Best: <span id="reactionHighScore">0</span></p>
+                    <button class="action-btn" id="playReactionBtn">Play</button>
+                </div>
+                <div class="game-card">
+                    <h3>🧩 Memory Game</h3>
+                    <p>Match pairs of cards!</p>
+                    <p class="high-score">Best: <span id="memoryHighScore">0</span></p>
+                    <button class="action-btn" id="playMemoryBtn">Play</button>
+                </div>
+                <div class="game-card">
+                    <h3>🎵 Rhythm Game</h3>
+                    <p>Hit notes at the right time! (D, F, J, K keys)</p>
+                    <p class="high-score">Best: <span id="rhythmHighScore">0</span></p>
+                    <button class="action-btn" id="playRhythmBtn">Play</button>
+                </div>
+            </div>
+            <div class="game-canvas-container" id="gameCanvasContainer" style="display: none;">
+                <canvas id="gameCanvas" width="350" height="500"></canvas>
+                <button class="action-btn" id="endGameBtn">End Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friends Modal -->
+    <div class="modal" id="friendsModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeFriendsModal">×</span>
+            <h2>👥 Friends</h2>
+            <div class="friends-content">
+                <div class="friend-tabs">
+                    <button class="tab-btn active" data-tab="list">Friends</button>
+                    <button class="tab-btn" data-tab="requests">Requests</button>
+                    <button class="tab-btn" data-tab="add">Add Friend</button>
+                </div>
+                <div class="tab-content" id="friendsListTab">
+                    <div id="friendsList">
+                        <!-- Friends will be populated dynamically -->
+                    </div>
+                </div>
+                <div class="tab-content" style="display: none;" id="friendRequestsTab">
+                    <div id="friendRequests">
+                        <!-- Requests will be populated dynamically -->
+                    </div>
+                </div>
+                <div class="tab-content" style="display: none;" id="addFriendTab">
+                    <input type="text" id="friendUsernameInput" placeholder="Enter username" />
+                    <button class="action-btn" id="sendFriendRequestBtn">Send Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tournament Modal -->
+    <div class="modal" id="tournamentModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeTournamentModal">×</span>
+            <h2>🏅 Tournament</h2>
+            <div class="tournament-content" id="tournamentContent">
+                <!-- Tournament UI will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuration Modules -->
+    <script src="app-config.js"></script>
+    <script src="pet-config.js"></script>
+    <script src="battle-config.js"></script>
+    
+    <!-- Manager Modules -->
+    <script src="sound-manager.js"></script>
+    <script src="vibration-manager.js"></script>
+    <script src="ui-manager.js"></script>
+    <script src="battle-ui-manager.js"></script>
+    <script src="milestone-manager.js"></script>
+    <script src="social-features.js"></script>
+    <script src="particle-effects.js"></script>
+    
+    <!-- Phase 3-4 Feature Modules -->
+    <script src="item-system.js"></script>
+    <script src="minigames.js"></script>
+    <script src="evolution-paths.js"></script>
+    <script src="friend-system.js"></script>
+    <script src="tournament-manager.js"></script>
+    
+    <!-- Core Classes -->
+    <script src="pet.js"></script>
+    <script src="battle.js"></script>
+    <script src="server.js"></script>
+    <script src="premium.js"></script>
+    <script src="backup-manager.js"></script>
+    <script src="hibernation-manager.js"></script>
+    
+    <!-- Phase 3-4 Integration -->
+    <script src="phase34-integration.js"></script>
+    
+    <!-- Main Application -->
+    <script src="app.js"></script>
+</body>
+</html>
