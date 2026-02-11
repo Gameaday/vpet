@@ -1,6 +1,6 @@
 {
   "name": "vpet",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A cross-platform virtual pet application inspired by Digimon and traditional virtual pets",
   "type": "module",
   "scripts": {
