@@ -90,7 +90,7 @@ class ServerConnection {
         // Don't reconnect if we've exceeded max attempts
         if (this.reconnectAttempts >= this.maxReconnectAttempts) {
             console.log('Max reconnection attempts reached. Manual reconnection required.');
-            showNotification('⚠️ Unable to connect. Check settings to reconnect.', 'warning');
+            this.updateConnectionStatus(false, true); // Show max attempts reached
             return;
         }
 
@@ -99,17 +99,40 @@ class ServerConnection {
         this.reconnectAttempts++;
 
         console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
-        showNotification(`🔄 Reconnecting in ${Math.round(delay/1000)}s...`, 'info');
+        this.updateConnectionStatus(false, false, true); // Show reconnecting state
 
         this.reconnectTimer = setTimeout(() => {
             console.log('Attempting to reconnect...');
             this.connect().then(() => {
-                showNotification('✅ Reconnected to server!', 'success');
+                // Connection successful, status will be updated by onopen handler
+                console.log('Reconnected successfully');
             }).catch((error) => {
                 console.error('Reconnection failed:', error);
                 // The onclose handler will trigger another reconnect attempt
             });
         }, delay);
+    }
+
+    // Manual retry connection (e.g., from user click)
+    manualRetry() {
+        // Reset reconnect attempts
+        this.reconnectAttempts = 0;
+        this.manualDisconnect = false;
+        
+        // Clear any existing timer
+        if (this.reconnectTimer) {
+            clearTimeout(this.reconnectTimer);
+            this.reconnectTimer = null;
+        }
+        
+        // Try to connect
+        this.updateConnectionStatus(false, false, true);
+        this.connect().then(() => {
+            console.log('Manual reconnection successful');
+        }).catch((error) => {
+            console.error('Manual reconnection failed:', error);
+            // Will trigger auto-reconnect via onclose handler
+        });
     }
 
     // Disconnect from server
@@ -132,21 +155,37 @@ class ServerConnection {
     }
 
     // Update connection status in UI
-    updateConnectionStatus(connected) {
+    updateConnectionStatus(connected, maxAttemptsReached = false, reconnecting = false) {
         const statusDot = document.querySelector('.status-dot');
-        const statusText = document.querySelector('.server-status span:last-child');
+        const statusText = document.querySelector('.status-text');
+        const statusRetry = document.querySelector('.status-retry');
+        const serverStatus = document.getElementById('serverStatus');
         const onlineBattleBtn = document.getElementById('onlineBattleBtn');
         
         if (connected) {
-            statusDot.classList.remove('offline');
+            statusDot.classList.remove('offline', 'reconnecting');
             statusDot.classList.add('online');
+            serverStatus.classList.remove('reconnecting');
             statusText.textContent = 'Online';
-            onlineBattleBtn.disabled = false;
+            if (statusRetry) statusRetry.style.display = 'none';
+            if (onlineBattleBtn) onlineBattleBtn.disabled = false;
+            serverStatus.title = 'Connected to server';
+        } else if (reconnecting) {
+            statusDot.classList.remove('online', 'offline');
+            statusDot.classList.add('reconnecting');
+            serverStatus.classList.add('reconnecting');
+            statusText.textContent = 'Connecting...';
+            if (statusRetry) statusRetry.style.display = 'inline';
+            if (onlineBattleBtn) onlineBattleBtn.disabled = true;
+            serverStatus.title = 'Attempting to reconnect... Click to cancel';
         } else {
-            statusDot.classList.remove('online');
+            statusDot.classList.remove('online', 'reconnecting');
             statusDot.classList.add('offline');
-            statusText.textContent = 'Offline';
-            onlineBattleBtn.disabled = true;
+            serverStatus.classList.remove('reconnecting');
+            statusText.textContent = maxAttemptsReached ? 'Offline' : 'Offline';
+            if (statusRetry) statusRetry.style.display = 'none';
+            if (onlineBattleBtn) onlineBattleBtn.disabled = true;
+            serverStatus.title = maxAttemptsReached ? 'Click to retry connection' : 'Not connected to server';
         }
     }
 

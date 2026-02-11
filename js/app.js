@@ -99,6 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Set up all event listeners
 function setupEventListeners() {
+    // Server status click handler for manual retry
+    document.getElementById('serverStatus').addEventListener('click', () => {
+        if (serverConnection && !serverConnection.connected) {
+            serverConnection.manualRetry();
+        }
+    });
+    
     // Action buttons
     document.getElementById('feedBtn').addEventListener('click', handleFeed);
     document.getElementById('playBtn').addEventListener('click', handlePlay);

@@ -55,21 +55,23 @@ body {
         position: sticky;
         top: 0;
         z-index: 100;
-        padding: 12px 16px; /* Slightly larger padding */
+        padding: 10px 12px; /* Reduced padding */
     }
     
     header h1 {
-        font-size: 1.25rem; /* Larger for readability */
+        font-size: 1.15rem; /* Slightly smaller for more space */
     }
     
-    /* Scrollable main content only */
+    /* Scrollable main content only - optimized for no scroll on main view */
     main {
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-y: contain;
-        padding: 15px;
+        padding: 10px; /* Reduced padding */
+        display: flex;
+        flex-direction: column;
     }
     
     /* Android Material Design bottom navigation style */
@@ -81,24 +83,25 @@ body {
         position: sticky;
         bottom: 0;
         background: #1a1a1a;
-        padding: 12px 8px;
-        margin: 0 -15px;
+        padding: 10px 8px; /* Reduced padding */
+        margin: 0 -10px;
         border-top: 2px solid rgba(102, 126, 234, 0.3);
         z-index: 50;
+        flex-shrink: 0;
     }
     
     /* Compact button layout for mobile */
     .action-panel {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 10px; /* Increased from 8px for better spacing */
+        gap: 6px; /* Reduced gap */
     }
     
     .action-btn {
         flex-direction: column;
-        padding: 12px 6px; /* Slightly more padding */
-        min-height: 64px; /* Increased from 60px for better touch */
-        font-size: 0.8rem; /* Slightly larger font */
+        padding: 8px 4px; /* Reduced padding */
+        min-height: 56px; /* Reduced from 64px */
+        font-size: 0.75rem; /* Smaller font */
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -109,23 +112,23 @@ body {
     }
     
     .action-btn .btn-icon {
-        font-size: 1.6rem; /* Slightly larger icons */
-        margin-bottom: 4px;
+        font-size: 1.4rem; /* Smaller icons */
+        margin-bottom: 2px;
     }
     
     /* Compact battle section */
     .battle-panel {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px; /* Increased from 8px */
-        padding: 12px 10px; /* More padding */
+        gap: 8px;
+        padding: 10px 8px;
     }
     
     .battle-btn,
     .online-battle-btn {
-        padding: 14px 10px; /* More padding */
-        font-size: 0.9rem; /* Larger font */
-        min-height: 52px; /* Ensure touch target */
+        padding: 12px 8px;
+        font-size: 0.85rem;
+        min-height: 48px; /* Reduced height */
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -140,16 +143,16 @@ body {
     .game-panel {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 10px; /* Increased from 8px */
-        padding: 12px 10px; /* More padding */
+        gap: 8px;
+        padding: 10px 8px;
     }
     
     .social-btn,
     .game-btn {
         flex-direction: column;
-        padding: 12px 6px; /* More padding */
-        min-height: 64px; /* Increased from 60px */
-        font-size: 0.8rem; /* Larger font */
+        padding: 10px 4px;
+        min-height: 56px;
+        font-size: 0.75rem;
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -161,23 +164,23 @@ body {
     
     .social-btn .btn-icon,
     .game-btn .btn-icon {
-        font-size: 1.6rem; /* Larger icons */
-        margin-bottom: 4px;
+        font-size: 1.4rem;
+        margin-bottom: 2px;
     }
     
     /* Compact QOL section */
     .qol-panel {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px; /* Increased from 8px */
-        padding: 12px 10px; /* More padding */
+        gap: 8px;
+        padding: 10px 8px;
     }
     
     .qol-btn {
         flex-direction: column;
-        padding: 12px 6px; /* More padding */
-        min-height: 64px; /* Increased from 60px */
-        font-size: 0.8rem; /* Larger font */
+        padding: 10px 4px;
+        min-height: 56px;
+        font-size: 0.75rem;
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -191,20 +194,21 @@ body {
         position: sticky;
         bottom: 0;
         background: #1a1a1a;
-        padding: 12px 10px; /* More padding */
-        margin: 0 -15px;
+        padding: 10px 8px;
+        margin: 0 -10px;
         border-top: 2px solid rgba(102, 126, 234, 0.3);
         display: flex;
         justify-content: space-around;
         z-index: 50;
+        flex-shrink: 0;
     }
     
     .settings-btn,
     .help-btn,
     .reset-btn {
-        width: 52px; /* Increased from 44px */
-        height: 52px; /* Increased from 44px */
-        font-size: 1.4rem; /* Larger icons */
+        width: 48px; /* Material Design minimum touch target */
+        height: 48px;
+        font-size: 1.3rem;
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -215,39 +219,67 @@ body {
         background-color: rgba(102, 126, 234, 0.3);
     }
     
-    /* Pet display optimization */
+    /* Pet display optimization - more compact */
     .pet-display {
-        margin-bottom: 16px; /* Slightly more spacing */
-        padding: 20px 16px;
+        margin-bottom: 8px;
+        padding: 12px 10px; /* Reduced padding */
+        flex-shrink: 0;
     }
     
     .pet-name {
-        font-size: 1.1rem; /* Larger name */
-        margin-bottom: 8px;
+        font-size: 1rem;
+        margin-bottom: 4px;
     }
     
     .pet-sprite {
-        width: 130px; /* Slightly larger */
-        height: 130px;
+        width: 100px; /* Smaller sprite */
+        height: 100px;
     }
     
-    /* Stats panel - more compact but readable */
+    .pet-stage {
+        font-size: 0.85rem;
+    }
+    
+    /* Stats panel - much more compact for Galaxy S24 */
     .stats-panel {
-        gap: 10px; /* More spacing */
-        margin-bottom: 16px;
+        gap: 6px; /* Reduced gap */
+        margin-bottom: 8px;
+        flex-shrink: 0;
     }
     
     .stat-bar {
-        padding: 10px; /* More padding */
+        padding: 6px 8px; /* Much more compact */
     }
     
     .stat-label {
-        font-size: 0.9rem; /* Larger font */
-        font-weight: 500; /* Slightly bolder */
+        font-size: 0.8rem; /* Smaller font */
+        font-weight: 500;
     }
     
     .stat-label span:first-child {
-        margin-right: 8px; /* More spacing */
+        margin-right: 6px;
+    }
+    
+    /* Hide circular gauges on mobile for space efficiency */
+    .circular-gauge {
+        display: none;
+    }
+    
+    /* Make progress bars more visible when gauges hidden */
+    .progress-bar {
+        height: 8px; /* Slightly taller */
+    }
+    
+    /* Stat info - more compact */
+    .stat-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        font-size: 0.8rem;
+    }
+    
+    .stat-info > div {
+        padding: 4px;
     }
     
     /* Modal optimizations for mobile */
@@ -342,35 +374,43 @@ body {
 /* Extra small screens optimization (iPhone SE, older devices) */
 @media (max-width: 375px) {
     html {
-        font-size: 15px; /* Slightly smaller base for very small screens */
+        font-size: 14px; /* Smaller base for very small screens */
+    }
+    
+    header h1 {
+        font-size: 1rem;
     }
     
     .action-panel {
-        gap: 8px;
+        gap: 5px;
     }
     
     .action-btn,
     .social-btn,
     .game-btn,
     .qol-btn {
-        padding: 10px 4px;
-        min-height: 60px;
-        font-size: 0.75rem;
+        padding: 8px 3px;
+        min-height: 52px;
+        font-size: 0.7rem;
     }
     
     .action-btn .btn-icon,
     .social-btn .btn-icon,
     .game-btn .btn-icon {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
     
     .pet-sprite {
-        width: 110px;
-        height: 110px;
+        width: 90px;
+        height: 90px;
     }
     
-    header h1 {
-        font-size: 1.1rem;
+    .stat-bar {
+        padding: 5px 6px;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
     }
 }
 
