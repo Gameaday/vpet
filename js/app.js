@@ -500,6 +500,12 @@ function updateUI() {
     document.getElementById('eggActionPanel').style.display = isEgg ? 'flex' : 'none';
     document.getElementById('normalActionPanel').style.display = isEgg ? 'none' : 'flex';
     
+    // Hide Battle/Social buttons during egg state
+    const secondaryPanel = document.getElementById('secondaryActionPanel');
+    if (secondaryPanel) {
+        secondaryPanel.style.display = isEgg ? 'none' : 'flex';
+    }
+    
     // Hide normal stats for eggs
     const normalStats = ['health', 'hunger', 'happiness', 'energy', 'cleanliness'];
     normalStats.forEach(stat => {
@@ -598,7 +604,9 @@ function updateUI() {
         document.getElementById('playBtn').disabled = actionsDisabled;
         document.getElementById('trainBtn').disabled = actionsDisabled;
         document.getElementById('cleanBtn').disabled = actionsDisabled;
-        document.getElementById('battleBtn').disabled = actionsDisabled;
+        // Battle button was renamed to battleGatewayBtn
+        const battleBtn = document.getElementById('battleGatewayBtn');
+        if (battleBtn) battleBtn.disabled = actionsDisabled;
         document.getElementById('sleepBtn').disabled = isHibernating;
     }
     
@@ -1669,12 +1677,21 @@ function openHibernationModal() {
                 '<p class="hibernation-warning">⚠️ Free tier cannot wake up early</p>' : ''}
         `;
         
-        document.getElementById('wakeUpBtn').addEventListener('click', () => {
-            if (hibernationManager.wakeUp()) {
-                closeHibernationModal();
-                updateUI();
+        // Use setTimeout to ensure the button is in DOM before adding event listener
+        setTimeout(() => {
+            const wakeBtn = document.getElementById('wakeUpBtn');
+            if (wakeBtn && !wakeBtn.disabled) {
+                wakeBtn.addEventListener('click', () => {
+                    // Pass false to indicate manual (not automatic) wake-up
+                    const result = hibernationManager.wakeUp(false);
+                    if (result) {
+                        closeHibernationModal();
+                        updateUI();
+                        showNotification('🌅 Pet woke up successfully!', 'success');
+                    }
+                });
             }
-        });
+        }, 0);
     } else {
         const tierName = premiumManager.subscriptionTier;
         const maxDays = hibStatus.maxDuration === Infinity ? 'Unlimited' : `${hibStatus.maxDuration} day${hibStatus.maxDuration > 1 ? 's' : ''}`;

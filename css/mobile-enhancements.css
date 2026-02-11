@@ -76,8 +76,6 @@ body {
     
     /* Android Material Design bottom navigation style */
     .action-panel,
-    .battle-panel,
-    .social-panel,
     .game-panel,
     .qol-panel {
         position: sticky;
@@ -116,15 +114,7 @@ body {
         margin-bottom: 2px;
     }
     
-    /* Compact battle section */
-    .battle-panel {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 6px;
-        padding: 8px 6px;
-    }
-    
-    .battle-btn,
+    /* Compact battle/online battle buttons for mobile */
     .online-battle-btn {
         padding: 10px 6px;
         font-size: 0.8rem;
@@ -132,14 +122,12 @@ body {
         transition: transform 0.2s, background-color 0.2s;
     }
     
-    .battle-btn:active,
     .online-battle-btn:active {
         transform: scale(0.98);
         background-color: rgba(102, 126, 234, 0.3);
     }
     
-    /* Bottom sheet style for social/game panels */
-    .social-panel,
+    /* Bottom sheet style for game panels */
     .game-panel {
         display: grid;
         grid-template-columns: repeat(4, 1fr); /* 4 columns instead of 3 for compactness */
@@ -147,7 +135,6 @@ body {
         padding: 8px 6px;
     }
     
-    .social-btn,
     .game-btn {
         flex-direction: column;
         padding: 8px 3px;
@@ -295,10 +282,13 @@ body {
     }
     
     /* Hide less critical panels on mobile to eliminate scrolling - prioritize core gameplay */
-    .social-panel,
     .game-panel,
-    .battle-panel,
     .qol-panel {
+        display: none; /* Hide on mobile - accessible via More menu modal */
+    }
+    
+    /* Hide secondary actions (Battle/Social) on very small screens */
+    .action-panel.secondary-actions {
         display: none; /* Hide on mobile - accessible via More menu modal */
     }
     
@@ -439,8 +429,6 @@ body {
     
     /* Side navigation style for tablets */
     .action-panel,
-    .battle-panel,
-    .social-panel,
     .game-panel {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -724,7 +712,6 @@ body {
 /* Android safe area handling */
 @supports (padding: env(safe-area-inset-bottom)) {
     .action-panel,
-    .battle-panel,
     .settings-panel {
         padding-bottom: 12px;
         padding-bottom: calc(12px + env(safe-area-inset-bottom));
