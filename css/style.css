@@ -1553,6 +1553,44 @@ main {
 }
 
 /* Battle History */
+/* App Information Section */
+.app-info-section {
+    margin: 15px 0;
+    padding: 12px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    border: 2px solid #333;
+}
+
+.app-info-section h3 {
+    color: #fff;
+    margin: 0 0 12px 0;
+    font-size: 1em;
+}
+
+.app-info-section .info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+    font-size: 0.9em;
+}
+
+.app-info-section .info-item:last-child {
+    border-bottom: none;
+}
+
+.app-info-section .info-item label {
+    color: #aaa;
+    font-weight: 500;
+}
+
+.app-info-section .info-item span {
+    color: #fff;
+    font-family: monospace;
+}
+
+/* Battle History Section */
 .battle-history-section {
     margin: 15px 0;
     padding: 12px;

@@ -1,5 +1,5 @@
 // Main application logic - Refactored with Modular Architecture
-/* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager, SocialFeatures, AppConfig, BackupManager, HibernationManager, ParticleEffects */
+/* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager, SocialFeatures, AppConfig, BackupManager, HibernationManager, ParticleEffects, BuildInfo */
 /* global initializePhase34Features, awardCoins */
 
 let pet = null;
@@ -1373,6 +1373,19 @@ function openSettings() {
     document.getElementById('soundToggle').checked = soundManager.isEnabled();
     document.getElementById('vibrationToggle').checked = vibrationManager.isEnabled();
     document.getElementById('themeSelect').value = currentTheme;
+    
+    // Load build information
+    if (typeof BuildInfo !== 'undefined') {
+        const appVersionElem = document.getElementById('appVersion');
+        const buildTimeElem = document.getElementById('buildTime');
+        
+        if (appVersionElem && BuildInfo.version) {
+            appVersionElem.textContent = BuildInfo.version;
+        }
+        if (buildTimeElem && BuildInfo.buildTime) {
+            buildTimeElem.textContent = BuildInfo.buildTime;
+        }
+    }
     
     // Update battle history
     updateBattleHistory();

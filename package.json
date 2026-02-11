@@ -12,7 +12,7 @@
     "validate": "bash validate-build.sh",
     "clean": "rm -rf www/ dist/ coverage/ *.backup",
     "prebuild": "npm run lint && npm run test",
-    "build": "npm run clean && mkdir -p www/js www/css && cp index.html manifest.json sw.js www/ && cp js/*.js www/js/ && cp css/*.css www/css/ && cp -r icons www/ && rm -f www/js/*.test.js",
+    "build": "npm run clean && node generate-build-info.cjs && mkdir -p www/js www/css && cp index.html manifest.json sw.js www/ && cp js/*.js www/js/ && cp css/*.css www/css/ && cp -r icons www/ && rm -f www/js/*.test.js",
     "build:quick": "mkdir -p www/js www/css && cp index.html manifest.json sw.js www/ && cp js/*.js www/js/ && cp css/*.css www/css/ && cp -r icons www/ && rm -f www/js/*.test.js",
     "serve": "python -m http.server 8000",
     "android:build": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
