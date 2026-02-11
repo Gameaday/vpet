@@ -14,9 +14,7 @@
     <meta name="apple-mobile-web-app-title" content="VPet">
     
     <!-- iOS Splash Screens -->
-    <link rel="apple-touch-startup-image" href="icons/icon-512x512.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
-    <link rel="apple-touch-startup-image" href="icons/icon-512x512.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)">
-    <link rel="apple-touch-startup-image" href="icons/icon-512x512.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="icons/icon-512x512.png">
     
     <!-- Android PWA Support -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -743,30 +741,30 @@
                     </div>
                 </div>
                 <div class="activities-grid">
-                    <button class="activity-card" id="playMinigamesBtn">
+                    <div class="activity-card" id="playMinigamesBtn" role="button" tabindex="0">
                         <span class="activity-icon">🎯</span>
                         <h3>Mini-Games</h3>
                         <p>Reaction, Memory, Rhythm</p>
                         <div class="activity-bonus">+Happiness +Coins</div>
-                    </button>
-                    <button class="activity-card" id="playExploreBtn">
+                    </div>
+                    <div class="activity-card" id="playExploreBtn" role="button" tabindex="0">
                         <span class="activity-icon">🗺️</span>
                         <h3>Explore</h3>
                         <p>Adventure & Discovery</p>
                         <div class="activity-bonus">+XP +Items</div>
-                    </button>
-                    <button class="activity-card" id="playSocialBtn">
+                    </div>
+                    <div class="activity-card" id="playSocialBtn" role="button" tabindex="0">
                         <span class="activity-icon">👥</span>
                         <h3>Social Play</h3>
                         <p>Visit friends' pets</p>
                         <div class="activity-bonus">+Happiness +Social</div>
-                    </button>
-                    <button class="activity-card" id="playToysBtn">
+                    </div>
+                    <div class="activity-card" id="playToysBtn" role="button" tabindex="0">
                         <span class="activity-icon">🎾</span>
                         <h3>Toys</h3>
                         <p>Use inventory items</p>
                         <div class="activity-bonus">+Happiness +Fun</div>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -788,30 +786,30 @@
                     </div>
                 </div>
                 <div class="rest-options">
-                    <button class="rest-option-card" id="normalSleepBtn">
+                    <div class="rest-option-card" id="normalSleepBtn" role="button" tabindex="0">
                         <span class="rest-icon">💤</span>
                         <h3>Normal Sleep</h3>
                         <p>Standard rest period</p>
                         <div class="rest-benefit">+50 Energy (2-4 hours)</div>
-                    </button>
-                    <button class="rest-option-card" id="deepSleepBtn">
+                    </div>
+                    <div class="rest-option-card" id="deepSleepBtn" role="button" tabindex="0">
                         <span class="rest-icon">🌙</span>
                         <h3>Deep Sleep</h3>
                         <p>Extended rest for full recovery</p>
                         <div class="rest-benefit">+100 Energy (6-8 hours)</div>
-                    </button>
-                    <button class="rest-option-card" id="cryoSleepBtn">
+                    </div>
+                    <div class="rest-option-card" id="cryoSleepBtn" role="button" tabindex="0">
                         <span class="rest-icon">❄️</span>
                         <h3>Cryo Sleep</h3>
                         <p>Pause when you need a break</p>
                         <div class="rest-benefit">Suspend all stats</div>
-                    </button>
-                    <button class="rest-option-card" id="dreamActivityBtn">
+                    </div>
+                    <div class="rest-option-card" id="dreamActivityBtn" role="button" tabindex="0">
                         <span class="rest-icon">✨</span>
                         <h3>Dream Activity</h3>
                         <p>Light rest + dream games</p>
                         <div class="rest-benefit">+30 Energy +Fun</div>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -833,30 +831,30 @@
                     </div>
                 </div>
                 <div class="grooming-options">
-                    <button class="grooming-card" id="bathGameBtn">
+                    <div class="grooming-card" id="bathGameBtn" role="button" tabindex="0">
                         <span class="grooming-icon">🛁</span>
                         <h3>Bath Time</h3>
                         <p>Interactive washing mini-game</p>
                         <div class="grooming-bonus">+Clean +Happiness +Coins</div>
-                    </button>
-                    <button class="grooming-card" id="brushGameBtn">
+                    </div>
+                    <div class="grooming-card" id="brushGameBtn" role="button" tabindex="0">
                         <span class="grooming-icon">✨</span>
                         <h3>Brush & Polish</h3>
                         <p>Grooming care activity</p>
                         <div class="grooming-bonus">+Clean +Appearance</div>
-                    </button>
-                    <button class="grooming-card" id="spaBtn">
+                    </div>
+                    <div class="grooming-card" id="spaBtn" role="button" tabindex="0">
                         <span class="grooming-icon">🌸</span>
                         <h3>Spa Treatment</h3>
                         <p>Premium grooming (costs coins)</p>
                         <div class="grooming-bonus">++Clean ++Happiness</div>
-                    </button>
-                    <button class="grooming-card" id="cosmeticsBtn">
+                    </div>
+                    <div class="grooming-card" id="cosmeticsBtn" role="button" tabindex="0">
                         <span class="grooming-icon">💄</span>
                         <h3>Cosmetics</h3>
                         <p>Unlock & apply styles</p>
                         <div class="grooming-bonus">Customization</div>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -890,36 +888,36 @@
                     </div>
                 </div>
                 <div class="training-options">
-                    <button class="training-card" id="strengthTrainBtn">
+                    <div class="training-card" id="strengthTrainBtn" role="button" tabindex="0">
                         <span class="training-icon">⚔️</span>
                         <h3>Strength Training</h3>
                         <p>Increase attack power</p>
                         <div class="training-cost">-20 Energy</div>
-                    </button>
-                    <button class="training-card" id="defenseTrainBtn">
+                    </div>
+                    <div class="training-card" id="defenseTrainBtn" role="button" tabindex="0">
                         <span class="training-icon">🛡️</span>
                         <h3>Defense Training</h3>
                         <p>Boost defensive stats</p>
                         <div class="training-cost">-20 Energy</div>
-                    </button>
-                    <button class="training-card" id="speedTrainBtn">
+                    </div>
+                    <div class="training-card" id="speedTrainBtn" role="button" tabindex="0">
                         <span class="training-icon">⚡</span>
                         <h3>Speed Training</h3>
                         <p>Enhance agility</p>
                         <div class="training-cost">-20 Energy</div>
-                    </button>
-                    <button class="training-card" id="balancedTrainBtn">
+                    </div>
+                    <div class="training-card" id="balancedTrainBtn" role="button" tabindex="0">
                         <span class="training-icon">🎯</span>
                         <h3>Balanced Training</h3>
                         <p>All-around improvement</p>
                         <div class="training-cost">-30 Energy</div>
-                    </button>
-                    <button class="training-card" id="battlePrepBtn">
+                    </div>
+                    <div class="training-card" id="battlePrepBtn" role="button" tabindex="0">
                         <span class="training-icon">⚔️</span>
                         <h3>Battle Prep</h3>
                         <p>Ready for combat</p>
                         <div class="training-cost">Opens Battle Menu</div>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
