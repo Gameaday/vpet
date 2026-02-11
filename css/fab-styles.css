@@ -35,7 +35,9 @@
     -moz-user-select: none;
     
     /* Safe area insets for notched devices - consolidated positioning */
+    bottom: clamp(16px, 4vh, 24px);
     bottom: calc(clamp(16px, 4vh, 24px) + env(safe-area-inset-bottom, 0px));
+    right: clamp(16px, 4vw, 24px);
     right: calc(clamp(16px, 4vw, 24px) + env(safe-area-inset-right, 0px));
 }
 

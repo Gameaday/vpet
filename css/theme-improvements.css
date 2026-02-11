@@ -73,7 +73,7 @@
 .social-btn:active:not(:disabled),
 .game-btn:active:not(:disabled),
 .qol-btn:active:not(:disabled) {
-    box-shadow: var(--elevation-0);
+    box-shadow: none;
 }
 
 /* Panels - Elevation 2 */

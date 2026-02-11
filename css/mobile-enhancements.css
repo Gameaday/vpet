@@ -195,6 +195,7 @@ body {
         bottom: 0;
         background: linear-gradient(180deg, transparent 0%, #1a1a1a 20%);
         padding: 8px 4% 8px;
+        padding-bottom: 8px;
         padding-bottom: max(8px, env(safe-area-inset-bottom));
         margin: 0 calc(-1 * 4%);
         border-top: 1px solid rgba(102, 126, 234, 0.2);
@@ -725,6 +726,7 @@ body {
     .action-panel,
     .battle-panel,
     .settings-panel {
+        padding-bottom: 12px;
         padding-bottom: calc(12px + env(safe-area-inset-bottom));
     }
 }
