@@ -391,6 +391,9 @@ class Pet {
             // If less than 1 hour, show in minutes
             if (ageInHours < 1) {
                 const ageInMinutes = Math.floor(ageInHours * 60);
+                if (ageInMinutes < 1) {
+                    return '< 1 minute';
+                }
                 return ageInMinutes === 1 ? '1 minute' : `${ageInMinutes} minutes`;
             }
             

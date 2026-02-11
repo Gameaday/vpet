@@ -254,7 +254,7 @@ function setupEventListeners() {
     // Backup modal buttons
     document.getElementById('exportBackupBtn')?.addEventListener('click', handleExportBackup);
     document.getElementById('importBackupBtnTrigger')?.addEventListener('click', () => {
-        document.getElementById('importBackupInput').click();
+        document.getElementById('importBackupInput')?.click();
     });
     document.getElementById('importBackupInput')?.addEventListener('change', handleImportBackup);
     document.getElementById('saveToCloudBtn')?.addEventListener('click', handleSaveToCloud);
@@ -497,13 +497,13 @@ function updateUI() {
     
     // Show/hide egg-specific elements
     document.getElementById('warmthStat').style.display = isEgg ? 'block' : 'none';
-    document.getElementById('eggActionPanel').style.display = isEgg ? 'flex' : 'none';
-    document.getElementById('normalActionPanel').style.display = isEgg ? 'none' : 'flex';
+    document.getElementById('eggActionPanel').style.display = isEgg ? 'grid' : 'none';
+    document.getElementById('normalActionPanel').style.display = isEgg ? 'none' : 'grid';
     
     // Hide Battle/Social buttons during egg state
     const secondaryPanel = document.getElementById('secondaryActionPanel');
     if (secondaryPanel) {
-        secondaryPanel.style.display = isEgg ? 'none' : 'flex';
+        secondaryPanel.style.display = isEgg ? 'none' : 'grid';
     }
     
     // Hide normal stats for eggs
@@ -579,7 +579,12 @@ function updateUI() {
     }
     
     // Update info
-    document.getElementById('petAge').textContent = isEgg ? 'Egg' : pet.getAgeDisplay();
+    const ageText = isEgg
+        ? 'Egg'
+        : (pet && typeof pet.getAgeDisplay === 'function'
+            ? pet.getAgeDisplay()
+            : Math.floor(pet.age || 0) + ' days');
+    document.getElementById('petAge').textContent = ageText;
     document.getElementById('petLevel').textContent = Math.floor(pet.level);
     document.getElementById('petWins').textContent = pet.wins;
     
@@ -650,11 +655,14 @@ function updateEvolutionPreview() {
     // If time is up, show "Ready to evolve!" message
     if (evolutionInfo.timeRemaining <= 0) {
         document.getElementById('evolutionTime').textContent = `Ready to evolve to ${evolutionInfo.nextStage}!`;
-        // Force evolution check
+        // Force evolution check and only update UI if stage actually changed
+        const oldStage = pet.stage;
         pet.checkEvolution();
-        // Update UI after evolution with small delay to allow pet state to update
-        const EVOLUTION_UI_UPDATE_DELAY = 100; // milliseconds - allows evolution state to propagate
-        setTimeout(() => updateUI(), EVOLUTION_UI_UPDATE_DELAY);
+        // Only schedule UI update if evolution occurred to avoid infinite loop
+        if (pet.stage !== oldStage) {
+            const EVOLUTION_UI_UPDATE_DELAY = 100; // milliseconds - allows evolution state to propagate
+            setTimeout(() => updateUI(), EVOLUTION_UI_UPDATE_DELAY);
+        }
     } else {
         const timeText = hours > 0
             ? `${hours}h ${minutes}m until ${evolutionInfo.nextStage}`
