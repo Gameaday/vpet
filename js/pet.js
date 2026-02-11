@@ -1,7 +1,7 @@
 // Pet class managing the virtual pet's state and behavior
 class Pet {
     constructor() {
-        this.name = 'My Pet';
+        this.name = '???'; // Egg starts with unknown name
         this.stage = 'egg'; // egg, baby, child, teen, adult
         this.health = 100;
         this.hunger = 100;

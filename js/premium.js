@@ -142,6 +142,12 @@ class PremiumManager {
         premiumThemes.forEach(theme => {
             theme.classList.remove('locked');
         });
+
+        // Hide premium CTA button
+        const premiumCtaBtn = document.getElementById('premiumCtaBtn');
+        if (premiumCtaBtn) {
+            premiumCtaBtn.style.display = 'none';
+        }
     }
 
     /**
@@ -160,6 +166,12 @@ class PremiumManager {
         premiumThemes.forEach(theme => {
             theme.classList.add('locked');
         });
+
+        // Show premium CTA button
+        const premiumCtaBtn = document.getElementById('premiumCtaBtn');
+        if (premiumCtaBtn) {
+            premiumCtaBtn.style.display = 'block';
+        }
     }
 
     /**

@@ -99,10 +99,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Set up all event listeners
 function setupEventListeners() {
-    // Server status click handler for manual retry
+    // Server status click handler for manual retry or cancel reconnect
     document.getElementById('serverStatus').addEventListener('click', () => {
-        if (serverConnection && !serverConnection.connected) {
-            serverConnection.manualRetry();
+        if (serverConnection) {
+            const serverStatus = document.getElementById('serverStatus');
+            const isReconnecting = serverStatus && serverStatus.classList.contains('reconnecting');
+            
+            if (isReconnecting) {
+                // Cancel ongoing reconnection attempts
+                serverConnection.cancelReconnect();
+            } else if (!serverConnection.connected) {
+                // Retry connection when offline
+                serverConnection.manualRetry();
+            }
         }
     });
     
@@ -665,6 +674,32 @@ function handleHatch() {
             const y = rect.top + rect.height / 2;
             particleEffects.showEvolution(x, y);
         }
+        
+        // Prompt for pet name
+        setTimeout(() => {
+            const newName = prompt('🎉 Your egg has hatched!\n\nWhat would you like to name your pet?', 'My Pet');
+            if (newName && newName.trim()) {
+                // Validate the name
+                const validation = InputValidator.validatePetName(newName);
+                if (validation.isValid) {
+                    pet.name = newName.trim();
+                    pet.save();
+                    showToast(`Welcome, ${pet.name}! 🐾`, 'success', 3000);
+                } else {
+                    showToast(validation.error, 'error', 3000);
+                    // Keep "???" or default if validation fails
+                    if (pet.name === '???') {
+                        pet.name = 'My Pet';
+                        pet.save();
+                    }
+                }
+            } else if (pet.name === '???') {
+                // User cancelled or provided empty name, set default
+                pet.name = 'My Pet';
+                pet.save();
+            }
+            updateUI();
+        }, 1000); // Delay to let the evolution animation play
         
         updateUI();
         uiManager.showSaveIndicator();
