@@ -162,11 +162,17 @@ The server enables multiplayer battles between players.
 ```
 vpet/
 ├── index.html          # Main HTML file
-├── style.css          # Styling and animations
-├── pet.js             # Pet class and logic
-├── battle.js          # Battle system
-├── server.js          # WebSocket client
-├── app.js             # Main application logic
+├── sw.js              # Service Worker for PWA
+├── manifest.json      # PWA manifest
+├── js/                # JavaScript modules
+│   ├── app.js         # Main application logic
+│   ├── pet.js         # Pet class and logic
+│   ├── battle.js      # Battle system
+│   ├── server.js      # WebSocket client
+│   └── ...            # Other modules
+├── css/               # Stylesheets
+│   └── style.css      # Main styling and animations
+├── icons/             # PWA icons
 ├── server/            # Optional multiplayer server
 │   ├── index.js       # WebSocket server
 │   └── package.json   # Server dependencies
@@ -222,7 +228,7 @@ npx live-server
 
 ### Modifying the Pet
 
-Edit `pet.js` to customize:
+Edit `js/pet.js` to customize:
 - Evolution stages and timing
 - Stat decay rates
 - Action effects
@@ -230,7 +236,7 @@ Edit `pet.js` to customize:
 
 ### Customizing Visuals
 
-Edit `style.css` to change:
+Edit `css/style.css` to change:
 - Pet sprites and animations
 - Color schemes
 - Layout and spacing
