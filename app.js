@@ -77,6 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up event listeners
     setupEventListeners();
     
+    // Initialize Phase 3-4 features
+    if (typeof initializePhase34Features === 'function') {
+        initializePhase34Features();
+    }
+    
     // Try to connect to server in background
     tryConnectToServer();
 });
@@ -822,6 +827,13 @@ function closeBattleModal() {
         const opponentName = battle.opponentPet.name || 'Opponent';
         pet.updatePersonality('battle'); // Update personality based on battle
         pet.updateAfterBattle(battle.playerWon(), opponentName);
+        
+        // Award coins for battle win
+        if (battle.playerWon() && typeof awardCoins === 'function') {
+            const baseReward = 10 + (battle.opponentPet.level || 1) * 2;
+            const coinsEarned = awardCoins(baseReward, 'battle');
+            showNotification(`+${coinsEarned} coins! 💰`, 'success');
+        }
         
         // Update leaderboard after battle
         if (socialFeatures) {
