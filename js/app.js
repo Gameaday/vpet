@@ -702,12 +702,18 @@ function enableMouseTracking() {
     
     document.addEventListener('mousemove', handleMouseMove);
     
-    // Periodically check if pet should follow mouse
-    setInterval(() => {
-        if (pet.stage !== 'egg' && !pet.isSleeping && Math.random() < 0.3) {
-            trackMouseForDuration(2000 + Math.random() * 3000); // 2-5 seconds
-        }
-    }, 8000 + Math.random() * 7000); // Check every 8-15 seconds
+    // Periodically check if pet should follow mouse with variable delays
+    const scheduleMouseCheck = () => {
+        const delay = 8000 + Math.random() * 7000; // 8-15 seconds
+        setTimeout(() => {
+            if (pet.stage !== 'egg' && !pet.isSleeping && Math.random() < 0.3) {
+                trackMouseForDuration(2000 + Math.random() * 3000); // 2-5 seconds
+            }
+            scheduleMouseCheck(); // Schedule next check
+        }, delay);
+    };
+    
+    scheduleMouseCheck();
 }
 
 function handleMouseMove(e) {
