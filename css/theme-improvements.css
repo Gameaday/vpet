@@ -73,7 +73,9 @@
 .social-btn:active:not(:disabled),
 .game-btn:active:not(:disabled),
 .qol-btn:active:not(:disabled) {
-    box-shadow: var(--elevation-0);
+    /* Using 'none' directly instead of var(--elevation-0) due to CSS validator constraints.
+       The validator doesn't accept CSS variables that resolve to 'none' in box-shadow property. */
+    box-shadow: none;
 }
 
 /* Panels - Elevation 2 */
