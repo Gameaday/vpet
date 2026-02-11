@@ -543,7 +543,7 @@ function updateUI() {
         if (warmthStatus) {
             warmthStatus.className = 'warmth-status';
             if (pet.warmth >= 100) {
-                warmthStatus.textContent = '🎉 Ready to Hatch! - Press Hatch button';
+                warmthStatus.textContent = '🎉 Ready to Hatch! - Click the 🐣 button below';
                 warmthStatus.classList.add('very-hot');
             } else if (pet.warmth >= 90) {
                 warmthStatus.textContent = '🔥 Very Hot - Almost ready!';
