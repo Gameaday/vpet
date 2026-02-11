@@ -46,12 +46,20 @@ class InputValidator {
             };
         }
 
-        // Sanitize HTML entities and dangerous characters
-        const sanitized = name
-            .replace(/[<>]/g, '') // Remove angle brackets
-            .replace(/javascript:/gi, '') // Remove javascript: protocol
-            .replace(/on\w+=/gi, '') // Remove event handlers
-            .trim();
+        // Sanitize HTML entities and dangerous characters using comprehensive approach
+        let sanitized = name.trim();
+        
+        // Remove ALL occurrences of dangerous patterns (multiple passes to handle edge cases)
+        for (let i = 0; i < 3; i++) {
+            sanitized = sanitized
+                .replace(/[<>]/g, '') // Remove angle brackets
+                .replace(/javascript\s*:/gi, '') // Remove javascript: protocol
+                .replace(/data\s*:/gi, '') // Remove data: protocol  
+                .replace(/vbscript\s*:/gi, '') // Remove vbscript: protocol
+                .replace(/on\w+\s*=/gi, ''); // Remove event handlers
+        }
+        
+        sanitized = sanitized.trim();
 
         // Check if sanitization removed too much
         if (sanitized.length < 2) {
@@ -168,11 +176,19 @@ class InputValidator {
             return '';
         }
 
-        return text
-            .replace(/[<>]/g, '') // Remove angle brackets
-            .replace(/javascript:/gi, '') // Remove javascript: protocol
-            .replace(/on\w+=/gi, '') // Remove event handlers
-            .trim();
+        let result = text.trim();
+        
+        // Multiple passes to handle edge cases in sanitization
+        for (let i = 0; i < 3; i++) {
+            result = result
+                .replace(/[<>]/g, '') // Remove angle brackets
+                .replace(/javascript\s*:/gi, '') // Remove javascript: protocol
+                .replace(/data\s*:/gi, '') // Remove data: protocol
+                .replace(/vbscript\s*:/gi, '') // Remove vbscript: protocol
+                .replace(/on\w+\s*=/gi, ''); // Remove event handlers
+        }
+        
+        return result.trim();
     }
 
     /**
