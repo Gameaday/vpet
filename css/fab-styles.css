@@ -1,102 +1,90 @@
 /**
  * Floating Action Button (FAB) Styles
  * Material Design 3 compliant FAB for settings
+ * Uses MD3 Design System variables
  */
 
-/* Settings FAB - Floating Action Button */
+/* Settings FAB - Floating Action Button using MD3 System */
 .settings-fab {
     position: fixed;
     width: 56px;
     height: 56px;
-    border-radius: 16px; /* Material Design 3 FAB shape */
-    background: linear-gradient(135deg, var(--primary, #667eea) 0%, var(--primary-dark, #5568d3) 100%);
+    border-radius: var(--md-radius-lg, 16px); /* Material Design 3 FAB shape */
+    background: linear-gradient(135deg, var(--md-primary, #667eea) 0%, var(--md-secondary, #764ba2) 100%);
     border: none;
-    color: white;
+    color: var(--md-on-primary, white);
     font-size: 24px;
     cursor: pointer;
-    z-index: 900; /* Below modals (1000) but above everything else */
-    
-    /* Material Design 3 elevation-3 */
-    box-shadow: 
-        0 3px 5px -1px rgba(0, 0, 0, 0.2),
-        0 6px 10px 0 rgba(0, 0, 0, 0.14),
-        0 1px 18px 0 rgba(0, 0, 0, 0.12);
-    
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Ensure proper touch target */
+    z-index: 900; /* Below modals (1000) but above content */
+    box-shadow: var(--md-elevation-3);
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* Disable user selection */
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     
     /* Safe area insets for notched devices - consolidated positioning */
-    bottom: clamp(16px, 4vh, 24px);
-    bottom: calc(clamp(16px, 4vh, 24px) + env(safe-area-inset-bottom, 0px));
-    right: clamp(16px, 4vw, 24px);
-    right: calc(clamp(16px, 4vw, 24px) + env(safe-area-inset-right, 0px));
+    bottom: var(--md-spacing-xl, 24px);
+    bottom: calc(var(--md-spacing-xl, 24px) + env(safe-area-inset-bottom, 0px));
+    right: var(--md-spacing-xl, 24px);
+    right: calc(var(--md-spacing-xl, 24px) + env(safe-area-inset-right, 0px));
 }
 
 .settings-fab:hover {
     transform: scale(1.05);
-    box-shadow: 
-        0 5px 5px -3px rgba(0, 0, 0, 0.2),
-        0 8px 10px 1px rgba(0, 0, 0, 0.14),
-        0 3px 14px 2px rgba(0, 0, 0, 0.12);
-    background: linear-gradient(135deg, var(--primary-dark, #5568d3) 0%, var(--primary, #667eea) 100%);
+    box-shadow: var(--md-elevation-4);
+    background: linear-gradient(135deg, var(--md-secondary, #764ba2) 0%, var(--md-primary, #667eea) 100%);
 }
 
 .settings-fab:active {
     transform: scale(0.95);
-    box-shadow: 
-        0 2px 4px -1px rgba(0, 0, 0, 0.2),
-        0 4px 5px 0 rgba(0, 0, 0, 0.14),
-        0 1px 10px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: var(--md-elevation-2);
 }
 
 .settings-fab:focus-visible {
-    outline: 3px solid var(--primary, #667eea);
+    outline: 3px solid var(--md-primary, #667eea);
     outline-offset: 2px;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .settings-fab {
-        /* Slightly smaller on mobile */
         width: 52px;
         height: 52px;
         font-size: 22px;
+        bottom: var(--md-spacing-lg, 16px);
+        bottom: calc(var(--md-spacing-lg, 16px) + env(safe-area-inset-bottom, 0px));
+        right: var(--md-spacing-lg, 16px);
+        right: calc(var(--md-spacing-lg, 16px) + env(safe-area-inset-right, 0px));
     }
 }
 
-/* Settings quick actions in settings modal */
+/* Settings quick actions in settings modal using MD3 */
 .settings-quick-actions {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-    margin: 20px 0;
-    padding: 16px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    gap: var(--md-spacing-md, 12px);
+    margin: var(--md-spacing-xl, 24px) 0;
+    padding: var(--md-spacing-lg, 16px) 0;
+    border-top: 1px solid var(--md-outline-variant, rgba(255, 255, 255, 0.1));
 }
 
 .quick-action-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 12px 16px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-    border: 1px solid rgba(102, 126, 234, 0.2);
-    border-radius: 12px;
-    color: var(--text-primary, #fff);
-    font-size: 0.9rem;
+    gap: var(--md-spacing-sm, 8px);
+    padding: var(--md-spacing-md, 12px) var(--md-spacing-lg, 16px);
+    background: var(--md-primary-container, rgba(102, 126, 234, 0.1));
+    border: 1px solid var(--md-outline-variant, rgba(102, 126, 234, 0.2));
+    border-radius: var(--md-radius-md, 12px);
+    color: var(--md-on-surface, #fff);
+    font-size: var(--md-type-label-large, 14px);
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    min-height: 44px; /* Accessibility touch target */
+    transition: all var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+    min-height: 44px;
 }
 
 .quick-action-btn .btn-icon {
@@ -104,17 +92,16 @@
 }
 
 .quick-action-btn:hover {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
-    border-color: rgba(102, 126, 234, 0.4);
+    background: var(--md-secondary-container, rgba(118, 75, 162, 0.2));
+    border-color: var(--md-outline, rgba(102, 126, 234, 0.4));
     transform: translateY(-2px);
-    box-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.1),
-        0 4px 8px rgba(102, 126, 234, 0.2);
+    box-shadow: var(--md-elevation-2),
+                0 4px 8px rgba(102, 126, 234, 0.2);
 }
 
 .quick-action-btn:active {
     transform: translateY(0);
-    box-shadow: none;
+    box-shadow: var(--md-elevation-0);
 }
 
 /* Remove old More button and settings panel styles if they exist */

@@ -86,104 +86,192 @@ body {
         flex-direction: column;
     }
     
-    /* Android Material Design bottom navigation style with retro digi-pet aesthetic */
+    /* Material Design 3 Bottom App Bar - Primary action container */
     .action-panel,
     .game-panel,
     .qol-panel {
         position: sticky;
         bottom: 0;
-        background: linear-gradient(180deg, rgba(26, 26, 26, 0.98) 0%, rgba(26, 26, 26, 0.98) 100%);
-        backdrop-filter: blur(12px);
-        padding: clamp(8px, 2vh, 12px) clamp(4px, 1vw, 8px);
+        background: var(--md-surface-container-highest, rgba(26, 26, 26, 0.98));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        padding: var(--md-spacing-lg, 16px) var(--md-spacing-md, 12px);
+        padding-bottom: calc(var(--md-spacing-lg, 16px) + env(safe-area-inset-bottom, 0px));
         margin: 0 calc(-1 * 4%);
-        border-top: 2px solid rgba(102, 126, 234, 0.3);
+        border-top: 1px solid var(--md-outline, rgba(102, 126, 234, 0.3));
         z-index: 50;
         flex-shrink: 0;
-        border-radius: 20px 20px 0 0;
-        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
+        border-radius: var(--md-radius-xxl, 28px) var(--md-radius-xxl, 28px) 0 0;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2),
+                    0 -1px 3px rgba(0, 0, 0, 0.15);
     }
     
-    /* Organic button layout for mobile - fits naturally with improved styling */
+    /* Material Design 3 Grid Layout - Auto-fit responsive grid */
     .action-panel {
-        /* Auto-fit creates optimal columns based on available space */
-        grid-template-columns: repeat(auto-fit, minmax(clamp(60px, 15vw, 90px), 1fr));
-        gap: clamp(8px, 2vw, 12px);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(clamp(70px, 18vw, 100px), 1fr));
+        gap: var(--md-spacing-sm, 8px);
+        align-items: start;
     }
     
-    /* Special styling for egg-only buttons (Incubate & Hatch) - centered and prominent */
+    /* Material Design 3 Filled Tonal Buttons - Egg action buttons */
     .action-panel .warm-btn,
     .action-panel .hatch-btn {
-        grid-column: 1 / -1; /* Span full width for centering */
-        max-width: 280px;
+        grid-column: 1 / -1; /* Full width for prominence */
+        max-width: 320px;
         margin: 0 auto;
-        padding: clamp(12px, 3vh, 16px) clamp(8px, 2vw, 12px);
-        min-height: clamp(64px, 15vw, 72px);
-        font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+        padding: var(--md-spacing-lg, 16px) var(--md-spacing-xl, 24px);
+        min-height: 56px; /* MD3 touch target */
+        font-size: clamp(1rem, 2.5vw, 1.125rem);
         font-weight: 600;
-        border-radius: 16px;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
-        border: 2px solid rgba(102, 126, 234, 0.4);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        letter-spacing: 0.1px;
+        border-radius: var(--md-radius-xxl, 28px);
+        background: var(--md-primary-container, rgba(102, 126, 234, 0.2));
+        border: 1px solid var(--md-outline-variant, rgba(102, 126, 234, 0.3));
+        color: var(--md-on-primary-container, #e8eaf6);
+        box-shadow: var(--md-elevation-1);
+        transition: all var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+        position: relative;
+        overflow: hidden;
     }
     
+    /* State layer for interactions */
+    .action-panel .warm-btn::before,
+    .action-panel .hatch-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--md-on-primary-container, #fff);
+        opacity: 0;
+        transition: opacity var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+        pointer-events: none;
+    }
+    
+    .action-panel .warm-btn:hover::before,
+    .action-panel .hatch-btn:hover::before {
+        opacity: var(--md-state-hover-opacity, 0.08);
+    }
+    
+    /* Warm button - tertiary color theme */
     .action-panel .warm-btn {
-        border-color: rgba(249, 115, 22, 0.6);
-        background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(234, 88, 12, 0.15) 100%);
+        background: var(--md-tertiary-container, rgba(249, 115, 22, 0.2));
+        border-color: rgba(249, 115, 22, 0.4);
+        color: #fff;
     }
     
     .action-panel .warm-btn:active {
-        background: linear-gradient(135deg, rgba(249, 115, 22, 0.25) 0%, rgba(234, 88, 12, 0.25) 100%);
         transform: scale(0.98);
+        box-shadow: var(--md-elevation-0);
     }
     
+    .action-panel .warm-btn:active::before {
+        opacity: var(--md-state-press-opacity, 0.12);
+    }
+    
+    /* Hatch button - success/positive color theme */
     .action-panel .hatch-btn {
-        border-color: rgba(132, 204, 22, 0.6);
-        background: linear-gradient(135deg, rgba(132, 204, 22, 0.15) 0%, rgba(101, 163, 13, 0.15) 100%);
+        background: rgba(132, 204, 22, 0.2);
+        border-color: rgba(132, 204, 22, 0.4);
+        color: #fff;
     }
     
     .action-panel .hatch-btn:not(:disabled):active {
-        background: linear-gradient(135deg, rgba(132, 204, 22, 0.25) 0%, rgba(101, 163, 13, 0.25) 100%);
         transform: scale(0.98);
+        box-shadow: var(--md-elevation-0);
     }
     
+    .action-panel .hatch-btn:not(:disabled):active::before {
+        opacity: var(--md-state-press-opacity, 0.12);
+    }
+    
+    /* Ready to hatch state - emphasized with animation */
     .action-panel .hatch-btn.ready-to-hatch {
-        animation: pulse-glow 1.5s ease-in-out infinite;
-        background: linear-gradient(135deg, rgba(132, 204, 22, 0.3) 0%, rgba(101, 163, 13, 0.3) 100%);
+        animation: md-pulse-glow 1.5s ease-in-out infinite;
+        background: rgba(132, 204, 22, 0.35);
         border-color: rgba(132, 204, 22, 0.8);
-        box-shadow: 0 4px 16px rgba(132, 204, 22, 0.4);
+        box-shadow: var(--md-elevation-3),
+                    0 0 20px rgba(132, 204, 22, 0.4);
     }
     
-    @keyframes pulse-glow {
+    @keyframes md-pulse-glow {
         0%, 100% {
-            box-shadow: 0 4px 16px rgba(132, 204, 22, 0.4);
+            box-shadow: var(--md-elevation-3),
+                        0 0 20px rgba(132, 204, 22, 0.4);
             border-color: rgba(132, 204, 22, 0.8);
         }
         50% {
-            box-shadow: 0 6px 24px rgba(132, 204, 22, 0.6);
+            box-shadow: var(--md-elevation-4),
+                        0 0 28px rgba(132, 204, 22, 0.6);
             border-color: rgba(132, 204, 22, 1);
         }
     }
     
+    /* Material Design 3 Outlined Buttons - Standard action buttons */
     .action-btn {
-        /* Buttons scale down gracefully on smaller screens */
-        padding: clamp(6px, 1.5vh, 10px) clamp(4px, 1vw, 8px);
-        min-height: clamp(52px, 13vw, 60px);
-        font-size: clamp(0.7rem, 2vw, 0.9rem);
-        border-radius: 14px;
-        background: linear-gradient(135deg, rgba(42, 42, 42, 0.8) 0%, rgba(51, 51, 51, 0.8) 100%);
-        border: 2px solid rgba(102, 126, 234, 0.25);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--md-spacing-xs, 4px);
+        padding: var(--md-spacing-md, 12px) var(--md-spacing-sm, 8px);
+        min-height: 64px; /* MD3 touch target */
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
+        font-weight: 500;
+        letter-spacing: 0.1px;
+        border-radius: var(--md-radius-lg, 16px);
+        background: var(--md-surface-container, rgba(42, 42, 42, 0.6));
+        border: 1px solid var(--md-outline-variant, rgba(102, 126, 234, 0.2));
+        color: var(--md-on-surface, #fff);
         backdrop-filter: blur(8px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        -webkit-backdrop-filter: blur(8px);
+        box-shadow: var(--md-elevation-1);
+        transition: all var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        user-select: none;
     }
     
-    /* Visual feedback on touch with retro glow */
+    /* State layer for interactions */
+    .action-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--md-primary, #667eea);
+        opacity: 0;
+        transition: opacity var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+        pointer-events: none;
+    }
+    
+    .action-btn:hover {
+        border-color: var(--md-primary, #667eea);
+        box-shadow: var(--md-elevation-2);
+    }
+    
+    .action-btn:hover::before {
+        opacity: var(--md-state-hover-opacity, 0.08);
+    }
+    
+    /* Active/pressed state with ripple effect */
     .action-btn:active {
-        transform: scale(0.95);
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%);
-        border-color: rgba(102, 126, 234, 0.5);
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        transform: scale(0.96);
+        box-shadow: var(--md-elevation-0);
+    }
+    
+    .action-btn:active::before {
+        opacity: var(--md-state-press-opacity, 0.12);
+    }
+    
+    /* Focus state for accessibility */
+    .action-btn:focus-visible {
+        outline: 2px solid var(--md-primary, #667eea);
+        outline-offset: 2px;
     }
     
     .action-btn .btn-icon {
