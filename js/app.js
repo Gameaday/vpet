@@ -652,8 +652,9 @@ function updateEvolutionPreview() {
         document.getElementById('evolutionTime').textContent = `Ready to evolve to ${evolutionInfo.nextStage}!`;
         // Force evolution check
         pet.checkEvolution();
-        // Update UI after evolution
-        setTimeout(() => updateUI(), 100);
+        // Update UI after evolution with small delay to allow pet state to update
+        const EVOLUTION_UI_UPDATE_DELAY = 100; // milliseconds - allows evolution state to propagate
+        setTimeout(() => updateUI(), EVOLUTION_UI_UPDATE_DELAY);
     } else {
         const timeText = hours > 0
             ? `${hours}h ${minutes}m until ${evolutionInfo.nextStage}`
