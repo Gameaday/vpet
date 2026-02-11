@@ -681,8 +681,8 @@ function handleHatch() {
             if (newName && newName.trim()) {
                 // Validate the name
                 const validation = InputValidator.validatePetName(newName);
-                if (validation.isValid) {
-                    pet.name = newName.trim();
+                if (validation.valid) {
+                    pet.name = validation.sanitized;
                     pet.save();
                     showToast(`Welcome, ${pet.name}! 🐾`, 'success', 3000);
                 } else {
