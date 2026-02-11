@@ -27,6 +27,41 @@ body {
         font-size: 1rem;
         line-height: 1.5; /* Better readability */
         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        /* Add retro pixel pattern overlay */
+        position: relative;
+    }
+    
+    /* Retro pixel/dot pattern overlay for digital aesthetic */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(102, 126, 234, 0.03) 2px,
+                rgba(102, 126, 234, 0.03) 4px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                rgba(102, 126, 234, 0.03) 2px,
+                rgba(102, 126, 234, 0.03) 4px
+            );
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    /* Ensure content is above pattern */
+    .container {
+        position: relative;
+        z-index: 2;
     }
 }
 
@@ -53,8 +88,7 @@ body {
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        background: linear-gradient(180deg, rgba(26, 26, 42, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%);
-        backdrop-filter: blur(20px);
+        background: transparent; /* Transparent to show body background */
     }
     
     /* Fixed header - no scrolling with retro styling */
@@ -86,31 +120,32 @@ body {
         flex-direction: column;
     }
     
-    /* Material Design 3 Bottom App Bar - Primary action container with gradient theme */
+    /* Material Design 3 Bottom App Bar - No background, sits against page theme */
     .action-panel,
     .game-panel,
     .qol-panel {
         position: sticky;
         bottom: 0;
-        background: linear-gradient(180deg, rgba(26, 26, 42, 0.6) 0%, rgba(22, 33, 62, 0.7) 100%);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        background: transparent; /* No background - sits against page background */
         padding: var(--md-spacing-lg, 16px) var(--md-spacing-md, 12px);
         padding-bottom: calc(var(--md-spacing-lg, 16px) + env(safe-area-inset-bottom, 0px));
-        margin: 0 calc(-1 * 4%);
-        border-top: 1px solid rgba(102, 126, 234, 0.2);
+        margin: 0 auto; /* Center the panel */
+        max-width: 100%; /* Allow full width on mobile */
+        border-top: none; /* Remove border */
         z-index: 50;
         flex-shrink: 0;
-        border-radius: var(--md-radius-xl, 20px) var(--md-radius-xl, 20px) 0 0;
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+        border-radius: 0; /* No rounded corners */
+        box-shadow: none; /* No shadow */
     }
     
-    /* Material Design 3 Grid Layout - Auto-fit responsive grid */
+    /* Material Design 3 Grid Layout - Centered auto-fit responsive grid */
     .action-panel {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(clamp(70px, 18vw, 100px), 1fr));
         gap: var(--md-spacing-md, 12px);
         align-items: start;
+        justify-content: center; /* Center grid contents */
+        justify-items: center; /* Center items within grid cells */
     }
     
     /* Material Design 3 Filled Tonal Buttons - Egg action buttons side by side */
@@ -1040,5 +1075,78 @@ body {
     
     button {
         border: 2px solid currentColor;
+    }
+}
+
+/* ================================================
+   THEME SYSTEM - System Preference Support
+   ================================================ */
+
+/* Dark Theme (Default) - Digital/Retro Aesthetic */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    
+    /* Pixel pattern for retro digital feel */
+    body::before {
+        background-image: 
+            repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(102, 126, 234, 0.03) 2px,
+                rgba(102, 126, 234, 0.03) 4px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                rgba(102, 126, 234, 0.03) 2px,
+                rgba(102, 126, 234, 0.03) 4px
+            );
+    }
+}
+
+/* Light Theme - Clean Modern Aesthetic */
+@media (prefers-color-scheme: light) {
+    body {
+        background: linear-gradient(135deg, #e0e7ff 0%, #cfd9ff 50%, #bfcfff 100%);
+    }
+    
+    /* Subtle dot pattern for light theme */
+    body::before {
+        background-image: 
+            repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(102, 126, 234, 0.02) 2px,
+                rgba(102, 126, 234, 0.02) 4px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                rgba(102, 126, 234, 0.02) 2px,
+                rgba(102, 126, 234, 0.02) 4px
+            );
+    }
+    
+    .container {
+        color: #1a1a2e;
+    }
+    
+    .pet-display,
+    .stats-panel {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(102, 126, 234, 0.15);
+    }
+    
+    .action-btn,
+    .warm-btn,
+    .hatch-btn {
+        color: #1a1a2e;
+        border-color: rgba(102, 126, 234, 0.3);
     }
 }
