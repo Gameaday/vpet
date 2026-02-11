@@ -32,8 +32,8 @@ class MockPremiumManager {
 }
 
 // Import modules
-const { BackupManager } = await import('./backup-manager.js');
-const { HibernationManager } = await import('./hibernation-manager.js');
+const { BackupManager } = await import('./js/backup-manager.js');
+const { HibernationManager } = await import('./js/hibernation-manager.js');
 
 describe('BackupManager', () => {
   let backupManager;

@@ -16,7 +16,7 @@ global.localStorage = localStorageMock;
 global.showNotification = vi.fn();
 
 // Import Pet class
-const { Pet } = await import('./pet.js');
+const { Pet } = await import('./js/pet.js');
 
 describe('Pet Class', () => {
   let pet;
