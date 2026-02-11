@@ -113,6 +113,26 @@ class ServerConnection {
         }, delay);
     }
 
+    // Cancel reconnection attempts
+    cancelReconnect() {
+        console.log('Reconnection cancelled by user');
+        
+        // Mark as manual disconnect to prevent auto-reconnect
+        this.manualDisconnect = true;
+        
+        // Clear any existing timer
+        if (this.reconnectTimer) {
+            clearTimeout(this.reconnectTimer);
+            this.reconnectTimer = null;
+        }
+        
+        // Reset reconnect attempts
+        this.reconnectAttempts = 0;
+        
+        // Update UI to show cancelled/offline state
+        this.updateConnectionStatus(false, false, false);
+    }
+
     // Manual retry connection (e.g., from user click)
     manualRetry() {
         // Reset reconnect attempts
@@ -161,6 +181,12 @@ class ServerConnection {
         const statusRetry = document.querySelector('.status-retry');
         const serverStatus = document.getElementById('serverStatus');
         const onlineBattleBtn = document.getElementById('onlineBattleBtn');
+        
+        // Guard against missing DOM elements (e.g., in tests)
+        if (!statusDot || !statusText || !serverStatus || 
+            !statusDot.classList || !serverStatus.classList) {
+            return;
+        }
         
         if (connected) {
             statusDot.classList.remove('offline', 'reconnecting');

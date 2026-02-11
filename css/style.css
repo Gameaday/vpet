@@ -603,11 +603,19 @@ main {
 .stat-info {
     display: flex;
     justify-content: space-around;
-    margin-top: 15px;
-    padding-top: 15px;
+    margin-top: 12px;
+    padding-top: 12px;
     border-top: 2px solid #333;
     color: #aaa;
-    font-size: 0.9em;
+    font-size: 0.85em;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.stats-panel.circular-mode .stat-info {
+    width: 100%;
+    margin-top: 8px;
+    padding-top: 8px;
 }
 
 /* Action Panel */
@@ -615,7 +623,9 @@ main {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
-    margin-bottom: 15px;
+    margin: 0 auto 15px;
+    max-width: 400px;
+    justify-content: center;
 }
 
 .action-btn {
@@ -2867,31 +2877,52 @@ body.theme-retro select {
 
 .stats-panel.circular-mode {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
-    gap: 15px;
-    padding: 15px 10px;
+    gap: 8px;
+    padding: 12px 8px;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.stats-panel.circular-mode::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .stats-panel.circular-mode .stat-bar {
     flex: 0 0 auto;
-    width: 80px;
+    width: 70px;
     margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
 }
 
 .stats-panel.circular-mode .stat-label {
     flex-direction: column;
-    gap: 3px;
-    font-size: 0.75rem;
+    gap: 2px;
+    font-size: 0.7rem;
     text-align: center;
+    order: 2; /* Place label below the gauge */
 }
 
 .stats-panel.circular-mode .stat-label span:first-child {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+}
+
+.stats-panel.circular-mode .stat-label span:last-child {
+    /* Keep for accessibility but hide visually - value shown in gauge */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }
 
 .stats-panel.circular-mode .progress-bar {
@@ -2899,14 +2930,15 @@ body.theme-retro select {
 }
 
 .circular-gauge {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     position: relative;
     display: none;
 }
 
 .stats-panel.circular-mode .circular-gauge {
     display: block;
+    order: 1; /* Place gauge above the label */
 }
 
 .circular-gauge svg {
@@ -3088,5 +3120,101 @@ body.theme-retro select {
 
 .more-option-btn:disabled::before {
     display: none;
+}
+
+/* Landscape and Widescreen Optimizations */
+@media (min-width: 768px) and (orientation: landscape), (min-width: 1024px) {
+    body {
+        padding: 20px;
+    }
+    
+    .container {
+        max-width: 900px;
+        display: grid;
+        grid-template-rows: auto 1fr;
+    }
+    
+    main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .pet-display {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+    }
+    
+    .stats-panel {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+    }
+    
+    .stats-panel.circular-mode {
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: flex-start;
+    }
+    
+    .stats-panel.circular-mode .stat-bar {
+        width: 80px;
+    }
+    
+    .circular-gauge {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .action-panel {
+        grid-column: 1 / 3;
+        grid-row: 2 / 3;
+        grid-template-columns: repeat(5, 1fr);
+        max-width: 100%;
+    }
+    
+    .battle-panel,
+    .social-panel,
+    .game-panel,
+    .qol-panel {
+        grid-column: 1 / 3;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .battle-panel button,
+    .social-panel button,
+    .game-panel button,
+    .qol-panel button {
+        flex: 0 1 auto;
+        min-width: 120px;
+    }
+}
+
+/* Extra wide screens - optimize further */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1100px;
+    }
+    
+    main {
+        grid-template-columns: 2fr 3fr;
+        gap: 30px;
+    }
+    
+    .stats-panel.circular-mode {
+        gap: 15px;
+    }
+    
+    .stats-panel.circular-mode .stat-bar {
+        width: 90px;
+    }
+    
+    .circular-gauge {
+        width: 80px;
+        height: 80px;
+    }
 }
 

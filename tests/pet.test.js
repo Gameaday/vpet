@@ -29,7 +29,7 @@ describe('Pet Class', () => {
 
   describe('Constructor and Initialization', () => {
     it('should create a new pet with default values', () => {
-      expect(pet.name).toBe('My Pet');
+      expect(pet.name).toBe('???'); // Eggs start with unknown name
       expect(pet.stage).toBe('egg');
       expect(pet.health).toBe(100);
       expect(pet.hunger).toBe(100);
@@ -430,8 +430,8 @@ describe('Pet Class', () => {
   });
 
   describe('Egg Incubation', () => {
-    it('should start with warmth at 50 for eggs', () => {
-      expect(pet.warmth).toBe(50);
+    it('should start with warmth at 0 for eggs', () => {
+      expect(pet.warmth).toBe(0); // Eggs start cold
       expect(pet.incubationTime).toBe(0);
       expect(pet.hasHatched).toBe(false);
     });
