@@ -13,30 +13,46 @@ A cross-platform virtual pet application inspired by Digimon and traditional vir
 ## 📚 Documentation Navigation
 
 **New to VPet?** Start here:
-- 📋 **[EXECUTIVE_SUMMARY.md](EXECUTIVE_SUMMARY.md)** - Single-page project overview and status
 - 🚀 **[QUICKSTART.md](QUICKSTART.md)** - Get playing in 30 seconds
+- 📖 **[README.md](README.md)** - This file, main overview
 
 **For Developers:**
-- 🏗️ **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design, power efficiency, cost optimization
-- 🤝 **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to VPet
-- 🔧 **[TECHNICAL_DEBT.md](TECHNICAL_DEBT.md)** - Known issues and priorities
+- 🤝 **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - How to contribute to VPet
+- 🏗️ **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - System design, power efficiency, cost optimization
+- 🔧 **[TECHNICAL_DEBT.md](docs/TECHNICAL_DEBT.md)** - Known issues and priorities
 - 🗺️ **[ROADMAP.md](ROADMAP.md)** - Future features and improvements
 - 💡 **[IMPROVEMENTS.md](IMPROVEMENTS.md)** - Quick wins and enhancement ideas
 
 **For Project Planning:**
-- 📊 **[PROJECT_STATUS.md](PROJECT_STATUS.md)** - Detailed analysis and metrics
-- 🎯 **[DEVELOPMENT_STRATEGY.md](DEVELOPMENT_STRATEGY.md)** - 6-phase development plan and monetization strategy
-- 🚀 **[DEPLOYMENT.md](DEPLOYMENT.md)** - How to deploy VPet
+- 📊 **[PROJECT_STATUS.md](docs/PROJECT_STATUS.md)** - Detailed analysis and metrics
+- 🎯 **[DEVELOPMENT_STRATEGY.md](docs/DEVELOPMENT_STRATEGY.md)** - 6-phase development plan
+- 🚀 **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** - How to deploy VPet
+- 📝 **[RELEASE_NOTES_v2.0.0.md](docs/RELEASE_NOTES_v2.0.0.md)** - Latest version release notes
+
+**Additional Documentation:**
+- See [docs/](docs/) folder for detailed technical documentation, build guides, and implementation summaries
 
 ---
 
 ## ✨ Features
 
+### Core Gameplay
 - **🎮 Interactive Pet Care**: Feed, play, train, and rest your virtual pet with keyboard shortcuts
 - **📊 Dynamic Stats System**: Monitor health, hunger, happiness, energy, discipline, and cleanliness
-- **🌱 Evolution System**: Watch your pet grow from egg → baby → child → teen → adult
+- **🌱 Multiple Evolution Paths**: 4 unique evolution branches (Power, Care, Balanced, Neglect) with 20+ forms
 - **⚔️ Battle System**: Fight against AI opponents locally or challenge other players online with damage numbers
-- **💾 Persistent Data**: Your pet's progress, personality, and stats history are automatically saved
+- **💰 Coin System**: Earn coins from battles and mini-games to buy items
+
+### New in v2.0.0 🎉
+- **🏪 Shop & Items**: 15+ items across 5 categories (food, medicine, battle, evolution, cosmetic)
+- **🎒 Inventory System**: Manage up to 30 items and use them on your pet
+- **🎯 Mini-Games**: 3 addictive games (Reaction, Memory, Rhythm) with high scores and rewards
+- **👥 Friend System**: Add friends, send challenges, track friend battles
+- **🏅 Tournament Mode**: Foundation ready (full UI coming soon)
+- **📱 Android App Support**: Build scripts and Capacitor config ready for deployment
+
+### Quality of Life
+- **💾 Persistent Data**: Your pet's progress, items, and friends are automatically saved
 - **📱 Mobile-First Design**: Responsive UI optimized for mobile devices
 - **🌐 Online Multiplayer**: Connect to the server for real-time battles with other players
 - **🎨 Pixelated Animations**: Retro-style visual effects and smooth idle animations
@@ -45,6 +61,8 @@ A cross-platform virtual pet application inspired by Digimon and traditional vir
 - **🎭 Personality Traits**: Your pet develops unique characteristics based on your care
 - **🤒 Illness System**: Keep your pet healthy or use medicine to cure sickness
 - **🎨 Theme Customization**: Dark mode, light mode, and authentic retro LCD theme
+- **❄️ Cryo Sleep**: Freeze your pet when you need a break (premium feature)
+- **💾 Backup & Restore**: Save and restore your pet's progress
 
 ## 🚀 Quick Start
 

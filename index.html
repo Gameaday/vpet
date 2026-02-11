@@ -44,6 +44,14 @@
                     <div class="progress-bar" id="healthBarContainer">
                         <div class="progress-fill health" id="healthBar"></div>
                     </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill health" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="healthCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="healthCircleValue">100</div>
+                    </div>
                 </div>
 
                 <div class="stat-bar" data-tooltip="">
@@ -53,6 +61,14 @@
                     </div>
                     <div class="progress-bar" id="hungerBarContainer">
                         <div class="progress-fill hunger" id="hungerBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill hunger" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="hungerCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="hungerCircleValue">100</div>
                     </div>
                 </div>
 
@@ -64,6 +80,14 @@
                     <div class="progress-bar" id="happinessBarContainer">
                         <div class="progress-fill happiness" id="happinessBar"></div>
                     </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill happiness" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="happinessCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="happinessCircleValue">100</div>
+                    </div>
                 </div>
 
                 <div class="stat-bar" data-tooltip="">
@@ -74,6 +98,14 @@
                     <div class="progress-bar" id="energyBarContainer">
                         <div class="progress-fill energy" id="energyBar"></div>
                     </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill energy" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="energyCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="energyCircleValue">100</div>
+                    </div>
                 </div>
 
                 <div class="stat-bar" data-tooltip="">
@@ -83,6 +115,14 @@
                     </div>
                     <div class="progress-bar" id="cleanlinessBarContainer">
                         <div class="progress-fill cleanliness" id="cleanlinessBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill cleanliness" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="cleanlinessCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="cleanlinessCircleValue">100</div>
                     </div>
                 </div>
 
@@ -95,6 +135,14 @@
                     <div class="progress-bar" id="warmthBarContainer">
                         <div class="progress-fill warmth" id="warmthBar"></div>
                     </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill warmth" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="warmthCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="warmthCircleValue">50</div>
+                    </div>
                     <div class="warmth-status" id="warmthStatus"></div>
                 </div>
 
@@ -102,6 +150,7 @@
                     <div>Age: <span id="petAge">0</span></div>
                     <div>Level: <span id="petLevel">1</span></div>
                     <div>Wins: <span id="petWins">0</span></div>
+                    <div>Coins: <span id="petCoins">0</span> 💰</div>
                 </div>
             </div>
 
@@ -162,6 +211,30 @@
                 <button class="social-btn" id="leaderboardBtn" title="View leaderboard">
                     <span class="btn-icon">🏆</span>
                     <span>Leaderboard</span>
+                </button>
+                <button class="social-btn" id="friendsBtn" title="Manage friends">
+                    <span class="btn-icon">👥</span>
+                    <span>Friends</span>
+                </button>
+                <button class="social-btn" id="tournamentBtn" title="Tournaments">
+                    <span class="btn-icon">🏅</span>
+                    <span>Tournament</span>
+                </button>
+            </div>
+
+            <!-- Game Features Section -->
+            <div class="game-panel">
+                <button class="game-btn" id="shopBtn" title="Shop">
+                    <span class="btn-icon">🏪</span>
+                    <span>Shop</span>
+                </button>
+                <button class="game-btn" id="inventoryBtn" title="Inventory">
+                    <span class="btn-icon">🎒</span>
+                    <span>Inventory</span>
+                </button>
+                <button class="game-btn" id="minigamesBtn" title="Mini-Games">
+                    <span class="btn-icon">🎯</span>
+                    <span>Games</span>
                 </button>
             </div>
 
@@ -252,6 +325,14 @@
                             <option value="dark">Dark Mode</option>
                             <option value="light">Light Mode</option>
                             <option value="retro">Retro LCD</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="statDisplaySelect">📊 Stat Display:</label>
+                        <select id="statDisplaySelect">
+                            <option value="bars">Horizontal Bars</option>
+                            <option value="circular">Circular Gauges</option>
                         </select>
                     </div>
                     
@@ -445,6 +526,113 @@
         </div>
     </div>
 
+    <!-- Shop Modal -->
+    <div class="modal" id="shopModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeShopModal">×</span>
+            <h2>🏪 Shop</h2>
+            <div class="shop-content">
+                <div class="coin-display">Coins: <span id="coinBalance">0</span> 💰</div>
+                <div class="shop-categories">
+                    <button class="category-btn active" data-category="all">All</button>
+                    <button class="category-btn" data-category="food">Food</button>
+                    <button class="category-btn" data-category="medicine">Medicine</button>
+                    <button class="category-btn" data-category="battle">Battle</button>
+                    <button class="category-btn" data-category="evolution">Evolution</button>
+                    <button class="category-btn" data-category="cosmetic">Cosmetic</button>
+                </div>
+                <div class="shop-items" id="shopItems">
+                    <!-- Items will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div class="modal" id="inventoryModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeInventoryModal">×</span>
+            <h2>🎒 Inventory</h2>
+            <div class="inventory-content">
+                <div class="inventory-items" id="inventoryItems">
+                    <!-- Items will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini-Games Modal -->
+    <div class="modal" id="minigamesModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeMinigamesModal">×</span>
+            <h2>🎯 Mini-Games</h2>
+            <div class="minigames-menu" id="minigamesMenu">
+                <div class="game-card">
+                    <h3>🎯 Reaction Game</h3>
+                    <p>Catch falling items before they hit the ground!</p>
+                    <p class="high-score">Best: <span id="reactionHighScore">0</span></p>
+                    <button class="action-btn" id="playReactionBtn">Play</button>
+                </div>
+                <div class="game-card">
+                    <h3>🧩 Memory Game</h3>
+                    <p>Match pairs of cards!</p>
+                    <p class="high-score">Best: <span id="memoryHighScore">0</span></p>
+                    <button class="action-btn" id="playMemoryBtn">Play</button>
+                </div>
+                <div class="game-card">
+                    <h3>🎵 Rhythm Game</h3>
+                    <p>Hit notes at the right time! (D, F, J, K keys)</p>
+                    <p class="high-score">Best: <span id="rhythmHighScore">0</span></p>
+                    <button class="action-btn" id="playRhythmBtn">Play</button>
+                </div>
+            </div>
+            <div class="game-canvas-container" id="gameCanvasContainer" style="display: none;">
+                <canvas id="gameCanvas" width="350" height="500"></canvas>
+                <button class="action-btn" id="endGameBtn">End Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friends Modal -->
+    <div class="modal" id="friendsModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeFriendsModal">×</span>
+            <h2>👥 Friends</h2>
+            <div class="friends-content">
+                <div class="friend-tabs">
+                    <button class="tab-btn active" data-tab="list">Friends</button>
+                    <button class="tab-btn" data-tab="requests">Requests</button>
+                    <button class="tab-btn" data-tab="add">Add Friend</button>
+                </div>
+                <div class="tab-content" id="friendsListTab">
+                    <div id="friendsList">
+                        <!-- Friends will be populated dynamically -->
+                    </div>
+                </div>
+                <div class="tab-content" style="display: none;" id="friendRequestsTab">
+                    <div id="friendRequests">
+                        <!-- Requests will be populated dynamically -->
+                    </div>
+                </div>
+                <div class="tab-content" style="display: none;" id="addFriendTab">
+                    <input type="text" id="friendUsernameInput" placeholder="Enter username" />
+                    <button class="action-btn" id="sendFriendRequestBtn">Send Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tournament Modal -->
+    <div class="modal" id="tournamentModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeTournamentModal">×</span>
+            <h2>🏅 Tournament</h2>
+            <div class="tournament-content" id="tournamentContent">
+                <!-- Tournament UI will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
     <!-- Configuration Modules -->
     <script src="app-config.js"></script>
     <script src="pet-config.js"></script>
@@ -459,6 +647,13 @@
     <script src="social-features.js"></script>
     <script src="particle-effects.js"></script>
     
+    <!-- Phase 3-4 Feature Modules -->
+    <script src="item-system.js"></script>
+    <script src="minigames.js"></script>
+    <script src="evolution-paths.js"></script>
+    <script src="friend-system.js"></script>
+    <script src="tournament-manager.js"></script>
+    
     <!-- Core Classes -->
     <script src="pet.js"></script>
     <script src="battle.js"></script>
@@ -466,6 +661,9 @@
     <script src="premium.js"></script>
     <script src="backup-manager.js"></script>
     <script src="hibernation-manager.js"></script>
+    
+    <!-- Phase 3-4 Integration -->
+    <script src="phase34-integration.js"></script>
     
     <!-- Main Application -->
     <script src="app.js"></script>

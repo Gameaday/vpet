@@ -186,8 +186,9 @@ class Pet {
         
         // Eggs only decay warmth, not other stats
         if (this.stage === 'egg' && !this.hasHatched) {
-            // Warmth decays slowly for eggs (0.3 per minute)
-            const warmthDecay = 0.3;
+            // Warmth decays faster for eggs (1.5 per minute, so ~5 min to deplete from full)
+            // This means eggs need to be warmed regularly during the 5-minute incubation period
+            const warmthDecay = 1.5;
             this.warmth = Math.max(0, this.warmth - (minutesPassed * warmthDecay));
             
             // Track incubation time if warmth is adequate (>= 60)

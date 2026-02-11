@@ -2201,3 +2201,551 @@ body.theme-retro select {
         font-size: 1.3rem;
     }
 }
+
+/* ============================================
+   Phase 3-4 Features Styling
+   ============================================ */
+
+/* Game Panel */
+.game-panel {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.game-btn {
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.game-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.game-btn .btn-icon {
+    font-size: 1.5rem;
+}
+
+/* Shop Modal */
+.shop-content {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.coin-display {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 10px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.shop-categories {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.category-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #444;
+    color: white;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.category-btn:hover {
+    background: #555;
+}
+
+.category-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.shop-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.shop-item {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.shop-item:hover {
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-2px);
+}
+
+.shop-item .item-name {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.shop-item .item-description {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 8px;
+    min-height: 40px;
+}
+
+.shop-item .item-price {
+    font-weight: bold;
+    color: #f5576c;
+    margin-bottom: 8px;
+}
+
+.shop-item .buy-btn {
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.shop-item .buy-btn:hover {
+    transform: scale(1.05);
+}
+
+.shop-item .buy-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Inventory Modal */
+.inventory-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inventory-item {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.inventory-item:hover {
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-2px);
+}
+
+.inventory-item .item-icon {
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+.inventory-item .item-name {
+    font-size: 0.85rem;
+    margin-bottom: 3px;
+}
+
+.inventory-item .item-quantity {
+    font-size: 0.75rem;
+    color: #aaa;
+}
+
+.inventory-empty {
+    text-align: center;
+    padding: 40px;
+    color: #aaa;
+}
+
+/* Mini-Games Modal */
+.minigames-menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.game-card {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.game-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+}
+
+.game-card p {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin: 8px 0;
+}
+
+.game-card .high-score {
+    font-weight: bold;
+    color: #f5576c;
+}
+
+.game-canvas-container {
+    text-align: center;
+}
+
+.game-canvas-container canvas {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background: #1a1a2e;
+}
+
+/* Friends Modal */
+.friends-content {
+    max-height: 500px;
+}
+
+.friend-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab-btn {
+    padding: 10px 15px;
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.tab-btn:hover {
+    color: white;
+}
+
+.tab-btn.active {
+    color: white;
+    border-bottom-color: #667eea;
+}
+
+.tab-content {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#friendsList, #friendRequests {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.friend-item, .request-item {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.friend-info, .request-info {
+    flex: 1;
+}
+
+.friend-name, .request-username {
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.friend-stats, .request-time {
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+.friend-actions, .request-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.friend-actions button, .request-actions button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.challenge-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.remove-btn, .decline-btn {
+    background: rgba(245, 87, 108, 0.3);
+    color: #f5576c;
+}
+
+.accept-btn {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+}
+
+#addFriendTab {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+}
+
+#friendUsernameInput {
+    padding: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 1rem;
+}
+
+/* Tournament Modal */
+.tournament-content {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.tournament-info {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.tournament-bracket {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bracket-match {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tournament-history {
+    margin-top: 20px;
+}
+
+.history-item {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+/* Responsive adjustments for new features */
+@media (max-width: 768px) {
+    .game-panel {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .game-btn {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .game-btn .btn-icon {
+        font-size: 1.3rem;
+    }
+    
+    .shop-items {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 8px;
+    }
+    
+    .inventory-items {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+    
+    .social-panel {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Empty state messages */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #aaa;
+}
+
+.empty-state .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-size: 0.9rem;
+}
+
+
+/* ============================================
+   Circular Stat Display Mode
+   ============================================ */
+
+.stats-panel.circular-mode {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px 10px;
+}
+
+.stats-panel.circular-mode .stat-bar {
+    flex: 0 0 auto;
+    width: 80px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.stats-panel.circular-mode .stat-label {
+    flex-direction: column;
+    gap: 3px;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.stats-panel.circular-mode .stat-label span:first-child {
+    font-size: 1.5rem;
+}
+
+.stats-panel.circular-mode .progress-bar {
+    display: none;
+}
+
+.circular-gauge {
+    width: 70px;
+    height: 70px;
+    position: relative;
+    display: none;
+}
+
+.stats-panel.circular-mode .circular-gauge {
+    display: block;
+}
+
+.circular-gauge svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+}
+
+.circular-gauge-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 8;
+}
+
+.circular-gauge-fill {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.circular-gauge-fill.health {
+    stroke: #ff6b6b;
+}
+
+.circular-gauge-fill.hunger {
+    stroke: #ffd93d;
+}
+
+.circular-gauge-fill.happiness {
+    stroke: #6bcf7f;
+}
+
+.circular-gauge-fill.energy {
+    stroke: #4ecdc4;
+}
+
+.circular-gauge-fill.cleanliness {
+    stroke: #95e1d3;
+}
+
+.circular-gauge-fill.warmth {
+    stroke: #ff8c42;
+}
+
+.circular-gauge-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: white;
+}
+
+/* Responsive adjustments for circular mode */
+@media (max-width: 768px) {
+    .stats-panel.circular-mode {
+        gap: 10px;
+    }
+    
+    .stats-panel.circular-mode .stat-bar {
+        width: 70px;
+    }
+    
+    .circular-gauge {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .circular-gauge-value {
+        font-size: 0.8rem;
+    }
+}
+

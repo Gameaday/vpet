@@ -1,5 +1,6 @@
 // Main application logic - Refactored with Modular Architecture
 /* global SoundManager, VibrationManager, UIManager, BattleUIManager, MilestoneManager, SocialFeatures, AppConfig, BackupManager, HibernationManager, ParticleEffects */
+/* global initializePhase34Features, awardCoins */
 
 let pet = null;
 let currentBattle = null;
@@ -37,6 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Apply saved theme
     uiManager.applyTheme(currentTheme);
+    
+    // Apply saved stat display mode
+    const savedStatMode = localStorage.getItem('statDisplayMode') || 'bars';
+    applyStatDisplayMode(savedStatMode);
+    document.getElementById('statDisplaySelect').value = savedStatMode;
     
     // Create pet instance
     pet = new Pet();
@@ -76,6 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Set up event listeners
     setupEventListeners();
+    
+    // Initialize Phase 3-4 features
+    if (typeof initializePhase34Features === 'function') {
+        initializePhase34Features();
+    }
     
     // Try to connect to server in background
     tryConnectToServer();
@@ -359,6 +370,7 @@ function updateUI() {
         // Update warmth stat
         uiManager.updateStat('warmth', pet.warmth);
         document.getElementById('warmthValue').textContent = Math.floor(pet.warmth);
+        updateCircularGauge('warmth', pet.warmth);
         
         // Add warmth-based visual classes to egg
         petAnimation.classList.remove('warm', 'very-warm', 'hot');
@@ -408,6 +420,13 @@ function updateUI() {
         uiManager.updateStat('happiness', pet.happiness);
         uiManager.updateStat('energy', pet.energy);
         uiManager.updateStat('cleanliness', pet.cleanliness);
+        
+        // Update circular gauges if in circular mode
+        updateCircularGauge('health', pet.health);
+        updateCircularGauge('hunger', pet.hunger);
+        updateCircularGauge('happiness', pet.happiness);
+        updateCircularGauge('energy', pet.energy);
+        updateCircularGauge('cleanliness', pet.cleanliness);
     }
     
     // Update info
@@ -823,6 +842,13 @@ function closeBattleModal() {
         pet.updatePersonality('battle'); // Update personality based on battle
         pet.updateAfterBattle(battle.playerWon(), opponentName);
         
+        // Award coins for battle win
+        if (battle.playerWon() && typeof awardCoins === 'function') {
+            const baseReward = 10 + (battle.opponentPet.level || 1) * 2;
+            const coinsEarned = awardCoins(baseReward, 'battle');
+            showNotification(`+${coinsEarned} coins! 💰`, 'success');
+        }
+        
         // Update leaderboard after battle
         if (socialFeatures) {
             socialFeatures.updateLeaderboard(pet);
@@ -972,8 +998,42 @@ function saveSettings() {
         showNotification(`🎨 Theme changed to ${currentTheme}`);
     }
     
+    // Save stat display mode
+    const statDisplayMode = document.getElementById('statDisplaySelect').value;
+    const previousMode = localStorage.getItem('statDisplayMode') || 'bars';
+    if (statDisplayMode !== previousMode) {
+        localStorage.setItem('statDisplayMode', statDisplayMode);
+        applyStatDisplayMode(statDisplayMode);
+        showNotification(`📊 Stat display changed to ${statDisplayMode === 'circular' ? 'circular gauges' : 'horizontal bars'}`);
+    }
+    
     updateUI();
     closeSettingsModal();
+}
+
+// Apply stat display mode
+function applyStatDisplayMode(mode) {
+    const statsPanel = document.querySelector('.stats-panel');
+    if (mode === 'circular') {
+        statsPanel.classList.add('circular-mode');
+    } else {
+        statsPanel.classList.remove('circular-mode');
+    }
+}
+
+// Update circular gauge display
+function updateCircularGauge(statName, value) {
+    const circle = document.getElementById(`${statName}Circle`);
+    const valueDisplay = document.getElementById(`${statName}CircleValue`);
+    
+    if (circle && valueDisplay) {
+        // Calculate stroke-dashoffset for circular progress
+        // Circle circumference = 2 * PI * radius = 2 * 3.14159 * 32 ≈ 201
+        const circumference = 201;
+        const offset = circumference - (value / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+        valueDisplay.textContent = Math.round(value);
+    }
 }
 
 // Apply theme to document

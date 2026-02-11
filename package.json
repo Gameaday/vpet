@@ -1,6 +1,6 @@
 {
   "name": "vpet",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A cross-platform virtual pet application inspired by Digimon and traditional virtual pets",
   "type": "module",
   "scripts": {
@@ -10,10 +10,10 @@
     "lint": "eslint *.js",
     "lint:fix": "eslint --fix *.js",
     "validate": "bash validate-build.sh",
-    "clean": "rm -rf www/ dist/ coverage/",
+    "clean": "rm -rf www/ dist/ coverage/ *.backup",
     "prebuild": "npm run lint && npm run test",
-    "build": "npm run clean && mkdir -p www && cp index.html style.css manifest.json www/ && cp *.js icons -r www/ && rm -f www/*.backup www/*.test.js www/eslint.config.js www/vitest.config.js www/generate-icons.js",
-    "build:quick": "mkdir -p www && cp index.html style.css manifest.json www/ && cp *.js icons -r www/ && rm -f www/*.backup www/*.test.js www/eslint.config.js www/vitest.config.js www/generate-icons.js",
+    "build": "npm run clean && mkdir -p www && cp index.html style.css manifest.json www/ && cp *.js icons -r www/ && rm -f www/*.backup www/*.test.js www/eslint.config.js www/vitest.config.js www/generate-icons.js www/validate-build.sh",
+    "build:quick": "mkdir -p www && cp index.html style.css manifest.json www/ && cp *.js icons -r www/ && rm -f www/*.backup www/*.test.js www/eslint.config.js www/vitest.config.js www/generate-icons.js www/validate-build.sh",
     "serve": "python -m http.server 8000",
     "android:build": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
     "android:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease"
