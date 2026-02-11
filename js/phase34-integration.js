@@ -3,14 +3,14 @@
  * Integrates item system, mini-games, evolution paths, friends, and tournaments into the main app
  */
 
-/* global pet, premiumManager, soundManager, updateUI */
+/* global premiumManager, soundManager, updateUI */
 /* global InventoryManager, ShopManager, useItem, ITEMS */
 /* global MiniGameManager, ReactionGame, MemoryGame, RhythmGame */
 /* global EvolutionManager */
 /* global FriendManager, FriendChallengeManager */
 /* global TournamentManager */
 
-// Initialize new managers
+// Initialize new managers (not global state)
 let inventoryManager = null;
 let shopManager = null;
 let miniGameManager = null;
@@ -772,8 +772,8 @@ function playNextMatch() {
             maxHP: nextMatch.player2.stats.maxHP
         };
         
-        // Start local battle
-        currentBattle = new Battle(pet, aiPet);
+        // Start local battle (use window scope for global variables)
+        window.currentBattle = new Battle(pet, aiPet);
         
         // Add tournament context to battle
         currentBattle.isTournamentMatch = true;

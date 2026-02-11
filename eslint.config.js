@@ -3,7 +3,7 @@ import js from '@eslint/js';
 export default [
   js.configs.recommended,
   {
-    files: ['*.js'],
+    files: ['**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -31,7 +31,7 @@ export default [
         self: 'readonly',
         caches: 'readonly',
         clients: 'readonly',
-        // App globals - functions defined in HTML script tags
+        // App globals - classes and functions defined in HTML script tags
         Pet: 'readonly',
         Battle: 'readonly',
         ServerConnection: 'readonly',
@@ -39,6 +39,14 @@ export default [
         showNotification: 'readonly',
         showToast: 'readonly',
         generateOpponent: 'readonly',
+        AccessibilityManager: 'readonly',
+        InputValidator: 'readonly',
+        GLOBAL_CONSTANTS: 'readonly',
+        // Global managers and state (writable in app.js, readable elsewhere)
+        pet: 'readonly',
+        currentBattle: 'readonly',
+        battleUIManager: 'readonly',
+        accessibilityManager: 'readonly',
         // Node globals
         process: 'readonly',
         Buffer: 'readonly',

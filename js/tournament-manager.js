@@ -173,17 +173,23 @@ class TournamentManager {
     }
 
     /**
-     * Record match result
-     * @param {number} matchIndex - Match index in bracket
-     * @param {object} winner - Winner data
+     * Record match result (supports both match object and index)
+     * @param {object|number} matchOrIndex - Match object or match index
+     * @param {string} winner - Winner name
      * @returns {boolean} Success status
      */
-    recordMatchResult(matchIndex, winner) {
-        if (!this.currentTournament || !this.currentTournament.bracket[matchIndex]) {
-            return false;
+    recordMatchResult(matchOrIndex, winner) {
+        // Support both new (match object) and old (index) signatures
+        let match;
+        if (typeof matchOrIndex === 'number') {
+            if (!this.currentTournament || !this.currentTournament.bracket[matchOrIndex]) {
+                return false;
+            }
+            match = this.currentTournament.bracket[matchOrIndex];
+        } else {
+            match = matchOrIndex;
         }
 
-        const match = this.currentTournament.bracket[matchIndex];
         match.winner = winner;
         match.completed = true;
 
@@ -197,6 +203,7 @@ class TournamentManager {
             this.advanceRound();
         }
 
+        this.saveTournaments();
         return true;
     }
 
@@ -296,27 +303,6 @@ class TournamentManager {
         );
 
         return currentRoundMatches.length > 0 ? currentRoundMatches[0] : null;
-    }
-
-    /**
-     * Record match result
-     * @param {object} match - Match object
-     * @param {string} winnerName - Name of winner
-     */
-    recordMatchResult(match, winnerName) {
-        match.winner = winnerName;
-        match.completed = true;
-        
-        // Check if round is complete
-        const roundComplete = this.currentTournament.bracket
-            .filter(m => m.round === this.currentTournament.currentRound)
-            .every(m => m.completed);
-        
-        if (roundComplete) {
-            this.advanceRound();
-        }
-        
-        this.saveTournaments();
     }
 
     /**
