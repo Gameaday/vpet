@@ -1,0 +1,457 @@
+/**
+ * MATERIAL DESIGN 3 SYSTEM
+ * ================================================
+ * Comprehensive design system for VPet
+ * Scalable framework for all views, pages, and components
+ * ================================================
+ */
+
+/* ================================================
+   DESIGN TOKENS - Material Design 3 Variables
+   ================================================ */
+
+:root {
+    /* Color Palette - Material Design 3 */
+    --md-primary: #667eea;
+    --md-primary-container: rgba(102, 126, 234, 0.15);
+    --md-on-primary: #ffffff;
+    --md-on-primary-container: #e8eaf6;
+    
+    --md-secondary: #764ba2;
+    --md-secondary-container: rgba(118, 75, 162, 0.15);
+    --md-on-secondary: #ffffff;
+    
+    --md-tertiary: #f97316;
+    --md-tertiary-container: rgba(249, 115, 22, 0.15);
+    --md-on-tertiary: #ffffff;
+    
+    /* Surface Colors */
+    --md-surface: #1a1a1a;
+    --md-surface-variant: #2a2a2a;
+    --md-surface-container-low: rgba(26, 26, 42, 0.5);
+    --md-surface-container: rgba(26, 26, 42, 0.8);
+    --md-surface-container-high: rgba(26, 26, 42, 0.95);
+    --md-surface-container-highest: rgba(26, 26, 42, 0.98);
+    --md-on-surface: #ffffff;
+    --md-on-surface-variant: #e0e0e0;
+    
+    /* Background */
+    --md-background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    --md-on-background: #ffffff;
+    
+    /* Outline */
+    --md-outline: rgba(102, 126, 234, 0.3);
+    --md-outline-variant: rgba(102, 126, 234, 0.15);
+    
+    /* State Layers - for hover, focus, press */
+    --md-state-hover-opacity: 0.08;
+    --md-state-focus-opacity: 0.12;
+    --md-state-press-opacity: 0.12;
+    --md-state-drag-opacity: 0.16;
+    
+    /* Material Design 3 Elevation System */
+    --md-elevation-0: none;
+    --md-elevation-1: 
+        0 1px 2px 0 rgba(0, 0, 0, 0.3),
+        0 1px 3px 1px rgba(0, 0, 0, 0.15);
+    --md-elevation-2: 
+        0 1px 2px 0 rgba(0, 0, 0, 0.3),
+        0 2px 6px 2px rgba(0, 0, 0, 0.15);
+    --md-elevation-3: 
+        0 1px 3px 0 rgba(0, 0, 0, 0.3),
+        0 4px 8px 3px rgba(0, 0, 0, 0.15);
+    --md-elevation-4: 
+        0 2px 3px 0 rgba(0, 0, 0, 0.3),
+        0 6px 10px 4px rgba(0, 0, 0, 0.15);
+    --md-elevation-5: 
+        0 4px 4px 0 rgba(0, 0, 0, 0.3),
+        0 8px 12px 6px rgba(0, 0, 0, 0.15);
+    
+    /* Spacing Scale - Material Design 3 */
+    --md-spacing-xs: 4px;
+    --md-spacing-sm: 8px;
+    --md-spacing-md: 12px;
+    --md-spacing-lg: 16px;
+    --md-spacing-xl: 24px;
+    --md-spacing-xxl: 32px;
+    
+    /* Border Radius Scale */
+    --md-radius-none: 0;
+    --md-radius-xs: 4px;
+    --md-radius-sm: 8px;
+    --md-radius-md: 12px;
+    --md-radius-lg: 16px;
+    --md-radius-xl: 20px;
+    --md-radius-xxl: 28px;
+    --md-radius-full: 9999px;
+    
+    /* Typography Scale - Material Design 3 */
+    --md-type-display-large: 57px;
+    --md-type-display-medium: 45px;
+    --md-type-display-small: 36px;
+    --md-type-headline-large: 32px;
+    --md-type-headline-medium: 28px;
+    --md-type-headline-small: 24px;
+    --md-type-title-large: 22px;
+    --md-type-title-medium: 16px;
+    --md-type-title-small: 14px;
+    --md-type-label-large: 14px;
+    --md-type-label-medium: 12px;
+    --md-type-label-small: 11px;
+    --md-type-body-large: 16px;
+    --md-type-body-medium: 14px;
+    --md-type-body-small: 12px;
+    
+    /* Motion - Material Design 3 Easing */
+    --md-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --md-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+    --md-easing-decelerated: cubic-bezier(0, 0, 0.2, 1);
+    --md-easing-accelerated: cubic-bezier(0.4, 0, 1, 1);
+    
+    /* Motion Duration */
+    --md-duration-short1: 50ms;
+    --md-duration-short2: 100ms;
+    --md-duration-short3: 150ms;
+    --md-duration-short4: 200ms;
+    --md-duration-medium1: 250ms;
+    --md-duration-medium2: 300ms;
+    --md-duration-medium3: 350ms;
+    --md-duration-medium4: 400ms;
+    --md-duration-long1: 450ms;
+    --md-duration-long2: 500ms;
+    --md-duration-long3: 550ms;
+    --md-duration-long4: 600ms;
+}
+
+/* ================================================
+   COMPONENT FRAMEWORK - Reusable Components
+   ================================================ */
+
+/* Material Design 3 Filled Button */
+.md-button-filled {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-spacing-sm);
+    padding: 10px 24px;
+    min-height: 40px;
+    border: none;
+    border-radius: var(--md-radius-xl);
+    background: linear-gradient(135deg, var(--md-primary) 0%, var(--md-secondary) 100%);
+    color: var(--md-on-primary);
+    font-size: var(--md-type-label-large);
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    text-transform: none;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: var(--md-elevation-1);
+    transition: all var(--md-duration-short4) var(--md-easing-standard);
+    overflow: hidden;
+}
+
+.md-button-filled::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--md-on-primary);
+    opacity: 0;
+    transition: opacity var(--md-duration-short4) var(--md-easing-standard);
+}
+
+.md-button-filled:hover::before {
+    opacity: var(--md-state-hover-opacity);
+}
+
+.md-button-filled:focus-visible::before {
+    opacity: var(--md-state-focus-opacity);
+}
+
+.md-button-filled:active::before {
+    opacity: var(--md-state-press-opacity);
+}
+
+.md-button-filled:active {
+    transform: scale(0.98);
+    box-shadow: var(--md-elevation-0);
+}
+
+/* Material Design 3 Outlined Button */
+.md-button-outlined {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-spacing-sm);
+    padding: 10px 24px;
+    min-height: 40px;
+    border: 1px solid var(--md-outline);
+    border-radius: var(--md-radius-xl);
+    background: transparent;
+    color: var(--md-primary);
+    font-size: var(--md-type-label-large);
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    cursor: pointer;
+    user-select: none;
+    transition: all var(--md-duration-short4) var(--md-easing-standard);
+    overflow: hidden;
+}
+
+.md-button-outlined::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--md-primary);
+    opacity: 0;
+    transition: opacity var(--md-duration-short4) var(--md-easing-standard);
+}
+
+.md-button-outlined:hover {
+    border-color: var(--md-primary);
+    background: var(--md-primary-container);
+}
+
+.md-button-outlined:active {
+    transform: scale(0.98);
+}
+
+/* Material Design 3 Text Button */
+.md-button-text {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-spacing-sm);
+    padding: 10px 12px;
+    min-height: 40px;
+    border: none;
+    border-radius: var(--md-radius-xl);
+    background: transparent;
+    color: var(--md-primary);
+    font-size: var(--md-type-label-large);
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    cursor: pointer;
+    user-select: none;
+    transition: all var(--md-duration-short4) var(--md-easing-standard);
+}
+
+.md-button-text:hover {
+    background: var(--md-primary-container);
+}
+
+.md-button-text:active {
+    transform: scale(0.98);
+}
+
+/* Material Design 3 FAB (Floating Action Button) */
+.md-fab {
+    position: fixed;
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: var(--md-radius-lg);
+    background: linear-gradient(135deg, var(--md-primary) 0%, var(--md-secondary) 100%);
+    color: var(--md-on-primary);
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--md-elevation-3);
+    transition: all var(--md-duration-medium2) var(--md-easing-standard);
+    z-index: 900;
+}
+
+.md-fab:hover {
+    transform: scale(1.05);
+    box-shadow: var(--md-elevation-4);
+}
+
+.md-fab:active {
+    transform: scale(0.95);
+    box-shadow: var(--md-elevation-2);
+}
+
+/* Material Design 3 Card */
+.md-card {
+    background: var(--md-surface-container);
+    border-radius: var(--md-radius-lg);
+    border: 1px solid var(--md-outline-variant);
+    box-shadow: var(--md-elevation-1);
+    padding: var(--md-spacing-lg);
+    transition: all var(--md-duration-short4) var(--md-easing-standard);
+}
+
+.md-card:hover {
+    box-shadow: var(--md-elevation-2);
+}
+
+/* Material Design 3 Surface Container */
+.md-surface-container {
+    background: var(--md-surface-container);
+    border-radius: var(--md-radius-lg);
+    padding: var(--md-spacing-lg);
+}
+
+.md-surface-container-high {
+    background: var(--md-surface-container-high);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Material Design 3 Bottom App Bar */
+.md-bottom-app-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--md-surface-container-highest);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--md-outline);
+    padding: var(--md-spacing-md) var(--md-spacing-lg);
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+}
+
+/* ================================================
+   LAYOUT SYSTEM - Material Design 3 Grid
+   ================================================ */
+
+.md-layout-grid {
+    display: grid;
+    gap: var(--md-spacing-md);
+    padding: var(--md-spacing-lg);
+}
+
+.md-layout-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(var(--min-col-width, 200px), 1fr));
+}
+
+.md-layout-auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(var(--min-col-width, 200px), 1fr));
+}
+
+/* ================================================
+   RESPONSIVE UTILITIES
+   ================================================ */
+
+@media (max-width: 768px) {
+    :root {
+        /* Adjust spacing for mobile */
+        --md-spacing-xs: 3px;
+        --md-spacing-sm: 6px;
+        --md-spacing-md: 10px;
+        --md-spacing-lg: 14px;
+        --md-spacing-xl: 20px;
+        --md-spacing-xxl: 28px;
+    }
+    
+    .md-fab {
+        width: 52px;
+        height: 52px;
+        font-size: 22px;
+    }
+}
+
+/* ================================================
+   ACCESSIBILITY & INTERACTION STATES
+   ================================================ */
+
+/* Focus visible for keyboard navigation */
+.md-button-filled:focus-visible,
+.md-button-outlined:focus-visible,
+.md-button-text:focus-visible,
+.md-fab:focus-visible {
+    outline: 3px solid var(--md-primary);
+    outline-offset: 2px;
+}
+
+/* Disabled state */
+.md-button-filled:disabled,
+.md-button-outlined:disabled,
+.md-button-text:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Loading state */
+.md-button-loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.md-button-loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: md-spin 0.6s linear infinite;
+}
+
+@keyframes md-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ================================================
+   UTILITY CLASSES
+   ================================================ */
+
+/* Elevation utilities */
+.md-elevation-0 { box-shadow: var(--md-elevation-0); }
+.md-elevation-1 { box-shadow: var(--md-elevation-1); }
+.md-elevation-2 { box-shadow: var(--md-elevation-2); }
+.md-elevation-3 { box-shadow: var(--md-elevation-3); }
+.md-elevation-4 { box-shadow: var(--md-elevation-4); }
+.md-elevation-5 { box-shadow: var(--md-elevation-5); }
+
+/* Spacing utilities */
+.md-p-xs { padding: var(--md-spacing-xs); }
+.md-p-sm { padding: var(--md-spacing-sm); }
+.md-p-md { padding: var(--md-spacing-md); }
+.md-p-lg { padding: var(--md-spacing-lg); }
+.md-p-xl { padding: var(--md-spacing-xl); }
+.md-p-xxl { padding: var(--md-spacing-xxl); }
+
+.md-m-xs { margin: var(--md-spacing-xs); }
+.md-m-sm { margin: var(--md-spacing-sm); }
+.md-m-md { margin: var(--md-spacing-md); }
+.md-m-lg { margin: var(--md-spacing-lg); }
+.md-m-xl { margin: var(--md-spacing-xl); }
+.md-m-xxl { margin: var(--md-spacing-xxl); }
+
+/* Gap utilities */
+.md-gap-xs { gap: var(--md-spacing-xs); }
+.md-gap-sm { gap: var(--md-spacing-sm); }
+.md-gap-md { gap: var(--md-spacing-md); }
+.md-gap-lg { gap: var(--md-spacing-lg); }
+.md-gap-xl { gap: var(--md-spacing-xl); }
+.md-gap-xxl { gap: var(--md-spacing-xxl); }
+
+/* Border radius utilities */
+.md-radius-none { border-radius: var(--md-radius-none); }
+.md-radius-xs { border-radius: var(--md-radius-xs); }
+.md-radius-sm { border-radius: var(--md-radius-sm); }
+.md-radius-md { border-radius: var(--md-radius-md); }
+.md-radius-lg { border-radius: var(--md-radius-lg); }
+.md-radius-xl { border-radius: var(--md-radius-xl); }
+.md-radius-xxl { border-radius: var(--md-radius-xxl); }
+.md-radius-full { border-radius: var(--md-radius-full); }
