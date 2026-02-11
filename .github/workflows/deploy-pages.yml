@@ -70,6 +70,26 @@ jobs:
           # Remove test files from deployment
           rm -f _site/js/*.test.js 2>/dev/null || true
           
+          # Generate build-info.js with actual build time
+          cat > _site/js/build-info.js << EOF
+          /**
+           * Build Information
+           * This file is auto-generated during deployment
+           */
+          
+          const BuildInfo = {
+              version: '2.0.0',
+              buildTime: '$(date -u +"%Y-%m-%d %H:%M:%S UTC")',
+              commit: '${{ github.sha }}',
+              branch: '${{ github.ref_name }}'
+          };
+          
+          // Export for use in modules
+          if (typeof module !== 'undefined' && module.exports) {
+              module.exports = BuildInfo;
+          }
+          EOF
+          
           # Copy documentation
           cp README.md _site/
           cp QUICKSTART.md _site/
