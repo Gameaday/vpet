@@ -46,7 +46,6 @@ jobs:
         with:
           root: ./
           css: false
-          extra: --ignore-re "CSS:"
 
       - name: 📊 Analyze JavaScript
         run: |
