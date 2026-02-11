@@ -1031,9 +1031,9 @@ main {
 /* Action Panel - Organic, intelligent layout that adapts to any screen size */
 .action-panel {
     display: grid;
-    /* Auto-fit creates as many columns as will fit, with each button 80-140px wide */
-    grid-template-columns: repeat(auto-fit, minmax(clamp(80px, 20vw, 140px), 1fr));
-    gap: clamp(6px, 1.5vw, 12px);
+    /* Fixed 2-column grid for uniform button sizes on mobile */
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(8px, 2vw, 12px);
     margin: 0 auto 20px;
     max-width: 100%;
     width: 100%;
@@ -1051,8 +1051,8 @@ main {
     background: #333;
     border: 2px solid #555;
     border-radius: 10px;
-    /* Responsive padding that scales with button size */
-    padding: clamp(8px, 2vw, 14px) clamp(6px, 1.5vw, 12px);
+    /* Consistent padding for uniform button sizes */
+    padding: clamp(10px, 2.5vw, 16px) clamp(8px, 2vw, 12px);
     color: #fff;
     /* Responsive font size */
     font-size: clamp(0.8rem, 2vw, 0.95rem);
@@ -1062,11 +1062,12 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(2px, 0.5vw, 6px);
+    gap: clamp(3px, 0.8vw, 6px);
     transition: all 0.2s;
-    /* Minimum touch target size for accessibility */
-    min-height: 48px;
-    min-width: 48px;
+    /* Consistent dimensions for uniform appearance */
+    min-height: 70px;
+    aspect-ratio: 1 / 1;
+    width: 100%;
 }
 
 .action-btn:hover {
@@ -1819,12 +1820,14 @@ main {
 
     .action-panel {
         grid-template-columns: repeat(2, 1fr);
+        gap: clamp(10px, 2.5vw, 14px);
     }
     
-    /* Larger touch targets for mobile */
+    /* Uniform touch targets for mobile with consistent sizing */
     .action-btn {
-        padding: 14px;
-        min-height: 60px;
+        padding: 12px 8px;
+        min-height: 75px;
+        aspect-ratio: 1 / 1;
     }
     
     .online-battle-btn {
