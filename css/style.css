@@ -1010,31 +1010,10 @@ main {
     clear: both;
 }
 
-/* Secondary actions - subtle visual grouping without hard separation */
-.action-panel.secondary-actions {
-    margin-top: clamp(12px, 2vh, 20px);
-    margin-bottom: 20px;
-    /* Subtle top border for visual grouping on larger screens */
-    position: relative;
-}
-
-/* Add subtle separator only on larger screens where both panels are visible */
-@media (min-width: 480px) {
-    .action-panel.secondary-actions::before {
-        content: '';
-        position: absolute;
-        top: calc(-1 * clamp(6px, 1vh, 10px));
-        left: 10%;
-        right: 10%;
-        height: 1px;
-        background: linear-gradient(90deg, 
-            transparent 0%, 
-            rgba(102, 126, 234, 0.2) 20%, 
-            rgba(102, 126, 234, 0.3) 50%, 
-            rgba(102, 126, 234, 0.2) 80%, 
-            transparent 100%
-        );
-    }
+/* Contextual button visibility - controlled by JavaScript based on pet stage */
+.action-btn.egg-only,
+.action-btn.non-egg {
+    /* Display controlled via inline styles for better performance */
 }
 
 .action-btn {

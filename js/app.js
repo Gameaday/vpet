@@ -495,16 +495,16 @@ function updateUI() {
     // Handle egg-specific UI
     const isEgg = pet.stage === 'egg' && !pet.hasHatched;
     
-    // Show/hide egg-specific elements
+    // Show/hide warmth stat for eggs
     document.getElementById('warmthStat').style.display = isEgg ? 'block' : 'none';
-    document.getElementById('eggActionPanel').style.display = isEgg ? 'grid' : 'none';
-    document.getElementById('normalActionPanel').style.display = isEgg ? 'none' : 'grid';
     
-    // Hide Battle/Social buttons during egg state
-    const secondaryPanel = document.getElementById('secondaryActionPanel');
-    if (secondaryPanel) {
-        secondaryPanel.style.display = isEgg ? 'none' : 'grid';
-    }
+    // Toggle button visibility based on stage (egg vs non-egg)
+    document.querySelectorAll('.action-btn.egg-only').forEach(btn => {
+        btn.style.display = isEgg ? '' : 'none';
+    });
+    document.querySelectorAll('.action-btn.non-egg').forEach(btn => {
+        btn.style.display = isEgg ? 'none' : '';
+    });
     
     // Hide normal stats for eggs
     const normalStats = ['health', 'hunger', 'happiness', 'energy', 'cleanliness'];
