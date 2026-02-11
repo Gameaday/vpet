@@ -26,6 +26,7 @@ body {
     body {
         font-size: 1rem;
         line-height: 1.5; /* Better readability */
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     }
 }
 
@@ -47,15 +48,21 @@ body {
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        background: linear-gradient(180deg, rgba(26, 26, 42, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%);
+        backdrop-filter: blur(20px);
     }
     
-    /* Fixed header - no scrolling */
+    /* Fixed header - no scrolling with retro styling */
     header {
         flex-shrink: 0;
         position: sticky;
         top: 0;
         z-index: 100;
-        padding: clamp(8px, 1.5vh, 12px) 4%;
+        padding: clamp(10px, 2vh, 14px) 4%;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     
     header h1 {
@@ -74,37 +81,104 @@ body {
         flex-direction: column;
     }
     
-    /* Android Material Design bottom navigation style */
+    /* Android Material Design bottom navigation style with retro digi-pet aesthetic */
     .action-panel,
     .game-panel,
     .qol-panel {
         position: sticky;
         bottom: 0;
-        background: #1a1a1a;
-        padding: clamp(6px, 1.5vh, 10px) clamp(4px, 1vw, 8px);
+        background: linear-gradient(180deg, rgba(26, 26, 26, 0.98) 0%, rgba(26, 26, 26, 0.98) 100%);
+        backdrop-filter: blur(12px);
+        padding: clamp(8px, 2vh, 12px) clamp(4px, 1vw, 8px);
         margin: 0 calc(-1 * 4%);
-        border-top: 1px solid rgba(102, 126, 234, 0.2);
+        border-top: 2px solid rgba(102, 126, 234, 0.3);
         z-index: 50;
         flex-shrink: 0;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
     }
     
-    /* Organic button layout for mobile - fits naturally */
+    /* Organic button layout for mobile - fits naturally with improved styling */
     .action-panel {
         /* Auto-fit creates optimal columns based on available space */
         grid-template-columns: repeat(auto-fit, minmax(clamp(60px, 15vw, 90px), 1fr));
+        gap: clamp(8px, 2vw, 12px);
+    }
+    
+    /* Special styling for egg-only buttons (Incubate & Hatch) - centered and prominent */
+    .action-panel .warm-btn,
+    .action-panel .hatch-btn {
+        grid-column: 1 / -1; /* Span full width for centering */
+        max-width: 280px;
+        margin: 0 auto;
+        padding: clamp(12px, 3vh, 16px) clamp(8px, 2vw, 12px);
+        min-height: clamp(64px, 15vw, 72px);
+        font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+        font-weight: 600;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        border: 2px solid rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .action-panel .warm-btn {
+        border-color: rgba(249, 115, 22, 0.6);
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(234, 88, 12, 0.15) 100%);
+    }
+    
+    .action-panel .warm-btn:active {
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.25) 0%, rgba(234, 88, 12, 0.25) 100%);
+        transform: scale(0.98);
+    }
+    
+    .action-panel .hatch-btn {
+        border-color: rgba(132, 204, 22, 0.6);
+        background: linear-gradient(135deg, rgba(132, 204, 22, 0.15) 0%, rgba(101, 163, 13, 0.15) 100%);
+    }
+    
+    .action-panel .hatch-btn:not(:disabled):active {
+        background: linear-gradient(135deg, rgba(132, 204, 22, 0.25) 0%, rgba(101, 163, 13, 0.25) 100%);
+        transform: scale(0.98);
+    }
+    
+    .action-panel .hatch-btn.ready-to-hatch {
+        animation: pulse-glow 1.5s ease-in-out infinite;
+        background: linear-gradient(135deg, rgba(132, 204, 22, 0.3) 0%, rgba(101, 163, 13, 0.3) 100%);
+        border-color: rgba(132, 204, 22, 0.8);
+        box-shadow: 0 4px 16px rgba(132, 204, 22, 0.4);
+    }
+    
+    @keyframes pulse-glow {
+        0%, 100% {
+            box-shadow: 0 4px 16px rgba(132, 204, 22, 0.4);
+            border-color: rgba(132, 204, 22, 0.8);
+        }
+        50% {
+            box-shadow: 0 6px 24px rgba(132, 204, 22, 0.6);
+            border-color: rgba(132, 204, 22, 1);
+        }
     }
     
     .action-btn {
         /* Buttons scale down gracefully on smaller screens */
-        padding: clamp(4px, 1vh, 8px) clamp(2px, 0.5vw, 6px);
-        min-height: clamp(48px, 12vw, 56px);
-        font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+        padding: clamp(6px, 1.5vh, 10px) clamp(4px, 1vw, 8px);
+        min-height: clamp(52px, 13vw, 60px);
+        font-size: clamp(0.7rem, 2vw, 0.9rem);
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(42, 42, 42, 0.8) 0%, rgba(51, 51, 51, 0.8) 100%);
+        border: 2px solid rgba(102, 126, 234, 0.25);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* Visual feedback on touch */
+    /* Visual feedback on touch with retro glow */
     .action-btn:active {
         transform: scale(0.95);
-        background-color: rgba(102, 126, 234, 0.3);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%);
+        border-color: rgba(102, 126, 234, 0.5);
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
     }
     
     .action-btn .btn-icon {
@@ -178,12 +252,13 @@ body {
     .settings-panel {
         position: sticky;
         bottom: 0;
-        background: linear-gradient(180deg, transparent 0%, #1a1a1a 20%);
+        background: linear-gradient(180deg, rgba(26, 26, 26, 0) 0%, rgba(26, 26, 26, 0.98) 20%);
+        backdrop-filter: blur(12px);
         padding: 8px 4% 8px;
         padding-bottom: 8px;
         padding-bottom: max(8px, env(safe-area-inset-bottom));
         margin: 0 calc(-1 * 4%);
-        border-top: 1px solid rgba(102, 126, 234, 0.2);
+        border-top: 2px solid rgba(102, 126, 234, 0.2);
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -196,18 +271,23 @@ body {
         flex: 1;
         min-height: 48px;
         padding: 12px 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+        border: 2px solid rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .more-btn:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%);
     }
     
     .more-btn .btn-icon {
         font-size: 1.25rem;
     }
     
-    /* Use higher specificity instead of !important */
+    /* Use higher specificity instead of !important with retro styling */
     .settings-panel .settings-btn,
     .settings-panel .help-btn,
     .settings-panel .reset-btn {
@@ -216,8 +296,8 @@ body {
         min-width: 48px;
         min-height: 48px;
         font-size: 1.25rem;
-        background: rgba(102, 126, 234, 0.1);
-        border: 1px solid rgba(102, 126, 234, 0.2);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        border: 2px solid rgba(102, 126, 234, 0.3);
         border-radius: 50%;
         padding: 0;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -226,12 +306,14 @@ body {
         justify-content: center;
         flex-shrink: 0;
         flex: 0 0 auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
     
     .settings-panel .settings-btn:hover {
-        background: rgba(102, 126, 234, 0.2);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%);
         transform: scale(1.05);
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        border-color: rgba(102, 126, 234, 0.5);
     }
     
     /* Hide help and reset buttons on mobile - accessible via More menu */
@@ -244,14 +326,19 @@ body {
     .help-btn:active,
     .reset-btn:active {
         transform: scale(0.95);
-        background-color: rgba(102, 126, 234, 0.3);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+        border-color: rgba(102, 126, 234, 0.6);
     }
     
-    /* Pet display optimization - more compact */
+    /* Pet display optimization - more compact with retro aesthetic */
     .pet-display {
         margin-bottom: clamp(6px, 1vh, 10px);
         padding: clamp(10px, 2vh, 16px) 4%;
         flex-shrink: 0;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+        border: 2px solid rgba(102, 126, 234, 0.2);
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     
     .pet-name {
@@ -299,15 +386,22 @@ body {
         grid-template-columns: repeat(2, 1fr); /* More button + Settings */
     }
     
-    /* Stats panel - much more compact for Galaxy S24 */
+    /* Stats panel - much more compact for Galaxy S24 with retro aesthetic */
     .stats-panel {
         gap: clamp(4px, 1vh, 8px);
         margin-bottom: clamp(6px, 1vh, 10px);
         flex-shrink: 0;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        border-radius: 16px;
+        padding: clamp(8px, 1.5vh, 12px);
     }
     
     .stat-bar {
         padding: clamp(4px, 1vh, 8px) clamp(6px, 1.5vw, 10px);
+        background: rgba(42, 42, 42, 0.5);
+        border: 1px solid rgba(102, 126, 234, 0.15);
+        border-radius: 12px;
+        backdrop-filter: blur(8px);
     }
     
     .stat-label {
@@ -341,22 +435,26 @@ body {
         padding: clamp(3px, 0.75vh, 6px);
     }
     
-    /* Modal optimizations for mobile */
+    /* Modal optimizations for mobile with retro aesthetic */
     .modal {
         padding: 0;
         align-items: flex-end;
-        background-color: rgba(0, 0, 0, 0.7); /* Slightly darker backdrop */
+        background-color: rgba(0, 0, 0, 0.75); /* Slightly darker backdrop */
     }
     
     .modal-content {
         max-width: 100%;
         width: 100%;
         max-height: 85vh; /* Increased from 80vh for more content visibility */
-        border-radius: 20px 20px 0 0;
+        border-radius: 24px 24px 0 0;
         margin: 0;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         font-size: 0.95rem; /* Ensure readable font size */
+        background: linear-gradient(180deg, rgba(26, 26, 26, 0.98) 0%, rgba(42, 42, 42, 0.98) 100%);
+        border: 2px solid rgba(102, 126, 234, 0.3);
+        border-bottom: none;
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5);
     }
     
     .modal-content h2,
@@ -383,6 +481,21 @@ body {
         height: 48px;
         top: 12px;
         right: 12px;
+        background: rgba(102, 126, 234, 0.15);
+        border: 2px solid rgba(102, 126, 234, 0.3);
+        border-radius: 50%;
+        color: #fff;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .close-btn:hover {
+        background: rgba(102, 126, 234, 0.25);
+        border-color: rgba(102, 126, 234, 0.5);
+        transform: scale(1.05);
+    }
+    
+    .close-btn:active {
+        transform: scale(0.95);
     }
     
     /* Android Material Design pull-to-refresh indicator space */
@@ -392,14 +505,30 @@ body {
         height: 8px;
     }
     
-    /* Notification positioning for mobile */
+    /* Notification positioning for mobile - FIXED: prevent full-screen span and touch blocking */
     .notification {
-        top: 10px;
+        position: fixed;
+        top: auto;
+        bottom: 90px; /* Above action panel */
         left: 50%;
-        transform: translateX(-50%);
-        max-width: 90%;
+        transform: translateX(-50%) translateY(100px);
+        max-width: calc(100% - 40px);
+        width: auto;
+        min-width: 200px;
+        max-height: 120px; /* Prevent vertical spanning */
         font-size: 0.95rem;
         padding: 14px 18px;
+        border-radius: 12px;
+        pointer-events: none; /* Don't block touches */
+        z-index: 1500; /* Below modals but above content */
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .notification.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+        pointer-events: auto; /* Allow interaction when shown */
     }
     
     /* Toast positioning for mobile */
