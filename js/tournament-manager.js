@@ -173,17 +173,23 @@ class TournamentManager {
     }
 
     /**
-     * Record match result
-     * @param {number} matchIndex - Match index in bracket
-     * @param {object} winner - Winner data
+     * Record match result (supports both match object and index)
+     * @param {object|number} matchOrIndex - Match object or match index
+     * @param {string} winner - Winner name
      * @returns {boolean} Success status
      */
-    recordMatchResult(matchIndex, winner) {
-        if (!this.currentTournament || !this.currentTournament.bracket[matchIndex]) {
-            return false;
+    recordMatchResult(matchOrIndex, winner) {
+        // Support both new (match object) and old (index) signatures
+        let match;
+        if (typeof matchOrIndex === 'number') {
+            if (!this.currentTournament || !this.currentTournament.bracket[matchOrIndex]) {
+                return false;
+            }
+            match = this.currentTournament.bracket[matchOrIndex];
+        } else {
+            match = matchOrIndex;
         }
 
-        const match = this.currentTournament.bracket[matchIndex];
         match.winner = winner;
         match.completed = true;
 
@@ -197,6 +203,7 @@ class TournamentManager {
             this.advanceRound();
         }
 
+        this.saveTournaments();
         return true;
     }
 
@@ -279,6 +286,40 @@ class TournamentManager {
      */
     getBracket() {
         return this.currentTournament ? this.currentTournament.bracket : [];
+    }
+
+    /**
+     * Get next unplayed match
+     * @returns {object|null} Next match or null if none
+     */
+    getNextMatch() {
+        if (!this.currentTournament || !this.currentTournament.bracket) {
+            return null;
+        }
+
+        // Find first incomplete match in current round
+        const currentRoundMatches = this.currentTournament.bracket.filter(
+            m => m.round === this.currentTournament.currentRound && !m.completed
+        );
+
+        return currentRoundMatches.length > 0 ? currentRoundMatches[0] : null;
+    }
+
+    /**
+     * Forfeit current tournament
+     */
+    forfeitTournament() {
+        if (!this.currentTournament) return;
+
+        this.currentTournament.status = 'forfeited';
+        this.currentTournament.completedAt = Date.now();
+
+        // Add to history
+        this.tournaments.push({...this.currentTournament});
+        this.saveTournaments();
+
+        // Clear current tournament
+        this.currentTournament = null;
     }
 
     /**

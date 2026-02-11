@@ -95,6 +95,10 @@ Visit **[https://gameaday.github.io/vpet/](https://gameaday.github.io/vpet/)** t
 
 ### Running the Server (Optional - for Online Battles)
 
+**⚠️ Important:** GitHub Pages cannot host the Node.js server - it can only host the client (HTML/CSS/JS). For full multiplayer:
+- **Option 1:** Play single-player only (works perfectly on GitHub Pages)
+- **Option 2:** Deploy server to Heroku/Railway/Render (see [deployment guide](docs/GITHUB_PAGES_DEPLOYMENT.md))
+
 The server enables multiplayer battles between players.
 
 1. **Install dependencies**:
@@ -197,11 +201,19 @@ vpet/
 
 ## 🌐 Deployment
 
-### GitHub Pages
+### GitHub Pages (Client Only)
 
-1. Enable GitHub Pages in repository settings
-2. Set source to main branch, root directory
-3. Access at: `https://yourusername.github.io/vpet/`
+VPet client is automatically deployed to GitHub Pages. **Note:** Multiplayer features require a separate server.
+
+See **[GitHub Pages Deployment Guide](docs/GITHUB_PAGES_DEPLOYMENT.md)** for:
+- ✅ What works on GitHub Pages (full single-player)
+- ❌ What doesn't work (multiplayer needs separate server)
+- 📦 Step-by-step deployment instructions
+- 🖥️ How to add multiplayer with external server hosting
+
+**Quick Summary:**
+- GitHub Pages = Free, Single-player only
+- GitHub Pages + Server = Full multiplayer ($0-4/month)
 
 ### Server Deployment
 

@@ -1,0 +1,634 @@
+/* ================================================
+   MOBILE-FIRST ENHANCEMENTS FOR ANDROID & CHROME
+   ================================================ */
+
+/* Android-specific optimizations */
+@supports (-webkit-touch-callout: none) {
+    /* iOS-specific styles already covered */
+}
+
+/* Android Chrome optimizations */
+body {
+    /* Prevent overscroll bounce on Android */
+    overscroll-behavior-y: contain;
+    
+    /* Optimize for touch */
+    -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
+    touch-action: manipulation;
+}
+
+/* Improve base font size for mobile readability */
+@media (max-width: 768px) {
+    html {
+        font-size: 16px; /* Ensure minimum 16px to prevent zoom on iOS */
+    }
+    
+    body {
+        font-size: 1rem;
+        line-height: 1.5; /* Better readability */
+    }
+}
+
+/* Reduce scrolling by making container fit viewport */
+@media (max-width: 768px) {
+    body {
+        padding: 0;
+        align-items: flex-start;
+        min-height: 100vh;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    .container {
+        max-width: 100%;
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    /* Fixed header - no scrolling */
+    header {
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 12px 16px; /* Slightly larger padding */
+    }
+    
+    header h1 {
+        font-size: 1.25rem; /* Larger for readability */
+    }
+    
+    /* Scrollable main content only */
+    main {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+        padding: 15px;
+    }
+    
+    /* Android Material Design bottom navigation style */
+    .action-panel,
+    .battle-panel,
+    .social-panel,
+    .game-panel,
+    .qol-panel {
+        position: sticky;
+        bottom: 0;
+        background: #1a1a1a;
+        padding: 12px 8px;
+        margin: 0 -15px;
+        border-top: 2px solid rgba(102, 126, 234, 0.3);
+        z-index: 50;
+    }
+    
+    /* Compact button layout for mobile */
+    .action-panel {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px; /* Increased from 8px for better spacing */
+    }
+    
+    .action-btn {
+        flex-direction: column;
+        padding: 12px 6px; /* Slightly more padding */
+        min-height: 64px; /* Increased from 60px for better touch */
+        font-size: 0.8rem; /* Slightly larger font */
+        transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    /* Visual feedback on touch */
+    .action-btn:active {
+        transform: scale(0.95);
+        background-color: rgba(102, 126, 234, 0.3);
+    }
+    
+    .action-btn .btn-icon {
+        font-size: 1.6rem; /* Slightly larger icons */
+        margin-bottom: 4px;
+    }
+    
+    /* Compact battle section */
+    .battle-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px; /* Increased from 8px */
+        padding: 12px 10px; /* More padding */
+    }
+    
+    .battle-btn,
+    .online-battle-btn {
+        padding: 14px 10px; /* More padding */
+        font-size: 0.9rem; /* Larger font */
+        min-height: 52px; /* Ensure touch target */
+        transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    .battle-btn:active,
+    .online-battle-btn:active {
+        transform: scale(0.98);
+        background-color: rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Bottom sheet style for social/game panels */
+    .social-panel,
+    .game-panel {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px; /* Increased from 8px */
+        padding: 12px 10px; /* More padding */
+    }
+    
+    .social-btn,
+    .game-btn {
+        flex-direction: column;
+        padding: 12px 6px; /* More padding */
+        min-height: 64px; /* Increased from 60px */
+        font-size: 0.8rem; /* Larger font */
+        transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    .social-btn:active,
+    .game-btn:active {
+        transform: scale(0.95);
+        background-color: rgba(102, 126, 234, 0.3);
+    }
+    
+    .social-btn .btn-icon,
+    .game-btn .btn-icon {
+        font-size: 1.6rem; /* Larger icons */
+        margin-bottom: 4px;
+    }
+    
+    /* Compact QOL section */
+    .qol-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px; /* Increased from 8px */
+        padding: 12px 10px; /* More padding */
+    }
+    
+    .qol-btn {
+        flex-direction: column;
+        padding: 12px 6px; /* More padding */
+        min-height: 64px; /* Increased from 60px */
+        font-size: 0.8rem; /* Larger font */
+        transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    .qol-btn:active {
+        transform: scale(0.95);
+        background-color: rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Compact settings section */
+    .settings-panel {
+        position: sticky;
+        bottom: 0;
+        background: #1a1a1a;
+        padding: 12px 10px; /* More padding */
+        margin: 0 -15px;
+        border-top: 2px solid rgba(102, 126, 234, 0.3);
+        display: flex;
+        justify-content: space-around;
+        z-index: 50;
+    }
+    
+    .settings-btn,
+    .help-btn,
+    .reset-btn {
+        width: 52px; /* Increased from 44px */
+        height: 52px; /* Increased from 44px */
+        font-size: 1.4rem; /* Larger icons */
+        transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    .settings-btn:active,
+    .help-btn:active,
+    .reset-btn:active {
+        transform: scale(0.95);
+        background-color: rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Pet display optimization */
+    .pet-display {
+        margin-bottom: 16px; /* Slightly more spacing */
+        padding: 20px 16px;
+    }
+    
+    .pet-name {
+        font-size: 1.1rem; /* Larger name */
+        margin-bottom: 8px;
+    }
+    
+    .pet-sprite {
+        width: 130px; /* Slightly larger */
+        height: 130px;
+    }
+    
+    /* Stats panel - more compact but readable */
+    .stats-panel {
+        gap: 10px; /* More spacing */
+        margin-bottom: 16px;
+    }
+    
+    .stat-bar {
+        padding: 10px; /* More padding */
+    }
+    
+    .stat-label {
+        font-size: 0.9rem; /* Larger font */
+        font-weight: 500; /* Slightly bolder */
+    }
+    
+    .stat-label span:first-child {
+        margin-right: 8px; /* More spacing */
+    }
+    
+    /* Modal optimizations for mobile */
+    .modal {
+        padding: 0;
+        align-items: flex-end;
+        background-color: rgba(0, 0, 0, 0.7); /* Slightly darker backdrop */
+    }
+    
+    .modal-content {
+        max-width: 100%;
+        width: 100%;
+        max-height: 85vh; /* Increased from 80vh for more content visibility */
+        border-radius: 20px 20px 0 0;
+        margin: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.95rem; /* Ensure readable font size */
+    }
+    
+    .modal-content h2,
+    .modal-content h3 {
+        font-size: 1.3rem; /* Larger headings */
+        margin-bottom: 12px;
+    }
+    
+    .modal-content p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+    
+    .modal-content button {
+        min-height: 48px; /* Ensure touch targets */
+        font-size: 0.95rem;
+        padding: 12px 20px;
+    }
+    
+    .close-btn {
+        font-size: 2rem;
+        width: 48px;
+        height: 48px;
+        top: 12px;
+        right: 12px;
+    }
+    
+    /* Android Material Design pull-to-refresh indicator space */
+    main::before {
+        content: '';
+        display: block;
+        height: 8px;
+    }
+    
+    /* Notification positioning for mobile */
+    .notification {
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90%;
+        font-size: 0.95rem;
+        padding: 14px 18px;
+    }
+    
+    /* Toast positioning for mobile */
+    .toast {
+        bottom: 80px; /* Above bottom navigation */
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90%;
+        font-size: 0.9rem;
+        padding: 12px 16px;
+    }
+}
+
+/* Tablet optimization (Android tablets) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 600px;
+    }
+    
+    /* Side navigation style for tablets */
+    .action-panel,
+    .battle-panel,
+    .social-panel,
+    .game-panel {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 10px;
+    }
+}
+
+/* Extra small screens optimization (iPhone SE, older devices) */
+@media (max-width: 375px) {
+    html {
+        font-size: 15px; /* Slightly smaller base for very small screens */
+    }
+    
+    .action-panel {
+        gap: 8px;
+    }
+    
+    .action-btn,
+    .social-btn,
+    .game-btn,
+    .qol-btn {
+        padding: 10px 4px;
+        min-height: 60px;
+        font-size: 0.75rem;
+    }
+    
+    .action-btn .btn-icon,
+    .social-btn .btn-icon,
+    .game-btn .btn-icon {
+        font-size: 1.4rem;
+    }
+    
+    .pet-sprite {
+        width: 110px;
+        height: 110px;
+    }
+    
+    header h1 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Android Chrome specific - prevent scroll bounce */
+@media (pointer: coarse) {
+    html {
+        overscroll-behavior: none;
+    }
+    
+    /* Improve touch target sizes */
+    button,
+    a,
+    input,
+    select {
+        min-height: 48px;
+        min-width: 48px;
+    }
+    
+    /* Add will-change for smoother animations */
+    .action-btn,
+    .battle-btn,
+    .social-btn,
+    .game-btn,
+    .qol-btn {
+        will-change: transform;
+    }
+}
+
+/* Loading states for better mobile feedback */
+@media (max-width: 768px) {
+    .loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(26, 26, 26, 0.95);
+        padding: 30px;
+        border-radius: 16px;
+        text-align: center;
+        z-index: 9999;
+    }
+    
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(102, 126, 234, 0.3);
+        border-top-color: #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Better error message styling */
+    .error-message {
+        background: rgba(239, 68, 68, 0.95);
+        color: white;
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin: 12px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        text-align: center;
+    }
+    
+    /* Success message styling */
+    .success-message {
+        background: rgba(34, 197, 94, 0.95);
+        color: white;
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin: 12px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        text-align: center;
+    }
+}
+
+/* Android Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2a2a2a;
+        --text-primary: #ffffff;
+        --accent-color: #667eea;
+    }
+}
+
+/* Android Light Mode Support */
+@media (prefers-color-scheme: light) {
+    body {
+        background: linear-gradient(135deg, #a8b8ff 0%, #c4b5fd 100%);
+    }
+    
+    .container {
+        background: #f5f5f5;
+    }
+    
+    header {
+        background: #667eea;
+    }
+    
+    .pet-display {
+        background: #ffffff;
+        border-color: #e0e0e0;
+    }
+}
+
+/* Landscape mode optimization for mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .container {
+        max-width: 100vw;
+        height: 100vh;
+    }
+    
+    main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .pet-display {
+        grid-column: 1;
+        grid-row: 1 / 3;
+    }
+    
+    .stats-panel {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    .action-panel {
+        grid-column: 1 / 3;
+        grid-row: 3;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+    }
+}
+
+/* PWA install prompt styling */
+.pwa-install-prompt {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    max-width: 90%;
+    backdrop-filter: blur(10px);
+}
+
+.pwa-install-prompt.show {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(-50%) translateY(0);
+    animation: slideUp 0.3s ease-out;
+}
+
+.pwa-prompt-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+}
+
+.pwa-prompt-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.pwa-prompt-text {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.pwa-install-btn {
+    background: rgba(255, 255, 255, 0.9);
+    color: #667eea;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.pwa-install-btn:hover {
+    background: white;
+    transform: scale(1.05);
+}
+
+.pwa-dismiss-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+}
+
+.pwa-dismiss-btn:hover {
+    opacity: 1;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateX(-50%) translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Android safe area handling */
+@supports (padding: env(safe-area-inset-bottom)) {
+    .action-panel,
+    .battle-panel,
+    .settings-panel {
+        padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .container {
+        border: 3px solid #ffffff;
+    }
+    
+    button {
+        border: 2px solid currentColor;
+    }
+}

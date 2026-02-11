@@ -33,6 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
     socialFeatures = new SocialFeatures();
     particleEffects = new ParticleEffects(AppConfig);
     
+    // Initialize accessibility and input validation
+    const accessibilityManager = new AccessibilityManager();
+    window.accessibilityManager = accessibilityManager;
+    window.InputValidator = InputValidator;
+    
     // Make particleEffects globally accessible for pet.js
     window.particleEffects = particleEffects;
     
@@ -956,10 +961,24 @@ function saveSettings() {
     const newVibrationEnabled = document.getElementById('vibrationToggle').checked;
     const newTheme = document.getElementById('themeSelect').value;
     
+    // Validate and update pet name
     if (newName && newName !== pet.name) {
-        pet.name = newName;
-        pet.save();
-        showNotification('✅ Pet name updated!');
+        const validation = InputValidator.validatePetName(newName);
+        
+        if (!validation.valid) {
+            showNotification(`❌ ${validation.error}`, 'error');
+            // Restore previous name in input
+            document.getElementById('petNameInput').value = pet.name;
+        } else {
+            pet.name = validation.sanitized;
+            pet.save();
+            showNotification('✅ Pet name updated!', 'success');
+            
+            // Announce to screen readers
+            if (window.accessibilityManager) {
+                window.accessibilityManager.announce(`Pet renamed to ${validation.sanitized}`);
+            }
+        }
     }
     
     if (newServerUrl && newServerUrl !== serverConnection.serverUrl) {

@@ -4,8 +4,9 @@
   "description": "A cross-platform virtual pet game inspired by Digimon and traditional vpets. Care for your pet, battle others, and watch it evolve!",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "background_color": "#1a1a2e",
-  "theme_color": "#6c63ff",
+  "theme_color": "#667eea",
   "orientation": "portrait-primary",
   "scope": "/",
   "categories": ["games", "entertainment"],
@@ -66,13 +67,15 @@
       "src": "screenshots/screenshot-desktop.png",
       "sizes": "1280x720",
       "type": "image/png",
-      "form_factor": "wide"
+      "form_factor": "wide",
+      "label": "VPet desktop view"
     },
     {
       "src": "screenshots/screenshot-mobile.png",
       "sizes": "375x667",
       "type": "image/png",
-      "form_factor": "narrow"
+      "form_factor": "narrow",
+      "label": "VPet mobile view"
     }
   ],
   "shortcuts": [
@@ -102,5 +105,15 @@
     }
   ],
   "related_applications": [],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }
