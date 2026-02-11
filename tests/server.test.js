@@ -71,7 +71,7 @@ global.document = {
 };
 
 // Import ServerConnection after mocking
-const { ServerConnection } = await import('./js/server.js');
+const { ServerConnection } = await import('../js/server.js');
 
 describe('ServerConnection', () => {
     let serverConnection;
