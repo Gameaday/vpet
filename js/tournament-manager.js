@@ -282,6 +282,61 @@ class TournamentManager {
     }
 
     /**
+     * Get next unplayed match
+     * @returns {object|null} Next match or null if none
+     */
+    getNextMatch() {
+        if (!this.currentTournament || !this.currentTournament.bracket) {
+            return null;
+        }
+
+        // Find first incomplete match in current round
+        const currentRoundMatches = this.currentTournament.bracket.filter(
+            m => m.round === this.currentTournament.currentRound && !m.completed
+        );
+
+        return currentRoundMatches.length > 0 ? currentRoundMatches[0] : null;
+    }
+
+    /**
+     * Record match result
+     * @param {object} match - Match object
+     * @param {string} winnerName - Name of winner
+     */
+    recordMatchResult(match, winnerName) {
+        match.winner = winnerName;
+        match.completed = true;
+        
+        // Check if round is complete
+        const roundComplete = this.currentTournament.bracket
+            .filter(m => m.round === this.currentTournament.currentRound)
+            .every(m => m.completed);
+        
+        if (roundComplete) {
+            this.advanceRound();
+        }
+        
+        this.saveTournaments();
+    }
+
+    /**
+     * Forfeit current tournament
+     */
+    forfeitTournament() {
+        if (!this.currentTournament) return;
+
+        this.currentTournament.status = 'forfeited';
+        this.currentTournament.completedAt = Date.now();
+
+        // Add to history
+        this.tournaments.push({...this.currentTournament});
+        this.saveTournaments();
+
+        // Clear current tournament
+        this.currentTournament = null;
+    }
+
+    /**
      * Get tournament history
      * @param {number} limit - Number of entries to return
      * @returns {Array} Tournament history

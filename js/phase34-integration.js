@@ -555,21 +555,263 @@ function closeTournament() {
 function populateTournamentContent() {
     const container = document.getElementById('tournamentContent');
     
-    // Simple tournament info for now
+    // Check if there's an active tournament
+    if (tournamentManager.currentTournament) {
+        showActiveTournament(container);
+    } else {
+        showTournamentLobby(container);
+    }
+}
+
+function showTournamentLobby(container) {
+    // Create tournament options
     container.innerHTML = `
-        <div class="tournament-info">
-            <h3>🏅 Tournament System</h3>
-            <p>Tournament features are coming soon!</p>
-            <p>This will include:</p>
-            <ul style="text-align: left; margin: 15px 0;">
-                <li>Single-elimination brackets</li>
-                <li>Entry fees and prize pools</li>
-                <li>Automatic matchmaking</li>
-                <li>Tournament history</li>
-            </ul>
-            <p style="margin-top: 20px; color: #aaa;">The tournament manager logic is complete and ready. UI integration will be completed in the next update.</p>
+        <div class="tournament-lobby">
+            <h3>🏆 Create a Tournament</h3>
+            <p>Choose your tournament size and prize pool:</p>
+            
+            <div class="tournament-options">
+                <div class="tournament-option" onclick="createTournament(4)">
+                    <div class="option-icon">🥇</div>
+                    <h4>Quick Tournament</h4>
+                    <p>4 participants</p>
+                    <p class="option-prize">Prize: 100 coins</p>
+                    <button class="tournament-create-btn">Create (Free)</button>
+                </div>
+                
+                <div class="tournament-option" onclick="createTournament(8)">
+                    <div class="option-icon">🏆</div>
+                    <h4>Standard Tournament</h4>
+                    <p>8 participants</p>
+                    <p class="option-prize">Prize: 250 coins</p>
+                    <button class="tournament-create-btn">Create (Free)</button>
+                </div>
+                
+                <div class="tournament-option premium-option" onclick="handlePremiumTournament()">
+                    <div class="option-icon">⭐</div>
+                    <h4>Championship</h4>
+                    <p>16 participants</p>
+                    <p class="option-prize">Prize: 500 coins</p>
+                    <button class="tournament-create-btn premium-btn">Premium Feature</button>
+                </div>
+            </div>
+            
+            <div class="tournament-info-box">
+                <h4>ℹ️ How Tournaments Work</h4>
+                <ul>
+                    <li>Single-elimination bracket format</li>
+                    <li>Battle against AI opponents</li>
+                    <li>Win all matches to claim the prize</li>
+                    <li>Your pet's stats and level determine strength</li>
+                </ul>
+            </div>
         </div>
     `;
+}
+
+function createTournament(maxParticipants) {
+    // Determine prize based on size
+    const prizes = { 4: 100, 8: 250, 16: 500 };
+    const prize = prizes[maxParticipants] || 100;
+    
+    // Create tournament
+    tournamentManager.createTournament({
+        name: maxParticipants === 4 ? 'Quick Tournament' : maxParticipants === 8 ? 'Standard Tournament' : 'Championship',
+        maxParticipants: maxParticipants,
+        prize: prize,
+        entryFee: 0 // Free for now
+    });
+    
+    // Enter player's pet
+    if (tournamentManager.enterTournament(pet)) {
+        // Generate bracket
+        tournamentManager.generateBracket();
+        
+        // Show tournament bracket
+        populateTournamentContent();
+        
+        showNotification(`🏆 Entered ${maxParticipants}-participant tournament!`, 'success');
+    } else {
+        showNotification('❌ Failed to enter tournament', 'error');
+    }
+}
+
+function handlePremiumTournament() {
+    if (premiumManager && premiumManager.canAccessFeature('tournament_priority')) {
+        createTournament(16);
+    } else {
+        showNotification('⭐ Championship tournaments require Premium Plus', 'info');
+        setTimeout(() => {
+            if (premiumManager) {
+                premiumManager.openPremiumModal();
+            }
+        }, 1000);
+    }
+}
+
+function showActiveTournament(container) {
+    const tournament = tournamentManager.currentTournament;
+    const bracket = tournament.bracket;
+    
+    container.innerHTML = `
+        <div class="active-tournament">
+            <div class="tournament-header">
+                <h3>🏆 ${tournament.name}</h3>
+                <p>Round ${tournament.currentRound} - Prize: ${tournament.prize} coins</p>
+            </div>
+            
+            <div class="tournament-bracket" id="tournamentBracket">
+                ${renderBracket(bracket, tournament.currentRound)}
+            </div>
+            
+            <div class="tournament-actions">
+                <button class="tournament-action-btn" onclick="playNextMatch()">
+                    ⚔️ Fight Next Match
+                </button>
+                <button class="tournament-action-btn forfeit-btn" onclick="forfeitTournament()">
+                    🏳️ Forfeit Tournament
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function renderBracket(bracket, currentRound) {
+    if (!bracket || bracket.length === 0) {
+        return '<p>No matches scheduled</p>';
+    }
+    
+    let html = '<div class="bracket-container">';
+    
+    // Group matches by round
+    const rounds = {};
+    bracket.forEach(match => {
+        if (!rounds[match.round]) {
+            rounds[match.round] = [];
+        }
+        rounds[match.round].push(match);
+    });
+    
+    // Render each round
+    Object.keys(rounds).sort().forEach(round => {
+        html += `<div class="bracket-round">`;
+        html += `<h4>Round ${round}</h4>`;
+        
+        rounds[round].forEach(match => {
+            const isCurrentMatch = !match.completed && match.round === currentRound;
+            const matchClass = match.completed ? 'completed' : isCurrentMatch ? 'current' : 'upcoming';
+            
+            html += `
+                <div class="bracket-match ${matchClass}">
+                    <div class="match-participant ${match.winner === match.player1.name ? 'winner' : ''}">
+                        <span class="participant-name">${match.player1.name}</span>
+                        <span class="participant-level">Lv.${match.player1.level}</span>
+                    </div>
+                    <div class="match-vs">VS</div>
+                    <div class="match-participant ${match.winner === match.player2.name ? 'winner' : ''}">
+                        <span class="participant-name">${match.player2.name}</span>
+                        <span class="participant-level">Lv.${match.player2.level}</span>
+                    </div>
+                    ${match.completed ? `<div class="match-result">✓ ${match.winner} wins</div>` : ''}
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+    });
+    
+    html += '</div>';
+    return html;
+}
+
+function playNextMatch() {
+    const nextMatch = tournamentManager.getNextMatch();
+    
+    if (!nextMatch) {
+        // Tournament completed!
+        const winner = tournamentManager.currentTournament.bracket
+            .filter(m => m.completed)
+            .slice(-1)[0]?.winner;
+        
+        if (winner === pet.name) {
+            // Player won!
+            const prize = tournamentManager.currentTournament.prize;
+            pet.coins += prize;
+            pet.save();
+            updateCoinsDisplay();
+            
+            showNotification(`🎉 Tournament Victory! You won ${prize} coins!`, 'success');
+            
+            // Save tournament to history
+            tournamentManager.completeTournament(true);
+        } else {
+            showNotification('😢 You were eliminated from the tournament', 'info');
+            tournamentManager.completeTournament(false);
+        }
+        
+        // Close modal after delay
+        setTimeout(() => {
+            closeTournament();
+        }, 3000);
+        
+        return;
+    }
+    
+    // Close tournament modal
+    closeTournament();
+    
+    // Start battle with opponent
+    if (nextMatch.player2.isAI) {
+        // Create AI pet for battle
+        const aiPet = {
+            name: nextMatch.player2.name,
+            level: nextMatch.player2.level,
+            stage: nextMatch.player2.stage,
+            attack: nextMatch.player2.stats.attack,
+            defense: nextMatch.player2.stats.defense,
+            maxHP: nextMatch.player2.stats.maxHP
+        };
+        
+        // Start local battle
+        currentBattle = new Battle(pet, aiPet);
+        
+        // Add tournament context to battle
+        currentBattle.isTournamentMatch = true;
+        currentBattle.tournamentMatch = nextMatch;
+        
+        // Show battle modal
+        battleUIManager.showBattle(currentBattle, false);
+        
+        // Override battle end callback to handle tournament progression
+        const originalEndBattle = window.endBattle;
+        window.endBattle = function() {
+            const playerWon = currentBattle.winner === pet.name;
+            
+            // Record match result
+            tournamentManager.recordMatchResult(nextMatch, playerWon ? pet.name : aiPet.name);
+            
+            // Call original end battle
+            if (originalEndBattle) {
+                originalEndBattle();
+            }
+            
+            // Show tournament progress
+            setTimeout(() => {
+                openTournament();
+            }, 2000);
+            
+            // Restore original callback
+            window.endBattle = originalEndBattle;
+        };
+    }
+}
+
+function forfeitTournament() {
+    if (confirm('Are you sure you want to forfeit the tournament? You will lose your entry.')) {
+        tournamentManager.forfeitTournament();
+        showNotification('🏳️ Tournament forfeited', 'info');
+        populateTournamentContent();
+    }
 }
 
 // ============================================
