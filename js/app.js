@@ -643,11 +643,21 @@ function performRandomBehavior() {
     const petAnimation = document.querySelector('.pet-animation');
     if (!petAnimation || pet.stage === 'egg' || pet.isSleeping) return;
     
-    // Random behaviors based on personality and state
+    // State-based behavior weighting system
     const behaviors = [];
     
-    // Eye movements (look around)
-    if (Math.random() < 0.4) {
+    // Calculate state-based probabilities
+    const energyLevel = pet.energy;
+    const happinessLevel = pet.happiness;
+    const isTired = energyLevel < 30;
+    const isVeryTired = energyLevel < 15;
+    const isHappy = happinessLevel > 70;
+    const isEnergetic = energyLevel > 60;
+    const isHighEnergy = pet.personalityTraits.energetic > 70;
+    
+    // Eye movements (look around) - more common when alert
+    const lookAroundChance = isEnergetic ? 0.5 : (isTired ? 0.2 : 0.4);
+    if (Math.random() < lookAroundChance) {
         behaviors.push(() => {
             petAnimation.classList.add('looking-left');
             setTimeout(() => {
@@ -660,15 +670,16 @@ function performRandomBehavior() {
         });
     }
     
-    // Happy bounce (when happiness > 70)
-    if (pet.happiness > 70 && Math.random() < 0.3) {
+    // Happy bounce - weighted by happiness and energy
+    const bounceChance = isHappy && isEnergetic ? 0.5 : (isHappy ? 0.3 : 0.1);
+    if (Math.random() < bounceChance) {
         behaviors.push(() => {
             petAnimation.classList.add('happy-bounce');
             setTimeout(() => petAnimation.classList.remove('happy-bounce'), 1000);
         });
     }
     
-    // Curious head tilt (based on friendly personality)
+    // Curious head tilt - friendly personality
     if (pet.personalityTraits.friendly > 60 && Math.random() < 0.25) {
         behaviors.push(() => {
             petAnimation.classList.add('head-tilt');
@@ -676,11 +687,36 @@ function performRandomBehavior() {
         });
     }
     
-    // Overstimulated shake (when happiness > 90 or energetic > 80)
-    if ((pet.happiness > 90 || pet.personalityTraits.energetic > 80) && Math.random() < 0.15) {
+    // Overstimulated shake - high energy + high happiness
+    const shakeChance = (happinessLevel > 90 || isHighEnergy) && isEnergetic ? 0.25 : 0.1;
+    if (Math.random() < shakeChance) {
         behaviors.push(() => {
             petAnimation.classList.add('excited-shake');
             setTimeout(() => petAnimation.classList.remove('excited-shake'), 600);
+        });
+    }
+    
+    // Drowsy/sleepy behavior - very tired pets
+    if (isVeryTired && Math.random() < 0.4) {
+        behaviors.push(() => {
+            petAnimation.classList.add('drowsy');
+            setTimeout(() => petAnimation.classList.remove('drowsy'), 2000);
+        });
+    }
+    
+    // Yawning - tired pets
+    if (isTired && !isVeryTired && Math.random() < 0.3) {
+        behaviors.push(() => {
+            petAnimation.classList.add('yawn');
+            setTimeout(() => petAnimation.classList.remove('yawn'), 1500);
+        });
+    }
+    
+    // Stretching - just woke up or restless
+    if (energyLevel > 80 && Math.random() < 0.2) {
+        behaviors.push(() => {
+            petAnimation.classList.add('stretch');
+            setTimeout(() => petAnimation.classList.remove('stretch'), 1200);
         });
     }
     
