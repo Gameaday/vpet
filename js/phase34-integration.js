@@ -779,30 +779,22 @@ function playNextMatch() {
         currentBattle.isTournamentMatch = true;
         currentBattle.tournamentMatch = nextMatch;
         
-        // Show battle modal
-        battleUIManager.showBattle(currentBattle, false);
-        
-        // Override battle end callback to handle tournament progression
-        const originalEndBattle = window.endBattle;
-        window.endBattle = function() {
-            const playerWon = currentBattle.winner === pet.name;
-            
+        // Set up tournament-specific battle end callback via BattleUIManager
+        battleUIManager.onBattleEnd = function(battle) {
             // Record match result
-            tournamentManager.recordMatchResult(nextMatch, playerWon ? pet.name : aiPet.name);
+            tournamentManager.recordMatchResult(nextMatch, battle.winner);
             
-            // Call original end battle
-            if (originalEndBattle) {
-                originalEndBattle();
-            }
-            
-            // Show tournament progress
+            // Show tournament progress after a delay
             setTimeout(() => {
                 openTournament();
             }, 2000);
             
-            // Restore original callback
-            window.endBattle = originalEndBattle;
+            // Clear the callback after use
+            battleUIManager.onBattleEnd = null;
         };
+        
+        // Show battle modal
+        battleUIManager.showBattle(currentBattle, false);
     }
 }
 

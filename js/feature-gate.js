@@ -9,14 +9,16 @@ class FeatureGate {
     }
 
     /**
-     * Check if feature is accessible and show prompt if not
+     * Check if feature is accessible (freemium model - all features accessible)
+     * This is the core principle: free users can access everything, premium enhances the experience
      * @param {string} featureName - Name of the feature to check
      * @param {string} featureDisplayName - Human-readable feature name for prompts
-     * @returns {boolean} - True if feature is accessible
+     * @returns {boolean} - Always true (freemium model - no hard gates)
      */
     checkAccess(featureName, featureDisplayName) {
-        // All features are accessible without premium for now (freemium model)
-        // But premium users get enhanced versions
+        // Freemium model: All features are accessible to everyone
+        // Premium users get enhanced versions (multipliers, extended limits, etc.)
+        // This ensures no frustration for free users while providing value for premium
         return true;
     }
 
