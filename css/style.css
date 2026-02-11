@@ -1064,8 +1064,10 @@ main {
     justify-content: center;
     gap: clamp(3px, 0.8vw, 6px);
     transition: all 0.2s;
-    /* Consistent square dimensions for uniform appearance */
+    /* Consistent square dimensions for uniform appearance with WCAG touch targets */
     aspect-ratio: 1 / 1;
+    min-width: 44px;
+    min-height: 44px;
     width: 100%;
 }
 
@@ -1822,9 +1824,9 @@ main {
         gap: clamp(10px, 2.5vw, 14px);
     }
     
-    /* Uniform touch targets for mobile with consistent square sizing */
+    /* Tighter padding for mobile to fit content while maintaining touch targets */
     .action-btn {
-        padding: 12px 8px;
+        padding: clamp(10px, 3vw, 14px) clamp(6px, 2vw, 10px);
     }
     
     .online-battle-btn {
