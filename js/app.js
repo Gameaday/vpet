@@ -1376,8 +1376,15 @@ function openSettings() {
     
     // Load build information
     if (typeof BuildInfo !== 'undefined') {
-        document.getElementById('appVersion').textContent = BuildInfo.version;
-        document.getElementById('buildTime').textContent = BuildInfo.buildTime;
+        const appVersionElem = document.getElementById('appVersion');
+        const buildTimeElem = document.getElementById('buildTime');
+        
+        if (appVersionElem && BuildInfo.version) {
+            appVersionElem.textContent = BuildInfo.version;
+        }
+        if (buildTimeElem && BuildInfo.buildTime) {
+            buildTimeElem.textContent = BuildInfo.buildTime;
+        }
     }
     
     // Update battle history
