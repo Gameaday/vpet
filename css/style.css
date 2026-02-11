@@ -3311,22 +3311,16 @@ body.theme-retro select {
 
 .stats-panel.circular-mode {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
     padding: 12px 8px;
-    overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
-}
-
-.stats-panel.circular-mode::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    overflow-x: visible;
 }
 
 .stats-panel.circular-mode .stat-bar {
     flex: 0 0 auto;
-    width: 70px;
+    width: 60px;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -3431,20 +3425,29 @@ body.theme-retro select {
 /* Responsive adjustments for circular mode */
 @media (max-width: 768px) {
     .stats-panel.circular-mode {
-        gap: 10px;
+        gap: 6px;
+        padding: 10px 4px;
     }
     
     .stats-panel.circular-mode .stat-bar {
-        width: 70px;
+        width: 55px;
     }
     
     .circular-gauge {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
     }
     
     .circular-gauge-value {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .stats-panel.circular-mode .stat-label {
+        font-size: 0.65rem;
+    }
+    
+    .stats-panel.circular-mode .stat-label span:first-child {
+        font-size: 1.1rem;
     }
 }
 
