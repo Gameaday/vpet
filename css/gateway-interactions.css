@@ -154,7 +154,8 @@
     border-color: rgba(102, 126, 234, 0.5);
     transform: translateY(-4px);
     box-shadow: var(--elevation-2, 0 4px 8px rgba(0, 0, 0, 0.2));
-    outline: none;
+    outline: 2px solid rgba(102, 126, 234, 0.6);
+    outline-offset: 2px;
 }
 
 .activity-card:active,
