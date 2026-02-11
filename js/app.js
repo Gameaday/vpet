@@ -88,6 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up event listeners
     setupEventListeners();
     
+    // Start pet behavior animations
+    startPetBehaviors();
+    enableMouseTracking();
+    
     // Initialize Phase 3-4 features
     if (typeof initializePhase34Features === 'function') {
         initializePhase34Features();
@@ -612,6 +616,144 @@ function updateIdleAnimation() {
     } else {
         petAnimation.classList.add('idle-high-energy');
     }
+}
+
+// Random behavior patterns for pet liveliness
+let petBehaviorInterval = null;
+
+function startPetBehaviors() {
+    // Clear any existing interval
+    if (petBehaviorInterval) {
+        clearInterval(petBehaviorInterval);
+    }
+    
+    // Start random behavior checks every 3-8 seconds
+    const scheduleNextBehavior = () => {
+        const delay = 3000 + Math.random() * 5000; // 3-8 seconds
+        setTimeout(() => {
+            performRandomBehavior();
+            scheduleNextBehavior();
+        }, delay);
+    };
+    
+    scheduleNextBehavior();
+}
+
+function performRandomBehavior() {
+    const petAnimation = document.querySelector('.pet-animation');
+    if (!petAnimation || pet.stage === 'egg' || pet.isSleeping) return;
+    
+    // Random behaviors based on personality and state
+    const behaviors = [];
+    
+    // Eye movements (look around)
+    if (Math.random() < 0.4) {
+        behaviors.push(() => {
+            petAnimation.classList.add('looking-left');
+            setTimeout(() => {
+                petAnimation.classList.remove('looking-left');
+                petAnimation.classList.add('looking-right');
+                setTimeout(() => {
+                    petAnimation.classList.remove('looking-right');
+                }, 800);
+            }, 800);
+        });
+    }
+    
+    // Happy bounce (when happiness > 70)
+    if (pet.happiness > 70 && Math.random() < 0.3) {
+        behaviors.push(() => {
+            petAnimation.classList.add('happy-bounce');
+            setTimeout(() => petAnimation.classList.remove('happy-bounce'), 1000);
+        });
+    }
+    
+    // Curious head tilt (based on friendly personality)
+    if (pet.personalityTraits.friendly > 60 && Math.random() < 0.25) {
+        behaviors.push(() => {
+            petAnimation.classList.add('head-tilt');
+            setTimeout(() => petAnimation.classList.remove('head-tilt'), 1200);
+        });
+    }
+    
+    // Overstimulated shake (when happiness > 90 or energetic > 80)
+    if ((pet.happiness > 90 || pet.personalityTraits.energetic > 80) && Math.random() < 0.15) {
+        behaviors.push(() => {
+            petAnimation.classList.add('excited-shake');
+            setTimeout(() => petAnimation.classList.remove('excited-shake'), 600);
+        });
+    }
+    
+    // Execute a random behavior if any are available
+    if (behaviors.length > 0) {
+        const behavior = behaviors[Math.floor(Math.random() * behaviors.length)];
+        behavior();
+    }
+}
+
+// Mouse cursor eye tracking
+let mouseTrackingEnabled = false;
+let lastMouseX = 0;
+let lastMouseY = 0;
+
+function enableMouseTracking() {
+    if (mouseTrackingEnabled) return;
+    mouseTrackingEnabled = true;
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    
+    // Periodically check if pet should follow mouse
+    setInterval(() => {
+        if (pet.stage !== 'egg' && !pet.isSleeping && Math.random() < 0.3) {
+            trackMouseForDuration(2000 + Math.random() * 3000); // 2-5 seconds
+        }
+    }, 8000 + Math.random() * 7000); // Check every 8-15 seconds
+}
+
+function handleMouseMove(e) {
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+}
+
+function trackMouseForDuration(duration) {
+    const petSprite = document.getElementById('petSprite');
+    const petAnimation = document.querySelector('.pet-animation');
+    if (!petSprite || !petAnimation) return;
+    
+    const startTime = Date.now();
+    petAnimation.classList.add('tracking-mouse');
+    
+    const trackingInterval = setInterval(() => {
+        if (Date.now() - startTime > duration) {
+            clearInterval(trackingInterval);
+            petAnimation.classList.remove('tracking-mouse', 'eyes-left', 'eyes-right', 'eyes-up', 'eyes-down');
+            return;
+        }
+        
+        const rect = petSprite.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        const deltaX = lastMouseX - centerX;
+        const deltaY = lastMouseY - centerY;
+        
+        // Update eye position classes
+        petAnimation.classList.remove('eyes-left', 'eyes-right', 'eyes-up', 'eyes-down');
+        
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX > 20) {
+                petAnimation.classList.add('eyes-right');
+            } else if (deltaX < -20) {
+                petAnimation.classList.add('eyes-left');
+            }
+        } else {
+            if (deltaY > 20) {
+                petAnimation.classList.add('eyes-down');
+            } else if (deltaY < -20) {
+                petAnimation.classList.add('eyes-up');
+            }
+        }
+    }, 100);
 }
 
 // Update stat tooltips with helpful information
