@@ -55,11 +55,11 @@ body {
         position: sticky;
         top: 0;
         z-index: 100;
-        padding: 8px 12px; /* Further reduced padding */
+        padding: clamp(8px, 1.5vh, 12px) 4%;
     }
     
     header h1 {
-        font-size: 1.1rem; /* Smaller for more space */
+        font-size: clamp(1rem, 3vw, 1.25rem);
     }
     
     /* Scrollable main content only - optimized for no scroll on main view */
@@ -69,7 +69,7 @@ body {
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-y: contain;
-        padding: 8px; /* Further reduced padding */
+        padding: clamp(8px, 2vh, 16px) 4%; /* Responsive padding using viewport units */
         display: flex;
         flex-direction: column;
     }
@@ -83,9 +83,9 @@ body {
         position: sticky;
         bottom: 0;
         background: #1a1a1a;
-        padding: 8px 6px; /* Further reduced padding */
-        margin: 0 -8px;
-        border-top: 2px solid rgba(102, 126, 234, 0.3);
+        padding: clamp(8px, 2vh, 12px) clamp(6px, 1.5vw, 10px);
+        margin: 0 calc(-1 * 4%);
+        border-top: 1px solid rgba(102, 126, 234, 0.2);
         z-index: 50;
         flex-shrink: 0;
     }
@@ -93,8 +93,8 @@ body {
     /* Compact button layout for mobile */
     .action-panel {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 4px; /* Further reduced gap */
+        grid-template-columns: repeat(auto-fit, minmax(min(60px, 100%), 1fr));
+        gap: clamp(4px, 1vw, 8px);
     }
     
     .action-btn {
@@ -189,36 +189,51 @@ body {
         background-color: rgba(102, 126, 234, 0.3);
     }
     
-    /* Compact settings section */
+    /* Compact settings section - Material Design bottom app bar */
     .settings-panel {
         position: sticky;
         bottom: 0;
-        background: #1a1a1a;
-        padding: 8px 6px;
-        margin: 0 -8px;
-        border-top: 2px solid rgba(102, 126, 234, 0.3);
-        display: grid;
-        grid-template-columns: 1fr 48px;
-        gap: 8px;
+        background: linear-gradient(180deg, transparent 0%, #1a1a1a 20%);
+        padding: max(8px, env(safe-area-inset-bottom, 8px)) 4% 8px;
+        margin: 0 calc(-1 * 4%);
+        border-top: 1px solid rgba(102, 126, 234, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: clamp(8px, 2vw, 16px);
         z-index: 50;
         flex-shrink: 0;
     }
     
     .more-btn {
+        flex: 1;
         min-height: 48px;
+        padding: 12px 20px;
     }
     
     .more-btn .btn-icon {
-        font-size: 1.6rem;
+        font-size: 1.25rem;
     }
     
     .settings-btn,
     .help-btn,
     .reset-btn {
-        width: 48px; /* Material Design minimum touch target */
+        width: 48px;
         height: 48px;
-        font-size: 1.2rem;
-        transition: transform 0.2s, background-color 0.2s;
+        font-size: 1.25rem;
+        background: rgba(102, 126, 234, 0.1);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 50%;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .settings-btn:hover {
+        background: rgba(102, 126, 234, 0.2);
+        transform: scale(1.05);
     }
     
     /* Hide help and reset buttons on mobile - accessible via More menu */
@@ -236,34 +251,34 @@ body {
     
     /* Pet display optimization - more compact */
     .pet-display {
-        margin-bottom: 6px;
-        padding: 10px 8px; /* Further reduced padding */
+        margin-bottom: clamp(6px, 1vh, 10px);
+        padding: clamp(10px, 2vh, 16px) 4%;
         flex-shrink: 0;
     }
     
     .pet-name {
-        font-size: 0.95rem;
-        margin-bottom: 3px;
+        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        margin-bottom: clamp(3px, 0.5vh, 6px);
     }
     
     .pet-sprite {
-        width: 90px; /* Smaller sprite */
-        height: 90px;
+        width: clamp(80px, 20vw, 110px);
+        height: clamp(80px, 20vw, 110px);
     }
     
     .pet-stage {
-        font-size: 0.8rem;
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
     }
     
     .evolution-preview {
-        margin-top: 6px;
-        font-size: 0.75rem;
+        margin-top: clamp(6px, 1vh, 10px);
+        font-size: clamp(0.7rem, 1.8vw, 0.85rem);
     }
     
     .mood-indicator {
-        font-size: 1.5em; /* Smaller mood indicator */
-        top: 3px;
-        right: 3px;
+        font-size: clamp(1.3em, 3vw, 1.6em);
+        top: clamp(3px, 0.5vh, 6px);
+        right: clamp(3px, 0.5vh, 6px);
     }
     
     /* Hide less critical panels on mobile to eliminate scrolling - prioritize core gameplay */
@@ -291,22 +306,22 @@ body {
     
     /* Stats panel - much more compact for Galaxy S24 */
     .stats-panel {
-        gap: 4px; /* Further reduced gap */
-        margin-bottom: 6px;
+        gap: clamp(4px, 1vh, 8px);
+        margin-bottom: clamp(6px, 1vh, 10px);
         flex-shrink: 0;
     }
     
     .stat-bar {
-        padding: 4px 6px; /* Much more compact */
+        padding: clamp(4px, 1vh, 8px) clamp(6px, 1.5vw, 10px);
     }
     
     .stat-label {
-        font-size: 0.75rem; /* Smaller font */
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
         font-weight: 500;
     }
     
     .stat-label span:first-child {
-        margin-right: 4px;
+        margin-right: clamp(4px, 1vw, 6px);
     }
     
     /* Hide circular gauges on mobile for space efficiency */
@@ -316,19 +331,19 @@ body {
     
     /* Make progress bars more visible when gauges hidden */
     .progress-bar {
-        height: 8px; /* Material Design recommended minimum for visibility */
+        height: clamp(6px, 1.5vh, 10px);
     }
     
     /* Stat info - more compact */
     .stat-info {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 4px;
-        font-size: 0.75rem;
+        gap: clamp(4px, 1vw, 8px);
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
     }
     
     .stat-info > div {
-        padding: 3px;
+        padding: clamp(3px, 0.75vh, 6px);
     }
     
     /* Modal optimizations for mobile */
