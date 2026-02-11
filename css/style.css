@@ -1064,8 +1064,7 @@ main {
     justify-content: center;
     gap: clamp(3px, 0.8vw, 6px);
     transition: all 0.2s;
-    /* Consistent dimensions for uniform appearance */
-    min-height: 70px;
+    /* Consistent square dimensions for uniform appearance */
     aspect-ratio: 1 / 1;
     width: 100%;
 }
@@ -1823,10 +1822,9 @@ main {
         gap: clamp(10px, 2.5vw, 14px);
     }
     
-    /* Uniform touch targets for mobile with consistent sizing */
+    /* Uniform touch targets for mobile with consistent square sizing */
     .action-btn {
         padding: 12px 8px;
-        min-height: 75px;
         aspect-ratio: 1 / 1;
     }
     
