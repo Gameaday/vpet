@@ -500,6 +500,12 @@ function updateUI() {
     document.getElementById('eggActionPanel').style.display = isEgg ? 'flex' : 'none';
     document.getElementById('normalActionPanel').style.display = isEgg ? 'none' : 'flex';
     
+    // Hide Battle/Social buttons during egg state
+    const secondaryPanel = document.getElementById('secondaryActionPanel');
+    if (secondaryPanel) {
+        secondaryPanel.style.display = isEgg ? 'none' : 'flex';
+    }
+    
     // Hide normal stats for eggs
     const normalStats = ['health', 'hunger', 'happiness', 'energy', 'cleanliness'];
     normalStats.forEach(stat => {

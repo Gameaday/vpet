@@ -166,8 +166,8 @@ main {
     transform: scale(0.95);
 }
 
-/* Pet animation element - centered within parent using absolute positioning */
-/* Parent (.pet-sprite) must maintain explicit dimensions for proper centering */
+/* Pet animation element - centered within parent using flexbox */
+/* Parent (.pet-sprite) uses flexbox to center this element */
 .pet-animation {
     width: 100%;
     height: 100%;
@@ -175,10 +175,7 @@ main {
     border-radius: 50%;
     animation: bounce 2s infinite;
     box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    flex-shrink: 0;
 }
 
 /* Pet eyes for more life-like appearance */
