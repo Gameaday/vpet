@@ -280,9 +280,9 @@ class Pet {
             this.health = Math.max(0, this.health - (minutesPassed * 0.5 * decayMultiplier));
         }
         
-        // Update age
+        // Update age (keep as decimal for accurate evolution tracking)
         const daysPassed = (now - this.birthTime) / (1000 * 60 * 60 * 24);
-        this.age = Math.floor(daysPassed);
+        this.age = daysPassed; // Don't floor - evolution needs precise age
         
         // Check for evolution
         this.checkEvolution();
@@ -378,6 +378,30 @@ class Pet {
             progress: Math.min(100, Math.max(0, progress)),
             timeRemaining: Math.max(0, timeRemaining)
         };
+    }
+
+    // Get human-readable age display (shows largest non-zero unit)
+    getAgeDisplay() {
+        const ageInDays = this.age;
+        
+        // If less than 1 day, show in hours or minutes
+        if (ageInDays < 1) {
+            const ageInHours = ageInDays * 24;
+            
+            // If less than 1 hour, show in minutes
+            if (ageInHours < 1) {
+                const ageInMinutes = Math.floor(ageInHours * 60);
+                return ageInMinutes === 1 ? '1 minute' : `${ageInMinutes} minutes`;
+            }
+            
+            // Show in hours
+            const hours = Math.floor(ageInHours);
+            return hours === 1 ? '1 hour' : `${hours} hours`;
+        }
+        
+        // Show in days
+        const days = Math.floor(ageInDays);
+        return days === 1 ? '1 day' : `${days} days`;
     }
 
     // Warm the egg (only for egg stage)

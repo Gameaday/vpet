@@ -579,7 +579,7 @@ function updateUI() {
     }
     
     // Update info
-    document.getElementById('petAge').textContent = isEgg ? 'Egg' : (pet.getAgeDisplay ? pet.getAgeDisplay() : pet.age + ' days');
+    document.getElementById('petAge').textContent = isEgg ? 'Egg' : pet.getAgeDisplay();
     document.getElementById('petLevel').textContent = Math.floor(pet.level);
     document.getElementById('petWins').textContent = pet.wins;
     
@@ -646,10 +646,20 @@ function updateEvolutionPreview() {
     
     const hours = Math.floor(evolutionInfo.timeRemaining / 60);
     const minutes = Math.floor(evolutionInfo.timeRemaining % 60);
-    const timeText = hours > 0
-        ? `${hours}h ${minutes}m until ${evolutionInfo.nextStage}`
-        : `${minutes}m until ${evolutionInfo.nextStage}`;
-    document.getElementById('evolutionTime').textContent = timeText;
+    
+    // If time is up, show "Ready to evolve!" message
+    if (evolutionInfo.timeRemaining <= 0) {
+        document.getElementById('evolutionTime').textContent = `Ready to evolve to ${evolutionInfo.nextStage}!`;
+        // Force evolution check
+        pet.checkEvolution();
+        // Update UI after evolution
+        setTimeout(() => updateUI(), 100);
+    } else {
+        const timeText = hours > 0
+            ? `${hours}h ${minutes}m until ${evolutionInfo.nextStage}`
+            : `${minutes}m until ${evolutionInfo.nextStage}`;
+        document.getElementById('evolutionTime').textContent = timeText;
+    }
 }
 
 // Update mood indicator based on pet stats
