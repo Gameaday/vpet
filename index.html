@@ -30,12 +30,14 @@
     <link rel="preload" href="css/mobile-enhancements.css" as="style">
     <link rel="preload" href="css/theme-improvements.css" as="style">
     <link rel="preload" href="css/gateway-interactions.css" as="style">
+    <link rel="preload" href="css/fab-styles.css" as="style">
     
     <title>Virtual Pet - VPet</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/mobile-enhancements.css">
     <link rel="stylesheet" href="css/theme-improvements.css">
     <link rel="stylesheet" href="css/gateway-interactions.css">
+    <link rel="stylesheet" href="css/fab-styles.css">
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -295,50 +297,13 @@
                 </button>
             </div>
 
-            <!-- Settings Section -->
-            <div class="settings-panel">
-                <button class="more-btn" id="moreBtn" title="More options">
-                    <span class="btn-icon">⋯</span>
-                    <span>More</span>
-                </button>
-                <button class="settings-btn" id="settingsBtn">⚙️</button>
-            </div>
+            <!-- Settings FAB (Floating Action Button) -->
+            <button class="settings-fab" id="settingsBtn" title="Settings" aria-label="Open Settings">
+                ⚙️
+            </button>
         </main>
 
-        <!-- Modal for More Options (Mobile) -->
-        <div class="modal" id="moreModal">
-            <div class="modal-content">
-                <span class="close-btn" id="closeMoreModal">&times;</span>
-                <h2>More Options</h2>
-                <div class="more-options-grid">
-                    <button class="more-option-btn" id="moreTrainBtn">
-                        <span class="btn-icon">💪</span>
-                        <span>Train</span>
-                    </button>
-                    <button class="more-option-btn" id="moreBattleBtn">
-                        <span class="btn-icon">⚔️</span>
-                        <span>Battle</span>
-                    </button>
-                    <button class="more-option-btn" id="moreOnlineBattleBtn">
-                        <span class="btn-icon">🌐</span>
-                        <span>Online Battle</span>
-                    </button>
-                    <button class="more-option-btn" id="moreHibernateBtn">
-                        <span class="btn-icon">❄️</span>
-                        <span>Cryo Sleep</span>
-                    </button>
-                    <button class="more-option-btn" id="moreBackupBtn">
-                        <span class="btn-icon">💾</span>
-                        <span>Backup</span>
-                    </button>
-                    <button class="more-option-btn" id="moreHelpBtn">
-                        <span class="btn-icon">❓</span>
-                        <span>Help</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
+        <!-- Modals Section -->
         <!-- Modal for Battle -->
         <div class="modal" id="battleModal">
             <div class="modal-content">
@@ -436,6 +401,18 @@
                         <div id="battleHistoryList" class="battle-history-list">
                             <p class="no-history">No battles yet</p>
                         </div>
+                    </div>
+                    
+                    <!-- Quick Actions Section -->
+                    <div class="settings-quick-actions">
+                        <button class="quick-action-btn" id="settingsBackupBtn">
+                            <span class="btn-icon">💾</span>
+                            <span>Backup Data</span>
+                        </button>
+                        <button class="quick-action-btn" id="settingsHelpBtn">
+                            <span class="btn-icon">❓</span>
+                            <span>Help & Guide</span>
+                        </button>
                     </div>
                     
                     <button class="save-settings-btn" id="saveSettingsBtn">Save</button>
