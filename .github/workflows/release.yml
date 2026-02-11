@@ -60,9 +60,10 @@ jobs:
           
           # Client package
           zip -r release/vpet-client-v${{ steps.version.outputs.version }}.zip \
-            index.html *.css *.js \
-            -x "server.js" \
-            README.md QUICKSTART.md
+            index.html css/ js/ icons/ \
+            sw.js manifest.json \
+            README.md QUICKSTART.md \
+            -x "js/*.test.js"
           
           # Server package
           cd server && zip -r ../release/vpet-server-v${{ steps.version.outputs.version }}.zip \
@@ -70,9 +71,11 @@ jobs:
           
           # Full package
           zip -r release/vpet-full-v${{ steps.version.outputs.version }}.zip \
-            index.html *.css *.js *.md \
+            index.html css/ js/ icons/ \
+            sw.js manifest.json \
+            *.md \
             server/ Dockerfile docker-compose.yml \
-            -x "*.git*" "node_modules/*"
+            -x "*.git*" "node_modules/*" "js/*.test.js"
           
           # Calculate checksums
           cd release
