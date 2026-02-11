@@ -137,7 +137,10 @@ function setupEventListeners() {
     });
     
     document.getElementById('sleepBtn').addEventListener('click', () => {
-        if (gatewayManager) {
+        // If pet is sleeping, wake directly without gateway
+        if (pet.isSleeping) {
+            handleSleep();
+        } else if (gatewayManager) {
             gatewayManager.openModal('rest');
         } else {
             handleSleep();
@@ -574,11 +577,20 @@ function updateUI() {
     document.getElementById('petLevel').textContent = Math.floor(pet.level);
     document.getElementById('petWins').textContent = pet.wins;
     
-    // Update sleep button text (only for non-eggs)
+    // Update sleep button text and tooltip (only for non-eggs)
     if (!isEgg) {
         const sleepBtn = document.getElementById('sleepBtn');
         const sleepBtnText = sleepBtn.querySelector('span:last-child');
         sleepBtnText.textContent = pet.isSleeping ? 'Wake' : 'Sleep';
+        
+        // Update tooltip to match action
+        if (pet.isSleeping) {
+            sleepBtn.setAttribute('aria-label', 'Wake up your pet');
+            sleepBtn.setAttribute('title', 'Wake up your pet');
+        } else {
+            sleepBtn.setAttribute('aria-label', 'Put your pet to sleep to restore energy');
+            sleepBtn.setAttribute('title', 'Put pet to sleep');
+        }
         
         // Disable actions if sleeping or hibernating
         const actionsDisabled = pet.isSleeping || isHibernating;
