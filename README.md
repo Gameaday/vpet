@@ -13,20 +13,24 @@ A cross-platform virtual pet application inspired by Digimon and traditional vir
 ## 📚 Documentation Navigation
 
 **New to VPet?** Start here:
-- 📋 **[EXECUTIVE_SUMMARY.md](EXECUTIVE_SUMMARY.md)** - Single-page project overview and status
 - 🚀 **[QUICKSTART.md](QUICKSTART.md)** - Get playing in 30 seconds
+- 📖 **[README.md](README.md)** - This file, main overview
 
 **For Developers:**
-- 🏗️ **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design, power efficiency, cost optimization
-- 🤝 **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to VPet
-- 🔧 **[TECHNICAL_DEBT.md](TECHNICAL_DEBT.md)** - Known issues and priorities
+- 🤝 **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - How to contribute to VPet
+- 🏗️ **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - System design, power efficiency, cost optimization
+- 🔧 **[TECHNICAL_DEBT.md](docs/TECHNICAL_DEBT.md)** - Known issues and priorities
 - 🗺️ **[ROADMAP.md](ROADMAP.md)** - Future features and improvements
 - 💡 **[IMPROVEMENTS.md](IMPROVEMENTS.md)** - Quick wins and enhancement ideas
 
 **For Project Planning:**
-- 📊 **[PROJECT_STATUS.md](PROJECT_STATUS.md)** - Detailed analysis and metrics
-- 🎯 **[DEVELOPMENT_STRATEGY.md](DEVELOPMENT_STRATEGY.md)** - 6-phase development plan and monetization strategy
-- 🚀 **[DEPLOYMENT.md](DEPLOYMENT.md)** - How to deploy VPet
+- 📊 **[PROJECT_STATUS.md](docs/PROJECT_STATUS.md)** - Detailed analysis and metrics
+- 🎯 **[DEVELOPMENT_STRATEGY.md](docs/DEVELOPMENT_STRATEGY.md)** - 6-phase development plan
+- 🚀 **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** - How to deploy VPet
+- 📝 **[RELEASE_NOTES_v2.0.0.md](docs/RELEASE_NOTES_v2.0.0.md)** - Latest version release notes
+
+**Additional Documentation:**
+- See [docs/](docs/) folder for detailed technical documentation, build guides, and implementation summaries
 
 ---
 

@@ -2627,3 +2627,125 @@ body.theme-retro select {
     font-size: 0.9rem;
 }
 
+
+/* ============================================
+   Circular Stat Display Mode
+   ============================================ */
+
+.stats-panel.circular-mode {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px 10px;
+}
+
+.stats-panel.circular-mode .stat-bar {
+    flex: 0 0 auto;
+    width: 80px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.stats-panel.circular-mode .stat-label {
+    flex-direction: column;
+    gap: 3px;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.stats-panel.circular-mode .stat-label span:first-child {
+    font-size: 1.5rem;
+}
+
+.stats-panel.circular-mode .progress-bar {
+    display: none;
+}
+
+.circular-gauge {
+    width: 70px;
+    height: 70px;
+    position: relative;
+    display: none;
+}
+
+.stats-panel.circular-mode .circular-gauge {
+    display: block;
+}
+
+.circular-gauge svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+}
+
+.circular-gauge-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 8;
+}
+
+.circular-gauge-fill {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.circular-gauge-fill.health {
+    stroke: #ff6b6b;
+}
+
+.circular-gauge-fill.hunger {
+    stroke: #ffd93d;
+}
+
+.circular-gauge-fill.happiness {
+    stroke: #6bcf7f;
+}
+
+.circular-gauge-fill.energy {
+    stroke: #4ecdc4;
+}
+
+.circular-gauge-fill.cleanliness {
+    stroke: #95e1d3;
+}
+
+.circular-gauge-fill.warmth {
+    stroke: #ff8c42;
+}
+
+.circular-gauge-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: white;
+}
+
+/* Responsive adjustments for circular mode */
+@media (max-width: 768px) {
+    .stats-panel.circular-mode {
+        gap: 10px;
+    }
+    
+    .stats-panel.circular-mode .stat-bar {
+        width: 70px;
+    }
+    
+    .circular-gauge {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .circular-gauge-value {
+        font-size: 0.8rem;
+    }
+}
+

@@ -44,6 +44,14 @@
                     <div class="progress-bar" id="healthBarContainer">
                         <div class="progress-fill health" id="healthBar"></div>
                     </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill health" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="healthCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="healthCircleValue">100</div>
+                    </div>
                 </div>
 
                 <div class="stat-bar" data-tooltip="">
@@ -53,6 +61,14 @@
                     </div>
                     <div class="progress-bar" id="hungerBarContainer">
                         <div class="progress-fill hunger" id="hungerBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill hunger" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="hungerCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="hungerCircleValue">100</div>
                     </div>
                 </div>
 
@@ -64,6 +80,14 @@
                     <div class="progress-bar" id="happinessBarContainer">
                         <div class="progress-fill happiness" id="happinessBar"></div>
                     </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill happiness" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="happinessCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="happinessCircleValue">100</div>
+                    </div>
                 </div>
 
                 <div class="stat-bar" data-tooltip="">
@@ -73,6 +97,14 @@
                     </div>
                     <div class="progress-bar" id="energyBarContainer">
                         <div class="progress-fill energy" id="energyBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill energy" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="energyCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="energyCircleValue">100</div>
                     </div>
                 </div>
 
@@ -84,6 +116,14 @@
                     <div class="progress-bar" id="cleanlinessBarContainer">
                         <div class="progress-fill cleanliness" id="cleanlinessBar"></div>
                     </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill cleanliness" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="cleanlinessCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="cleanlinessCircleValue">100</div>
+                    </div>
                 </div>
 
                 <!-- Egg-only stat -->
@@ -94,6 +134,14 @@
                     </div>
                     <div class="progress-bar" id="warmthBarContainer">
                         <div class="progress-fill warmth" id="warmthBar"></div>
+                    </div>
+                    <div class="circular-gauge">
+                        <svg viewBox="0 0 80 80">
+                            <circle class="circular-gauge-bg" cx="40" cy="40" r="32"></circle>
+                            <circle class="circular-gauge-fill warmth" cx="40" cy="40" r="32" 
+                                    stroke-dasharray="201" stroke-dashoffset="0" id="warmthCircle"></circle>
+                        </svg>
+                        <div class="circular-gauge-value" id="warmthCircleValue">50</div>
                     </div>
                     <div class="warmth-status" id="warmthStatus"></div>
                 </div>
@@ -277,6 +325,14 @@
                             <option value="dark">Dark Mode</option>
                             <option value="light">Light Mode</option>
                             <option value="retro">Retro LCD</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="statDisplaySelect">📊 Stat Display:</label>
+                        <select id="statDisplaySelect">
+                            <option value="bars">Horizontal Bars</option>
+                            <option value="circular">Circular Gauges</option>
                         </select>
                     </div>
                     

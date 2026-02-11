@@ -32,6 +32,10 @@ ios/
 # Temporary files
 tmp/
 temp/
+*.backup
+
+# Test files (excluded from builds)
+*.test.js
 
 # Docker
 docker-compose.override.yml
