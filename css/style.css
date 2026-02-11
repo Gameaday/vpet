@@ -152,6 +152,9 @@ main {
     image-rendering: crisp-edges;
     cursor: pointer;
     transition: transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pet-sprite:hover {
@@ -169,7 +172,10 @@ main {
     border-radius: 50%;
     animation: bounce 2s infinite;
     box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* Pet eyes for more life-like appearance */
@@ -1127,11 +1133,18 @@ main {
     }
 }
 
+/* Battle and Social Container */
+.battle-social-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
 /* Battle Panel */
 .battle-panel {
+    flex: 1;
     display: flex;
     gap: 8px;
-    margin-bottom: 15px;
 }
 
 .battle-btn,
@@ -2299,13 +2312,13 @@ body.theme-retro select {
 
 /* Social Panel Styles */
 .social-panel {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 10px 0;
+    flex: 1;
+    display: flex;
+    gap: 8px;
 }
 
 .social-btn {
+    flex: 1;
     padding: 12px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;

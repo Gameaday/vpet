@@ -1669,12 +1669,20 @@ function openHibernationModal() {
                 '<p class="hibernation-warning">⚠️ Free tier cannot wake up early</p>' : ''}
         `;
         
-        document.getElementById('wakeUpBtn').addEventListener('click', () => {
-            if (hibernationManager.wakeUp()) {
-                closeHibernationModal();
-                updateUI();
+        // Use setTimeout to ensure the button is in DOM before adding event listener
+        setTimeout(() => {
+            const wakeBtn = document.getElementById('wakeUpBtn');
+            if (wakeBtn && !wakeBtn.disabled) {
+                wakeBtn.addEventListener('click', () => {
+                    const result = hibernationManager.wakeUp(false);
+                    if (result) {
+                        closeHibernationModal();
+                        updateUI();
+                        showNotification('🌅 Pet woke up successfully!', 'success');
+                    }
+                });
             }
-        });
+        }, 0);
     } else {
         const tierName = premiumManager.subscriptionTier;
         const maxDays = hibStatus.maxDuration === Infinity ? 'Unlimited' : `${hibStatus.maxDuration} day${hibStatus.maxDuration > 1 ? 's' : ''}`;
