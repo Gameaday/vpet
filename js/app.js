@@ -106,12 +106,46 @@ function setupEventListeners() {
         }
     });
     
-    // Action buttons
-    document.getElementById('feedBtn').addEventListener('click', handleFeed);
-    document.getElementById('playBtn').addEventListener('click', handlePlay);
-    document.getElementById('sleepBtn').addEventListener('click', handleSleep);
-    document.getElementById('trainBtn').addEventListener('click', handleTrain);
-    document.getElementById('cleanBtn').addEventListener('click', handleClean);
+    // Action buttons - now open gateway modals
+    document.getElementById('feedBtn').addEventListener('click', () => {
+        if (gatewayManager) {
+            gatewayManager.openModal('kitchen');
+        } else {
+            handleFeed();
+        }
+    });
+    
+    document.getElementById('playBtn').addEventListener('click', () => {
+        if (gatewayManager) {
+            gatewayManager.openModal('activities');
+        } else {
+            handlePlay();
+        }
+    });
+    
+    document.getElementById('sleepBtn').addEventListener('click', () => {
+        if (gatewayManager) {
+            gatewayManager.openModal('rest');
+        } else {
+            handleSleep();
+        }
+    });
+    
+    document.getElementById('trainBtn').addEventListener('click', () => {
+        if (gatewayManager) {
+            gatewayManager.openModal('training');
+        } else {
+            handleTrain();
+        }
+    });
+    
+    document.getElementById('cleanBtn').addEventListener('click', () => {
+        if (gatewayManager) {
+            gatewayManager.openModal('grooming');
+        } else {
+            handleClean();
+        }
+    });
     
     // Egg-specific buttons
     document.getElementById('warmBtn').addEventListener('click', handleWarm);

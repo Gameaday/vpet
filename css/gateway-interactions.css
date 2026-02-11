@@ -1,0 +1,352 @@
+/* ================================================
+   GATEWAY INTERACTION SYSTEM STYLES
+   Enhanced modals for main action buttons
+   ================================================ */
+
+/* Gateway Modal Base Styles */
+.gateway-modal {
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.gateway-modal h2 {
+    margin-bottom: 20px;
+    color: var(--text-primary, #fff);
+    text-align: center;
+}
+
+/* Quick Action Bar */
+.quick-action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.quick-action-btn {
+    flex: 1;
+    min-height: 48px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--elevation-2, 0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.quick-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--elevation-3, 0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.quick-action-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--elevation-1, 0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.quick-action-btn .btn-icon {
+    font-size: 1.2rem;
+}
+
+.hunger-display,
+.happiness-display,
+.energy-display,
+.cleanliness-display {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary, #e0e0e0);
+    white-space: nowrap;
+}
+
+.training-stats {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary, #e0e0e0);
+}
+
+/* Grid Layouts for Cards */
+.food-grid,
+.activities-grid,
+.rest-options,
+.grooming-options,
+.training-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+/* Card Styles */
+.activity-card,
+.rest-option-card,
+.grooming-card,
+.training-card {
+    background: var(--surface-1, #2a2a2a);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.activity-card::before,
+.rest-option-card::before,
+.grooming-card::before,
+.training-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.activity-card:hover::before,
+.rest-option-card:hover::before,
+.grooming-card:hover::before,
+.training-card:hover::before {
+    opacity: 1;
+}
+
+.activity-card:hover,
+.rest-option-card:hover,
+.grooming-card:hover,
+.training-card:hover {
+    background: var(--surface-2, #333);
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-4px);
+    box-shadow: var(--elevation-2, 0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.activity-card:active,
+.rest-option-card:active,
+.grooming-card:active,
+.training-card:active {
+    transform: translateY(-1px);
+}
+
+.activity-icon,
+.rest-icon,
+.grooming-icon,
+.training-icon {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.activity-card h3,
+.rest-option-card h3,
+.grooming-card h3,
+.training-card h3 {
+    font-size: 1rem;
+    margin: 0 0 6px 0;
+    color: var(--text-primary, #fff);
+    position: relative;
+    z-index: 1;
+}
+
+.activity-card p,
+.rest-option-card p,
+.grooming-card p,
+.training-card p {
+    font-size: 0.8rem;
+    margin: 0;
+    color: var(--text-tertiary, #b0b0b0);
+    position: relative;
+    z-index: 1;
+}
+
+.activity-bonus,
+.rest-benefit,
+.grooming-bonus,
+.training-cost {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(102, 126, 234, 0.2);
+    color: #a5b4fc;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Stats Overview in Training Center */
+.stats-overview {
+    display: flex;
+    justify-content: space-around;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 8px;
+}
+
+.stat-display {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary, #e0e0e0);
+}
+
+/* Kitchen Actions */
+.kitchen-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Food Grid Specific */
+.food-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}
+
+.food-item-card {
+    background: var(--surface-1, #2a2a2a);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    position: relative;
+}
+
+.food-item-card:hover {
+    background: var(--surface-2, #333);
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-2px);
+    box-shadow: var(--elevation-1, 0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.food-item-icon {
+    font-size: 2rem;
+    margin-bottom: 6px;
+}
+
+.food-item-name {
+    font-size: 0.8rem;
+    color: var(--text-primary, #fff);
+    margin-bottom: 4px;
+}
+
+.food-item-effect {
+    font-size: 0.7rem;
+    color: #4ade80;
+}
+
+.food-item-count {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(102, 126, 234, 0.8);
+    color: #fff;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    .gateway-modal {
+        max-width: 100%;
+        max-height: 95vh;
+        border-radius: 16px 16px 0 0;
+    }
+    
+    .quick-action-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .quick-action-btn {
+        width: 100%;
+    }
+    
+    .hunger-display,
+    .happiness-display,
+    .energy-display,
+    .cleanliness-display,
+    .training-stats {
+        text-align: center;
+    }
+    
+    .food-grid,
+    .activities-grid,
+    .rest-options,
+    .grooming-options,
+    .training-options {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+    }
+    
+    .stats-overview {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .activity-card,
+    .rest-option-card,
+    .grooming-card,
+    .training-card {
+        min-height: 120px;
+        padding: 12px;
+    }
+    
+    .activity-icon,
+    .rest-icon,
+    .grooming-icon,
+    .training-icon {
+        font-size: 2rem;
+    }
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-tertiary, #b0b0b0);
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    margin: 0 0 8px 0;
+    color: var(--text-secondary, #e0e0e0);
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 0.9rem;
+}

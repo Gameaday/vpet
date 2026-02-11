@@ -29,11 +29,13 @@
     <link rel="preload" href="css/style.css" as="style">
     <link rel="preload" href="css/mobile-enhancements.css" as="style">
     <link rel="preload" href="css/theme-improvements.css" as="style">
+    <link rel="preload" href="css/gateway-interactions.css" as="style">
     
     <title>Virtual Pet - VPet</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/mobile-enhancements.css">
     <link rel="stylesheet" href="css/theme-improvements.css">
+    <link rel="stylesheet" href="css/gateway-interactions.css">
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -720,6 +722,232 @@
         </div>
     </div>
 
+    <!-- Kitchen/Feed Modal (Gateway for Feed Button) -->
+    <div class="modal" id="kitchenModal">
+        <div class="modal-content gateway-modal">
+            <span class="close-btn" id="closeKitchenModal">×</span>
+            <h2>🍖 Kitchen & Inventory</h2>
+            <div class="kitchen-content">
+                <div class="quick-action-bar">
+                    <button class="quick-action-btn" id="quickFeedBtn">
+                        <span class="btn-icon">⚡</span>
+                        <span>Quick Feed</span>
+                    </button>
+                    <div class="hunger-display">
+                        Hunger: <span id="kitchenHungerValue">100</span>%
+                    </div>
+                </div>
+                <div class="food-grid" id="foodGrid">
+                    <!-- Food items will be populated dynamically from inventory -->
+                </div>
+                <div class="kitchen-actions">
+                    <button class="action-btn" id="openShopFromKitchen">
+                        <span class="btn-icon">🏪</span>
+                        <span>Buy Food</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activities Hub Modal (Gateway for Play Button) -->
+    <div class="modal" id="activitiesModal">
+        <div class="modal-content gateway-modal">
+            <span class="close-btn" id="closeActivitiesModal">×</span>
+            <h2>🎮 Activities Hub</h2>
+            <div class="activities-content">
+                <div class="quick-action-bar">
+                    <button class="quick-action-btn" id="quickPlayBtn">
+                        <span class="btn-icon">⚡</span>
+                        <span>Quick Play</span>
+                    </button>
+                    <div class="happiness-display">
+                        Happiness: <span id="activitiesHappinessValue">100</span>%
+                    </div>
+                </div>
+                <div class="activities-grid">
+                    <button class="activity-card" id="playMinigamesBtn">
+                        <span class="activity-icon">🎯</span>
+                        <h3>Mini-Games</h3>
+                        <p>Reaction, Memory, Rhythm</p>
+                        <div class="activity-bonus">+Happiness +Coins</div>
+                    </button>
+                    <button class="activity-card" id="playExploreBtn">
+                        <span class="activity-icon">🗺️</span>
+                        <h3>Explore</h3>
+                        <p>Adventure & Discovery</p>
+                        <div class="activity-bonus">+XP +Items</div>
+                    </button>
+                    <button class="activity-card" id="playSocialBtn">
+                        <span class="activity-icon">👥</span>
+                        <h3>Social Play</h3>
+                        <p>Visit friends' pets</p>
+                        <div class="activity-bonus">+Happiness +Social</div>
+                    </button>
+                    <button class="activity-card" id="playToysBtn">
+                        <span class="activity-icon">🎾</span>
+                        <h3>Toys</h3>
+                        <p>Use inventory items</p>
+                        <div class="activity-bonus">+Happiness +Fun</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rest Menu Modal (Gateway for Sleep Button) -->
+    <div class="modal" id="restModal">
+        <div class="modal-content gateway-modal">
+            <span class="close-btn" id="closeRestModal">×</span>
+            <h2>😴 Rest & Relaxation</h2>
+            <div class="rest-content">
+                <div class="quick-action-bar">
+                    <button class="quick-action-btn" id="quickSleepBtn">
+                        <span class="btn-icon">⚡</span>
+                        <span>Quick Nap</span>
+                    </button>
+                    <div class="energy-display">
+                        Energy: <span id="restEnergyValue">100</span>%
+                    </div>
+                </div>
+                <div class="rest-options">
+                    <button class="rest-option-card" id="normalSleepBtn">
+                        <span class="rest-icon">💤</span>
+                        <h3>Normal Sleep</h3>
+                        <p>Standard rest period</p>
+                        <div class="rest-benefit">+50 Energy (2-4 hours)</div>
+                    </button>
+                    <button class="rest-option-card" id="deepSleepBtn">
+                        <span class="rest-icon">🌙</span>
+                        <h3>Deep Sleep</h3>
+                        <p>Extended rest for full recovery</p>
+                        <div class="rest-benefit">+100 Energy (6-8 hours)</div>
+                    </button>
+                    <button class="rest-option-card" id="cryoSleepBtn">
+                        <span class="rest-icon">❄️</span>
+                        <h3>Cryo Sleep</h3>
+                        <p>Pause when you need a break</p>
+                        <div class="rest-benefit">Suspend all stats</div>
+                    </button>
+                    <button class="rest-option-card" id="dreamActivityBtn">
+                        <span class="rest-icon">✨</span>
+                        <h3>Dream Activity</h3>
+                        <p>Light rest + dream games</p>
+                        <div class="rest-benefit">+30 Energy +Fun</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grooming Center Modal (Gateway for Clean Button) -->
+    <div class="modal" id="groomingModal">
+        <div class="modal-content gateway-modal">
+            <span class="close-btn" id="closeGroomingModal">×</span>
+            <h2>🧼 Grooming Center</h2>
+            <div class="grooming-content">
+                <div class="quick-action-bar">
+                    <button class="quick-action-btn" id="quickCleanBtn">
+                        <span class="btn-icon">⚡</span>
+                        <span>Quick Clean</span>
+                    </button>
+                    <div class="cleanliness-display">
+                        Cleanliness: <span id="groomingCleanValue">100</span>%
+                    </div>
+                </div>
+                <div class="grooming-options">
+                    <button class="grooming-card" id="bathGameBtn">
+                        <span class="grooming-icon">🛁</span>
+                        <h3>Bath Time</h3>
+                        <p>Interactive washing mini-game</p>
+                        <div class="grooming-bonus">+Clean +Happiness +Coins</div>
+                    </button>
+                    <button class="grooming-card" id="brushGameBtn">
+                        <span class="grooming-icon">✨</span>
+                        <h3>Brush & Polish</h3>
+                        <p>Grooming care activity</p>
+                        <div class="grooming-bonus">+Clean +Appearance</div>
+                    </button>
+                    <button class="grooming-card" id="spaBtn">
+                        <span class="grooming-icon">🌸</span>
+                        <h3>Spa Treatment</h3>
+                        <p>Premium grooming (costs coins)</p>
+                        <div class="grooming-bonus">++Clean ++Happiness</div>
+                    </button>
+                    <button class="grooming-card" id="cosmeticsBtn">
+                        <span class="grooming-icon">💄</span>
+                        <h3>Cosmetics</h3>
+                        <p>Unlock & apply styles</p>
+                        <div class="grooming-bonus">Customization</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Training Center Modal (Gateway for Train Button) -->
+    <div class="modal" id="trainingModal">
+        <div class="modal-content gateway-modal">
+            <span class="close-btn" id="closeTrainingModal">×</span>
+            <h2>💪 Training Center</h2>
+            <div class="training-content">
+                <div class="quick-action-bar">
+                    <button class="quick-action-btn" id="quickTrainBtn">
+                        <span class="btn-icon">⚡</span>
+                        <span>Quick Train</span>
+                    </button>
+                    <div class="training-stats">
+                        Lvl: <span id="trainingLevelValue">1</span> | 
+                        XP: <span id="trainingXPValue">0</span>/100
+                    </div>
+                </div>
+                <div class="stats-overview">
+                    <div class="stat-display">
+                        ⚔️ Attack: <span id="trainingAttackValue">10</span>
+                    </div>
+                    <div class="stat-display">
+                        🛡️ Defense: <span id="trainingDefenseValue">10</span>
+                    </div>
+                    <div class="stat-display">
+                        ⚡ Speed: <span id="trainingSpeedValue">10</span>
+                    </div>
+                </div>
+                <div class="training-options">
+                    <button class="training-card" id="strengthTrainBtn">
+                        <span class="training-icon">⚔️</span>
+                        <h3>Strength Training</h3>
+                        <p>Increase attack power</p>
+                        <div class="training-cost">-20 Energy</div>
+                    </button>
+                    <button class="training-card" id="defenseTrainBtn">
+                        <span class="training-icon">🛡️</span>
+                        <h3>Defense Training</h3>
+                        <p>Boost defensive stats</p>
+                        <div class="training-cost">-20 Energy</div>
+                    </button>
+                    <button class="training-card" id="speedTrainBtn">
+                        <span class="training-icon">⚡</span>
+                        <h3>Speed Training</h3>
+                        <p>Enhance agility</p>
+                        <div class="training-cost">-20 Energy</div>
+                    </button>
+                    <button class="training-card" id="balancedTrainBtn">
+                        <span class="training-icon">🎯</span>
+                        <h3>Balanced Training</h3>
+                        <p>All-around improvement</p>
+                        <div class="training-cost">-30 Energy</div>
+                    </button>
+                    <button class="training-card" id="battlePrepBtn">
+                        <span class="training-icon">⚔️</span>
+                        <h3>Battle Prep</h3>
+                        <p>Ready for combat</p>
+                        <div class="training-cost">Opens Battle Menu</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Configuration Modules -->
     <script src="js/constants.js"></script>
     <script src="js/app-config.js"></script>
@@ -744,6 +972,7 @@
     <script src="js/evolution-paths.js"></script>
     <script src="js/friend-system.js"></script>
     <script src="js/tournament-manager.js"></script>
+    <script src="js/gateway-manager.js"></script>
     
     <!-- Core Classes -->
     <script src="js/pet.js"></script>
