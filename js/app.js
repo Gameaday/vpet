@@ -88,6 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up event listeners
     setupEventListeners();
     
+    // Start pet behavior animations
+    startPetBehaviors();
+    enableMouseTracking();
+    
     // Initialize Phase 3-4 features
     if (typeof initializePhase34Features === 'function') {
         initializePhase34Features();
@@ -133,7 +137,10 @@ function setupEventListeners() {
     });
     
     document.getElementById('sleepBtn').addEventListener('click', () => {
-        if (gatewayManager) {
+        // If pet is sleeping, wake directly without gateway
+        if (pet.isSleeping) {
+            handleSleep();
+        } else if (gatewayManager) {
             gatewayManager.openModal('rest');
         } else {
             handleSleep();
@@ -160,13 +167,22 @@ function setupEventListeners() {
     document.getElementById('warmBtn').addEventListener('click', handleWarm);
     document.getElementById('hatchBtn').addEventListener('click', handleHatch);
     
-    // Battle buttons
-    document.getElementById('battleBtn').addEventListener('click', handleLocalBattle);
-    document.getElementById('onlineBattleBtn').addEventListener('click', handleOnlineBattle);
+    // Pet tap interaction for visual feedback
+    document.getElementById('petSprite').addEventListener('click', handlePetTap);
     
-    // Social buttons
-    document.getElementById('shareBtn').addEventListener('click', handleShare);
-    document.getElementById('leaderboardBtn').addEventListener('click', showLeaderboard);
+    // Gateway buttons
+    document.getElementById('battleGatewayBtn')?.addEventListener('click', openBattleGateway);
+    document.getElementById('socialGatewayBtn')?.addEventListener('click', openSocialGateway);
+    
+    // Social buttons (kept for backward compatibility, but hidden on main screen)
+    document.getElementById('shareBtn')?.addEventListener('click', handleShare);
+    document.getElementById('leaderboardBtn')?.addEventListener('click', showLeaderboard);
+    document.getElementById('friendsBtn')?.addEventListener('click', openFriendsModal);
+    document.getElementById('tournamentBtn')?.addEventListener('click', openTournamentModal);
+    
+    // Battle buttons (kept for backward compatibility)
+    document.getElementById('battleBtn')?.addEventListener('click', handleLocalBattle);
+    document.getElementById('onlineBattleBtn')?.addEventListener('click', handleOnlineBattle);
     
     // QoL buttons
     document.getElementById('hibernateBtn').addEventListener('click', openHibernationModal);
@@ -189,15 +205,51 @@ function setupEventListeners() {
         closeSettingsModal();
         openHelp();
     });
+    document.getElementById('settingsHibernateBtn')?.addEventListener('click', () => {
+        closeSettingsModal();
+        openHibernationModal();
+    });
     
     // Modal close buttons
     document.getElementById('closeBattleModal').addEventListener('click', closeBattleModal);
+    document.getElementById('closeBattleGatewayModal')?.addEventListener('click', closeBattleGateway);
+    document.getElementById('closeSocialGatewayModal')?.addEventListener('click', closeSocialGateway);
     document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
     document.getElementById('closeHelpModal').addEventListener('click', closeHelp);
     document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
     document.getElementById('closeLeaderboardModal').addEventListener('click', closeLeaderboard);
     document.getElementById('closeHibernationModal').addEventListener('click', closeHibernationModal);
     document.getElementById('closeBackupModal').addEventListener('click', closeBackupModal);
+    
+    // Battle gateway cards
+    document.getElementById('localBattleCard')?.addEventListener('click', () => {
+        closeBattleGateway();
+        handleLocalBattle();
+    });
+    document.getElementById('onlineBattleCard')?.addEventListener('click', () => {
+        if (!document.getElementById('onlineBattleCard').classList.contains('disabled')) {
+            closeBattleGateway();
+            handleOnlineBattle();
+        }
+    });
+    
+    // Social gateway cards
+    document.getElementById('shareCard')?.addEventListener('click', () => {
+        closeSocialGateway();
+        handleShare();
+    });
+    document.getElementById('leaderboardCard')?.addEventListener('click', () => {
+        closeSocialGateway();
+        showLeaderboard();
+    });
+    document.getElementById('friendsCard')?.addEventListener('click', () => {
+        closeSocialGateway();
+        openFriendsModal();
+    });
+    document.getElementById('tournamentCard')?.addEventListener('click', () => {
+        closeSocialGateway();
+        openTournamentModal();
+    });
     
     // Backup modal buttons
     document.getElementById('exportBackupBtn').addEventListener('click', handleExportBackup);
@@ -388,6 +440,32 @@ function updateUI() {
     const petAnimation = document.querySelector('.pet-animation');
     petAnimation.className = `pet-animation ${pet.stage}`;
     
+    // Apply appearance variations if pet has hatched
+    if (pet.appearance && pet.hasHatched) {
+        // Add eye shape class
+        if (pet.appearance.eyeShape !== 'round') {
+            petAnimation.classList.add(`eye-${pet.appearance.eyeShape}`);
+        }
+        
+        // Add eye color class
+        if (pet.appearance.eyeColor !== 'black') {
+            petAnimation.classList.add(`eye-color-${pet.appearance.eyeColor}`);
+        }
+        
+        // Add mouth shape class
+        petAnimation.classList.add(`mouth-${pet.appearance.mouthShape}`);
+        
+        // Add body color class
+        if (pet.appearance.bodyColor !== 'default') {
+            petAnimation.classList.add(`body-${pet.appearance.bodyColor}`);
+        }
+        
+        // Add body size class
+        if (pet.appearance.bodySize !== 'normal') {
+            petAnimation.classList.add(`size-${pet.appearance.bodySize}`);
+        }
+    }
+    
     // Check hibernation status
     const isHibernating = hibernationManager && hibernationManager.shouldFreezePet();
     
@@ -499,11 +577,20 @@ function updateUI() {
     document.getElementById('petLevel').textContent = Math.floor(pet.level);
     document.getElementById('petWins').textContent = pet.wins;
     
-    // Update sleep button text (only for non-eggs)
+    // Update sleep button text and tooltip (only for non-eggs)
     if (!isEgg) {
         const sleepBtn = document.getElementById('sleepBtn');
         const sleepBtnText = sleepBtn.querySelector('span:last-child');
         sleepBtnText.textContent = pet.isSleeping ? 'Wake' : 'Sleep';
+        
+        // Update tooltip to match action
+        if (pet.isSleeping) {
+            sleepBtn.setAttribute('aria-label', 'Wake up your pet');
+            sleepBtn.setAttribute('title', 'Wake up your pet');
+        } else {
+            sleepBtn.setAttribute('aria-label', 'Put your pet to sleep to restore energy');
+            sleepBtn.setAttribute('title', 'Put pet to sleep');
+        }
         
         // Disable actions if sleeping or hibernating
         const actionsDisabled = pet.isSleeping || isHibernating;
@@ -583,6 +670,186 @@ function updateIdleAnimation() {
     } else {
         petAnimation.classList.add('idle-high-energy');
     }
+}
+
+// Random behavior patterns for pet liveliness
+let petBehaviorInterval = null;
+
+function startPetBehaviors() {
+    // Clear any existing interval
+    if (petBehaviorInterval) {
+        clearInterval(petBehaviorInterval);
+    }
+    
+    // Start random behavior checks every 3-8 seconds
+    const scheduleNextBehavior = () => {
+        const delay = 3000 + Math.random() * 5000; // 3-8 seconds
+        setTimeout(() => {
+            performRandomBehavior();
+            scheduleNextBehavior();
+        }, delay);
+    };
+    
+    scheduleNextBehavior();
+}
+
+function performRandomBehavior() {
+    const petAnimation = document.querySelector('.pet-animation');
+    if (!petAnimation || pet.stage === 'egg' || pet.isSleeping) return;
+    
+    // State-based behavior weighting system
+    const behaviors = [];
+    
+    // Calculate state-based probabilities
+    const energyLevel = pet.energy;
+    const happinessLevel = pet.happiness;
+    const isTired = energyLevel < 30;
+    const isVeryTired = energyLevel < 15;
+    const isHappy = happinessLevel > 70;
+    const isEnergetic = energyLevel > 60;
+    const isHighEnergy = pet.personalityTraits.energetic > 70;
+    
+    // Eye movements (look around) - more common when alert
+    const lookAroundChance = isEnergetic ? 0.5 : (isTired ? 0.2 : 0.4);
+    if (Math.random() < lookAroundChance) {
+        behaviors.push(() => {
+            petAnimation.classList.add('looking-left');
+            setTimeout(() => {
+                petAnimation.classList.remove('looking-left');
+                petAnimation.classList.add('looking-right');
+                setTimeout(() => {
+                    petAnimation.classList.remove('looking-right');
+                }, 800);
+            }, 800);
+        });
+    }
+    
+    // Happy bounce - weighted by happiness and energy
+    const bounceChance = isHappy && isEnergetic ? 0.5 : (isHappy ? 0.3 : 0.1);
+    if (Math.random() < bounceChance) {
+        behaviors.push(() => {
+            petAnimation.classList.add('happy-bounce');
+            setTimeout(() => petAnimation.classList.remove('happy-bounce'), 1000);
+        });
+    }
+    
+    // Curious head tilt - friendly personality
+    if (pet.personalityTraits.friendly > 60 && Math.random() < 0.25) {
+        behaviors.push(() => {
+            petAnimation.classList.add('head-tilt');
+            setTimeout(() => petAnimation.classList.remove('head-tilt'), 1200);
+        });
+    }
+    
+    // Overstimulated shake - high energy + high happiness
+    const shakeChance = (happinessLevel > 90 || isHighEnergy) && isEnergetic ? 0.25 : 0.1;
+    if (Math.random() < shakeChance) {
+        behaviors.push(() => {
+            petAnimation.classList.add('excited-shake');
+            setTimeout(() => petAnimation.classList.remove('excited-shake'), 600);
+        });
+    }
+    
+    // Drowsy/sleepy behavior - very tired pets
+    if (isVeryTired && Math.random() < 0.4) {
+        behaviors.push(() => {
+            petAnimation.classList.add('drowsy');
+            setTimeout(() => petAnimation.classList.remove('drowsy'), 2000);
+        });
+    }
+    
+    // Yawning - tired pets
+    if (isTired && !isVeryTired && Math.random() < 0.3) {
+        behaviors.push(() => {
+            petAnimation.classList.add('yawn');
+            setTimeout(() => petAnimation.classList.remove('yawn'), 1500);
+        });
+    }
+    
+    // Stretching - just woke up or restless
+    if (energyLevel > 80 && Math.random() < 0.2) {
+        behaviors.push(() => {
+            petAnimation.classList.add('stretch');
+            setTimeout(() => petAnimation.classList.remove('stretch'), 1200);
+        });
+    }
+    
+    // Execute a random behavior if any are available
+    if (behaviors.length > 0) {
+        const behavior = behaviors[Math.floor(Math.random() * behaviors.length)];
+        behavior();
+    }
+}
+
+// Mouse cursor eye tracking
+let mouseTrackingEnabled = false;
+let lastMouseX = 0;
+let lastMouseY = 0;
+
+function enableMouseTracking() {
+    if (mouseTrackingEnabled) return;
+    mouseTrackingEnabled = true;
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    
+    // Periodically check if pet should follow mouse with variable delays
+    const scheduleMouseCheck = () => {
+        const delay = 8000 + Math.random() * 7000; // 8-15 seconds
+        setTimeout(() => {
+            if (pet.stage !== 'egg' && !pet.isSleeping && Math.random() < 0.3) {
+                trackMouseForDuration(2000 + Math.random() * 3000); // 2-5 seconds
+            }
+            scheduleMouseCheck(); // Schedule next check
+        }, delay);
+    };
+    
+    scheduleMouseCheck();
+}
+
+function handleMouseMove(e) {
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+}
+
+function trackMouseForDuration(duration) {
+    const petSprite = document.getElementById('petSprite');
+    const petAnimation = document.querySelector('.pet-animation');
+    if (!petSprite || !petAnimation) return;
+    
+    const startTime = Date.now();
+    petAnimation.classList.add('tracking-mouse');
+    
+    const trackingInterval = setInterval(() => {
+        if (Date.now() - startTime > duration) {
+            clearInterval(trackingInterval);
+            petAnimation.classList.remove('tracking-mouse', 'eyes-left', 'eyes-right', 'eyes-up', 'eyes-down');
+            return;
+        }
+        
+        const rect = petSprite.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        const deltaX = lastMouseX - centerX;
+        const deltaY = lastMouseY - centerY;
+        
+        // Update eye position classes
+        petAnimation.classList.remove('eyes-left', 'eyes-right', 'eyes-up', 'eyes-down');
+        
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX > 20) {
+                petAnimation.classList.add('eyes-right');
+            } else if (deltaX < -20) {
+                petAnimation.classList.add('eyes-left');
+            }
+        } else {
+            if (deltaY > 20) {
+                petAnimation.classList.add('eyes-down');
+            } else if (deltaY < -20) {
+                petAnimation.classList.add('eyes-up');
+            }
+        }
+    }, 100);
 }
 
 // Update stat tooltips with helpful information
@@ -703,6 +970,69 @@ function handleHatch() {
         
         updateUI();
         uiManager.showSaveIndicator();
+    }
+}
+
+// Handle pet tap interaction for feedback
+function handlePetTap() {
+    const petAnimation = document.querySelector('.pet-animation');
+    const petSprite = document.getElementById('petSprite');
+    
+    // Show different responses based on pet stage and state
+    if (pet.stage === 'egg' && !pet.hasHatched) {
+        // Egg responses
+        if (pet.canHatch()) {
+            // Note: "Hatch" button text must match the button label in HTML (id="hatchBtn")
+            showToast('🥚 Tap the "Hatch" button to meet your pet!', 'info', 2000);
+            petAnimation.classList.add('wiggle');
+            setTimeout(() => petAnimation.classList.remove('wiggle'), 500);
+        } else if (pet.warmth < 60) {
+            showToast('🌡️ Keep me warm! I need warmth to hatch.', 'info', 2000);
+        } else {
+            showToast('⏱️ Keep me warm... something is happening!', 'info', 2000);
+            petAnimation.classList.add('wiggle');
+            setTimeout(() => petAnimation.classList.remove('wiggle'), 500);
+        }
+        vibrationManager.vibrate('light');
+    } else {
+        // Non-egg pet responses based on happiness
+        const responses = [];
+        
+        if (pet.happiness > 80) {
+            responses.push('😊 I\'m so happy!', '❤️ You\'re the best!', '🎉 Life is great!');
+        } else if (pet.happiness > 50) {
+            responses.push('👋 Hey there!', '😊 Nice to see you!', '🐾 What\'s up?');
+        } else if (pet.happiness > 20) {
+            responses.push('😐 I\'m okay...', '🤔 Could be better.', '😕 I need attention.');
+        } else {
+            responses.push('😢 I\'m sad...', '💔 Please take care of me.', '😞 I need help.');
+        }
+        
+        // Add hunger/energy specific responses
+        if (pet.hunger < 30) {
+            responses.push('🍖 I\'m hungry!', '🍔 Feed me please!');
+        }
+        if (pet.energy < 30) {
+            responses.push('😴 I\'m tired...', '💤 Need rest...');
+        }
+        
+        // Show random response
+        const message = responses[Math.floor(Math.random() * responses.length)];
+        showToast(message, 'info', 2000);
+        
+        // Visual feedback - bounce animation
+        petAnimation.classList.add('wave');
+        setTimeout(() => petAnimation.classList.remove('wave'), 600);
+        
+        // Show hearts if happy
+        if (pet.happiness > 70 && petSprite && particleEffects) {
+            const rect = petSprite.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            particleEffects.showHearts(x, y);
+        }
+        
+        vibrationManager.vibrate('light');
     }
 }
 
@@ -1473,6 +1803,42 @@ function handleAutoCloudBackupToggle(event) {
     } else {
         backupManager.disableCloudBackups();
     }
+}
+
+// Open battle gateway modal
+function openBattleGateway() {
+    const modal = document.getElementById('battleGatewayModal');
+    modal.classList.add('active');
+    soundManager.play('open');
+}
+
+// Close battle gateway modal
+function closeBattleGateway() {
+    const modal = document.getElementById('battleGatewayModal');
+    modal.classList.remove('active');
+}
+
+// Open social gateway modal
+function openSocialGateway() {
+    const modal = document.getElementById('socialGatewayModal');
+    modal.classList.add('active');
+    soundManager.play('open');
+}
+
+// Close social gateway modal
+function closeSocialGateway() {
+    const modal = document.getElementById('socialGatewayModal');
+    modal.classList.remove('active');
+}
+
+// Open friends modal (placeholder for future implementation)
+function openFriendsModal() {
+    showNotification('👥 Friends feature coming soon!', 'info', 3000);
+}
+
+// Open tournament modal (placeholder for future implementation)
+function openTournamentModal() {
+    showNotification('🏅 Tournament feature coming soon!', 'info', 3000);
 }
 
 // Clean up on page unload

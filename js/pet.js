@@ -1,5 +1,14 @@
 // Pet class managing the virtual pet's state and behavior
 class Pet {
+    // Appearance trait options (single source of truth)
+    static APPEARANCE_OPTIONS = {
+        eyeShapes: ['round', 'oval', 'star', 'heart'],
+        eyeColors: ['black', 'blue', 'green', 'brown', 'purple'],
+        mouthShapes: ['happy', 'neutral', 'sad', 'surprised'],
+        bodyColors: ['default', 'golden', 'crimson', 'azure', 'emerald', 'violet'],
+        bodySizes: ['normal', 'small', 'large']
+    };
+    
     constructor() {
         this.name = '???'; // Egg starts with unknown name
         this.stage = 'egg'; // egg, baby, child, teen, adult
@@ -30,6 +39,15 @@ class Pet {
         this.warmth = 0; // Warmth stat for eggs (0-100) - starts cold
         this.incubationTime = 0; // Time in milliseconds with proper warmth
         this.hasHatched = false; // Track if egg has hatched
+        
+        // Visual appearance traits - initialized on first hatch
+        this.appearance = {
+            eyeShape: 'round', // round, oval, star, heart
+            eyeColor: 'black', // black, blue, green, brown, purple
+            mouthShape: 'happy', // happy, neutral, sad, surprised
+            bodyColor: 'default', // default, golden, crimson, azure, emerald, violet
+            bodySize: 'normal' // normal, small, large (relative to stage)
+        };
         
         // Load saved pet or create new one
         this.load();
@@ -83,7 +101,8 @@ class Pet {
                 cleanliness: this.cleanliness || 100,
                 warmth: this.warmth || 50,
                 incubationTime: this.incubationTime || 0,
-                hasHatched: this.hasHatched || false
+                hasHatched: this.hasHatched || false,
+                appearance: this.appearance || {eyeShape: 'round', eyeColor: 'black', mouthShape: 'happy', bodyColor: 'default', bodySize: 'normal'}
             };
             
             // Check if localStorage is available and has space
@@ -153,6 +172,17 @@ class Pet {
                     this.warmth = Number(petData.warmth) || 50;
                     this.incubationTime = Number(petData.incubationTime) || 0;
                     this.hasHatched = Boolean(petData.hasHatched);
+                    
+                    // Load appearance traits or set defaults
+                    if (petData.appearance && typeof petData.appearance === 'object') {
+                        this.appearance = {
+                            eyeShape: petData.appearance.eyeShape || 'round',
+                            eyeColor: petData.appearance.eyeColor || 'black',
+                            mouthShape: petData.appearance.mouthShape || 'happy',
+                            bodyColor: petData.appearance.bodyColor || 'default',
+                            bodySize: petData.appearance.bodySize || 'normal'
+                        };
+                    }
                     
                     // Validate all stats are in proper ranges
                     this.validateStats();
@@ -293,7 +323,17 @@ class Pet {
     // Handle evolution event
     onEvolution() {
         this.level++;
-        showNotification(`🎉 Your pet evolved to ${this.stage}!`, 'success');
+        
+        // Enhanced notification with visual change description
+        const stageDescriptions = {
+            'baby': '🐣 Your egg hatched into a baby! It\'s small and adorable.',
+            'child': '🌱 Your baby grew into a child! It\'s getting bigger and more active.',
+            'teen': '⚡ Your child became a teen! It\'s developing its unique personality.',
+            'adult': '👑 Your teen evolved into an adult! It has reached full maturity!'
+        };
+        
+        const description = stageDescriptions[this.stage] || `🎉 Your pet evolved to ${this.stage}!`;
+        showNotification(description, 'success');
         
         // Trigger evolution particle effects
         if (typeof window !== 'undefined' && window.particleEffects) {
@@ -392,6 +432,9 @@ class Pet {
         this.birthTime = Date.now(); // Reset birth time for accurate age tracking
         this.age = 0;
         
+        // Generate random appearance traits for the newly hatched pet
+        this.generateRandomAppearance();
+        
         // Initialize stats for the hatched pet
         this.health = 100;
         this.hunger = 100;
@@ -403,6 +446,19 @@ class Pet {
         showNotification('🎉 Your egg hatched into a baby pet!', 'success');
         this.save();
         return true;
+    }
+    
+    // Generate random appearance traits for the pet
+    generateRandomAppearance() {
+        const options = Pet.APPEARANCE_OPTIONS;
+        
+        this.appearance = {
+            eyeShape: options.eyeShapes[Math.floor(Math.random() * options.eyeShapes.length)],
+            eyeColor: options.eyeColors[Math.floor(Math.random() * options.eyeColors.length)],
+            mouthShape: options.mouthShapes[Math.floor(Math.random() * options.mouthShapes.length)],
+            bodyColor: options.bodyColors[Math.floor(Math.random() * options.bodyColors.length)],
+            bodySize: options.bodySizes[Math.floor(Math.random() * options.bodySizes.length)]
+        };
     }
 
     // Feed the pet

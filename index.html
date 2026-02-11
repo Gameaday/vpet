@@ -54,7 +54,9 @@
             <div class="pet-display">
                 <div class="mood-indicator" id="moodIndicator">😊</div>
                 <div class="pet-sprite" id="petSprite">
-                    <div class="pet-animation"></div>
+                    <div class="pet-animation">
+                        <div class="pet-mouth"></div>
+                    </div>
                 </div>
                 <div class="pet-name" id="petName">My Pet</div>
                 <div class="pet-stage" id="petStage">Egg</div>
@@ -235,65 +237,24 @@
                 </button>
             </div>
 
-            <!-- Battle Section -->
+            <!-- Battle Gateway Button -->
             <div class="battle-panel">
-                <button class="battle-btn" id="battleBtn">
+                <button class="battle-btn" id="battleGatewayBtn" title="Battle Options">
                     <span class="btn-icon">⚔️</span>
                     <span>Battle</span>
                 </button>
-                <button class="online-battle-btn" id="onlineBattleBtn" disabled>
-                    <span class="btn-icon">🌐</span>
-                    <span>Online Battle</span>
-                </button>
             </div>
 
-            <!-- Social Features Section -->
+            <!-- Social Gateway Button -->
             <div class="social-panel">
-                <button class="social-btn" id="shareBtn" title="Share your pet">
-                    <span class="btn-icon">📤</span>
-                    <span>Share</span>
-                </button>
-                <button class="social-btn" id="leaderboardBtn" title="View leaderboard">
-                    <span class="btn-icon">🏆</span>
-                    <span>Leaderboard</span>
-                </button>
-                <button class="social-btn" id="friendsBtn" title="Manage friends">
+                <button class="social-btn" id="socialGatewayBtn" title="Social Features">
                     <span class="btn-icon">👥</span>
-                    <span>Friends</span>
-                </button>
-                <button class="social-btn" id="tournamentBtn" title="Tournaments">
-                    <span class="btn-icon">🏅</span>
-                    <span>Tournament</span>
+                    <span>Social</span>
                 </button>
             </div>
 
-            <!-- Game Features Section -->
-            <div class="game-panel">
-                <button class="game-btn" id="shopBtn" title="Shop">
-                    <span class="btn-icon">🏪</span>
-                    <span>Shop</span>
-                </button>
-                <button class="game-btn" id="inventoryBtn" title="Inventory">
-                    <span class="btn-icon">🎒</span>
-                    <span>Inventory</span>
-                </button>
-                <button class="game-btn" id="minigamesBtn" title="Mini-Games">
-                    <span class="btn-icon">🎯</span>
-                    <span>Games</span>
-                </button>
-            </div>
-
-            <!-- Quality of Life Features Section -->
-            <div class="qol-panel">
-                <button class="qol-btn" id="hibernateBtn" title="Cryo Sleep">
-                    <span class="btn-icon">❄️</span>
-                    <span>Cryo Sleep</span>
-                </button>
-                <button class="qol-btn" id="backupBtn" title="Backup & Restore">
-                    <span class="btn-icon">💾</span>
-                    <span>Backup</span>
-                </button>
-            </div>
+            <!-- Shop/Inventory/Games removed - accessed via Feed/Play gateway modals -->
+            <!-- Backup/Cryo moved to settings to reduce clutter -->
 
             <!-- Settings FAB (Floating Action Button) -->
             <button class="settings-fab" id="settingsBtn" title="Settings" aria-label="Open Settings">
@@ -339,6 +300,59 @@
                     <button class="battle-action-btn" id="specialBtn">Special</button>
                 </div>
                 <button class="battle-action-btn finish-btn" id="finishBattleBtn" style="display: none;">Finish</button>
+            </div>
+        </div>
+
+        <!-- Battle Gateway Modal -->
+        <div class="modal" id="battleGatewayModal">
+            <div class="modal-content gateway-modal">
+                <span class="close-btn" id="closeBattleGatewayModal">×</span>
+                <h2>⚔️ Battle Arena</h2>
+                <div class="gateway-content">
+                    <div class="gateway-card" id="localBattleCard" role="button" tabindex="0">
+                        <span class="gateway-icon">⚔️</span>
+                        <h3>Local Battle</h3>
+                        <p>Battle against AI opponent</p>
+                        <div class="gateway-requirement">Requires 30 Energy</div>
+                    </div>
+                    <div class="gateway-card disabled" id="onlineBattleCard" role="button" tabindex="0">
+                        <span class="gateway-icon">🌐</span>
+                        <h3>Online Battle</h3>
+                        <p>Battle other players</p>
+                        <div class="gateway-requirement">Coming Soon</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Gateway Modal -->
+        <div class="modal" id="socialGatewayModal">
+            <div class="modal-content gateway-modal">
+                <span class="close-btn" id="closeSocialGatewayModal">×</span>
+                <h2>👥 Social Hub</h2>
+                <div class="gateway-content">
+                    <div class="gateway-card" id="shareCard" role="button" tabindex="0">
+                        <span class="gateway-icon">📤</span>
+                        <h3>Share</h3>
+                        <p>Share your pet on social media</p>
+                    </div>
+                    <div class="gateway-card" id="leaderboardCard" role="button" tabindex="0">
+                        <span class="gateway-icon">🏆</span>
+                        <h3>Leaderboard</h3>
+                        <p>View global rankings</p>
+                    </div>
+                    <div class="gateway-card" id="friendsCard" role="button" tabindex="0">
+                        <span class="gateway-icon">👥</span>
+                        <h3>Friends</h3>
+                        <p>Manage your friends list</p>
+                        <div class="gateway-requirement">Visit friends coming soon</div>
+                    </div>
+                    <div class="gateway-card" id="tournamentCard" role="button" tabindex="0">
+                        <span class="gateway-icon">🏅</span>
+                        <h3>Tournament</h3>
+                        <p>Compete in tournaments</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -403,6 +417,10 @@
                     
                     <!-- Quick Actions Section -->
                     <div class="settings-quick-actions">
+                        <button class="quick-action-btn" id="settingsHibernateBtn">
+                            <span class="btn-icon">❄️</span>
+                            <span>Cryo Sleep</span>
+                        </button>
                         <button class="quick-action-btn" id="settingsBackupBtn">
                             <span class="btn-icon">💾</span>
                             <span>Backup Data</span>
