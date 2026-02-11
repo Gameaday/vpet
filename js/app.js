@@ -598,7 +598,9 @@ function updateUI() {
         document.getElementById('playBtn').disabled = actionsDisabled;
         document.getElementById('trainBtn').disabled = actionsDisabled;
         document.getElementById('cleanBtn').disabled = actionsDisabled;
-        document.getElementById('battleBtn').disabled = actionsDisabled;
+        // Battle button was renamed to battleGatewayBtn
+        const battleBtn = document.getElementById('battleGatewayBtn');
+        if (battleBtn) battleBtn.disabled = actionsDisabled;
         document.getElementById('sleepBtn').disabled = isHibernating;
     }
     
