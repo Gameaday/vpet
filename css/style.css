@@ -2913,7 +2913,16 @@ body.theme-retro select {
 }
 
 .stats-panel.circular-mode .stat-label span:last-child {
-    display: none; /* Hide numeric value, shown in gauge instead */
+    /* Keep for accessibility but hide visually - value shown in gauge */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }
 
 .stats-panel.circular-mode .progress-bar {
