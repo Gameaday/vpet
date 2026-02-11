@@ -128,7 +128,7 @@ body {
     .online-battle-btn {
         padding: 10px 6px;
         font-size: 0.8rem;
-        min-height: 44px; /* Reduced height */
+        min-height: 48px; /* Material Design minimum touch target */
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -206,8 +206,8 @@ body {
     .settings-btn,
     .help-btn,
     .reset-btn {
-        width: 44px; /* Material Design minimum touch target */
-        height: 44px;
+        width: 48px; /* Material Design minimum touch target */
+        height: 48px;
         font-size: 1.2rem;
         transition: transform 0.2s, background-color 0.2s;
     }
@@ -284,7 +284,7 @@ body {
     
     /* Make progress bars more visible when gauges hidden */
     .progress-bar {
-        height: 6px; /* Slightly smaller */
+        height: 8px; /* Material Design recommended minimum for visibility */
     }
     
     /* Stat info - more compact */
