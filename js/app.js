@@ -531,12 +531,22 @@ function updateUI() {
             petAnimation.classList.add('warm');
         }
         
+        // Add incubating class for flame effects
+        if (pet.isIncubating) {
+            petAnimation.classList.add('incubating');
+        } else {
+            petAnimation.classList.remove('incubating');
+        }
+        
         // Update warmth status display
         const warmthStatus = document.getElementById('warmthStatus');
         if (warmthStatus) {
             warmthStatus.className = 'warmth-status';
-            if (pet.warmth >= 90) {
-                warmthStatus.textContent = '🔥 Very Hot - Perfect for hatching!';
+            if (pet.warmth >= 100) {
+                warmthStatus.textContent = '🎉 Ready to Hatch! - Press Hatch button';
+                warmthStatus.classList.add('very-hot');
+            } else if (pet.warmth >= 90) {
+                warmthStatus.textContent = '🔥 Very Hot - Almost ready!';
                 warmthStatus.classList.add('very-hot');
             } else if (pet.warmth >= 70) {
                 warmthStatus.textContent = '🌡️ Hot - Good warmth level';
@@ -548,8 +558,22 @@ function updateUI() {
                 warmthStatus.textContent = '🌤️ Cool - Needs more warmth';
                 warmthStatus.classList.add('cool');
             } else {
-                warmthStatus.textContent = '❄️ Cold - Warm up quickly!';
+                warmthStatus.textContent = '❄️ Cold - Start incubating!';
                 warmthStatus.classList.add('cold');
+            }
+        }
+        
+        // Update incubate button text and state
+        const warmBtn = document.getElementById('warmBtn');
+        if (warmBtn) {
+            const btnText = warmBtn.querySelector('span:last-child');
+            if (btnText) {
+                btnText.textContent = pet.isIncubating ? 'Stop' : 'Incubate';
+            }
+            if (pet.isIncubating) {
+                warmBtn.classList.add('incubating');
+            } else {
+                warmBtn.classList.remove('incubating');
             }
         }
         
@@ -933,16 +957,16 @@ function handleWarm() {
         
         // Add warming animation to egg
         const petAnimation = document.querySelector('.pet-animation');
-        if (petAnimation) {
+        if (petAnimation && pet.isIncubating) {
             petAnimation.classList.add('warming-up');
             setTimeout(() => {
                 petAnimation.classList.remove('warming-up');
             }, 800);
         }
         
-        // Show particle effects
+        // Show particle effects based on incubation state
         const petSprite = document.getElementById('petSprite');
-        if (petSprite && particleEffects) {
+        if (petSprite && particleEffects && pet.isIncubating) {
             const rect = petSprite.getBoundingClientRect();
             const x = rect.left + rect.width / 2;
             const y = rect.top + rect.height / 2;

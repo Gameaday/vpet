@@ -39,6 +39,7 @@ class Pet {
         this.warmth = 0; // Warmth stat for eggs (0-100) - starts cold
         this.incubationTime = 0; // Time in milliseconds with proper warmth
         this.hasHatched = false; // Track if egg has hatched
+        this.isIncubating = false; // Track if egg is currently being incubated
         
         // Visual appearance traits - initialized on first hatch
         this.appearance = {
@@ -102,6 +103,7 @@ class Pet {
                 warmth: this.warmth || 50,
                 incubationTime: this.incubationTime || 0,
                 hasHatched: this.hasHatched || false,
+                isIncubating: this.isIncubating || false,
                 appearance: this.appearance || {eyeShape: 'round', eyeColor: 'black', mouthShape: 'happy', bodyColor: 'default', bodySize: 'normal'}
             };
             
@@ -172,6 +174,7 @@ class Pet {
                     this.warmth = Number(petData.warmth) || 50;
                     this.incubationTime = Number(petData.incubationTime) || 0;
                     this.hasHatched = Boolean(petData.hasHatched);
+                    this.isIncubating = Boolean(petData.isIncubating);
                     
                     // Load appearance traits or set defaults
                     if (petData.appearance && typeof petData.appearance === 'object') {
@@ -216,10 +219,17 @@ class Pet {
         
         // Eggs only decay warmth, not other stats
         if (this.stage === 'egg' && !this.hasHatched) {
-            // Warmth decays faster for eggs (1.5 per minute, so ~5 min to deplete from full)
-            // This means eggs need to be warmed regularly during the 5-minute incubation period
-            const warmthDecay = 1.5;
-            this.warmth = Math.max(0, this.warmth - (minutesPassed * warmthDecay));
+            if (this.isIncubating) {
+                // Gradually increase warmth when incubating
+                // 0.33 per second = 20 per minute (reaches 100 from 0 in 5 minutes)
+                const warmthIncreaseRate = (typeof GLOBAL_CONSTANTS !== 'undefined' && GLOBAL_CONSTANTS?.INCUBATION?.WARMTH_INCREASE_RATE) || 0.33;
+                const warmthIncrease = (timePassed / 1000) * warmthIncreaseRate;
+                this.warmth = Math.min(100, this.warmth + warmthIncrease);
+            } else {
+                // Warmth decays when not incubating (1.5 per minute)
+                const warmthDecay = 1.5;
+                this.warmth = Math.max(0, this.warmth - (minutesPassed * warmthDecay));
+            }
             
             // Track incubation time if warmth is adequate (>= 60)
             if (this.warmth >= 60) {
@@ -407,23 +417,20 @@ class Pet {
         return days === 1 ? '1 day' : `${days} days`;
     }
 
-    // Warm the egg (only for egg stage)
+    // Warm the egg (only for egg stage) - toggles incubation
     warm() {
         if (this.stage !== 'egg' || this.hasHatched) {
             showNotification('This action is only for eggs!', 'warning');
             return false;
         }
         
-        // Increase warmth by 15 points
-        this.warmth = Math.min(100, this.warmth + 15);
+        // Toggle incubation state
+        this.isIncubating = !this.isIncubating;
         
-        // Check if egg can hatch (requires 5 minutes of adequate warmth)
-        const requiredIncubationTime = 5 * 60 * 1000; // 5 minutes in milliseconds
-        
-        if (this.incubationTime >= requiredIncubationTime && this.warmth >= 60) {
-            showNotification('🔥 Your egg is warm and ready to hatch!', 'success');
+        if (this.isIncubating) {
+            showNotification('🔥 Started incubating! Warmth will increase gradually.', 'success');
         } else {
-            showNotification('🔥 You warmed the egg!', 'success');
+            showNotification('❄️ Stopped incubating. Warmth will start to decay.', 'info');
         }
         
         this.save();
@@ -432,11 +439,10 @@ class Pet {
 
     // Check if egg is ready to hatch
     canHatch() {
-        const requiredIncubationTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+        // Egg can hatch when warmth reaches 100%
         return this.stage === 'egg' && 
                !this.hasHatched && 
-               this.warmth >= 60 && 
-               this.incubationTime >= requiredIncubationTime;
+               this.warmth >= 100;
     }
 
     // Hatch the egg
@@ -444,14 +450,15 @@ class Pet {
         if (!this.canHatch()) {
             if (this.stage !== 'egg') {
                 showNotification('Your pet has already hatched!', 'info');
-            } else if (this.warmth < 60) {
-                showNotification('🌡️ Keep the egg warm (≥60) to hatch!', 'warning');
-            } else {
-                const timeRemaining = Math.ceil((5 * 60 * 1000 - this.incubationTime) / 1000 / 60);
-                showNotification(`⏱️ Keep warmth high for ${timeRemaining} more minutes!`, 'info');
+            } else if (this.warmth < 100) {
+                const percentRemaining = Math.ceil(100 - this.warmth);
+                showNotification(`🌡️ Keep incubating! Warmth needs to reach 100% (${percentRemaining}% remaining)`, 'warning');
             }
             return false;
         }
+        
+        // Stop incubating when hatching
+        this.isIncubating = false;
         
         // Hatch the egg!
         this.hasHatched = true;

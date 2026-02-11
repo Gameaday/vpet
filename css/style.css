@@ -386,6 +386,37 @@ main {
     }
 }
 
+/* Flame effects for incubating eggs */
+.pet-animation.egg.incubating::before {
+    content: '🔥';
+    position: absolute;
+    font-size: 40px;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: flame-flicker 0.8s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.8));
+}
+
+@keyframes flame-flicker {
+    0%, 100% {
+        transform: translateX(-50%) scale(1) translateY(0);
+        opacity: 1;
+    }
+    25% {
+        transform: translateX(-50%) scale(1.1) translateY(-2px);
+        opacity: 0.9;
+    }
+    50% {
+        transform: translateX(-50%) scale(0.95) translateY(-1px);
+        opacity: 0.95;
+    }
+    75% {
+        transform: translateX(-50%) scale(1.05) translateY(-3px);
+        opacity: 0.85;
+    }
+}
+
 .pet-animation.baby {
     background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
     box-shadow: 0 5px 20px rgba(251, 191, 36, 0.5);
@@ -1131,6 +1162,24 @@ main {
 .warm-btn:active::before {
     width: 300px;
     height: 300px;
+}
+
+/* Incubating state - active incubation */
+.warm-btn.incubating {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.6);
+    animation: flame-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes flame-pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(249, 115, 22, 0.6);
+        filter: brightness(1);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(249, 115, 22, 0.9);
+        filter: brightness(1.1);
+    }
 }
 
 .hatch-btn {

@@ -27,7 +27,9 @@ const GLOBAL_CONSTANTS = {
         TIME_REQUIRED: 5 * 60 * 1000,        // 5 minutes
         MIN_WARMTH: 60,                       // Minimum warmth needed to incubate
         WARMTH_DECAY_RATE: 0.5,               // Per minute
-        WARMTH_INCREASE_PER_ACTION: 10        // Per warm action
+        WARMTH_INCREASE_PER_ACTION: 10,       // Per warm action (legacy)
+        WARMTH_INCREASE_RATE: 0.33,           // Per second when incubating (20 per minute)
+        WARMTH_TARGET: 100                    // Target warmth to enable hatching
     },
 
     // ===== STAT DECAY RATES (per minute) =====

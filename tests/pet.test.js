@@ -434,24 +434,44 @@ describe('Pet Class', () => {
       expect(pet.warmth).toBe(0); // Eggs start cold
       expect(pet.incubationTime).toBe(0);
       expect(pet.hasHatched).toBe(false);
+      expect(pet.isIncubating).toBe(false);
     });
 
-    it('should increase warmth when warmed', () => {
-      pet.warmth = 50;
-      pet.warm();
+    it('should toggle incubation state when warm() is called', () => {
+      expect(pet.isIncubating).toBe(false);
       
-      expect(pet.warmth).toBe(65); // 50 + 15
+      pet.warm();
+      expect(pet.isIncubating).toBe(true);
+      
+      pet.warm();
+      expect(pet.isIncubating).toBe(false);
+    });
+
+    it('should gradually increase warmth when incubating', () => {
+      pet.warmth = 50;
+      pet.isIncubating = true;
+      pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
+      
+      pet.updateStatsFromTimePassed();
+      
+      // Should increase by ~20 per minute (0.33 per second * 60)
+      expect(pet.warmth).toBeGreaterThan(50);
+      expect(pet.warmth).toBeLessThanOrEqual(100);
     });
 
     it('should not exceed 100 warmth', () => {
       pet.warmth = 95;
-      pet.warm();
+      pet.isIncubating = true;
+      pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
+      
+      pet.updateStatsFromTimePassed();
       
       expect(pet.warmth).toBe(100);
     });
 
-    it('should decay warmth for eggs over time', () => {
+    it('should decay warmth when not incubating', () => {
       pet.warmth = 100;
+      pet.isIncubating = false;
       pet.lastUpdateTime = Date.now() - (60 * 1000); // 1 minute ago
       
       pet.updateStatsFromTimePassed();
@@ -479,41 +499,38 @@ describe('Pet Class', () => {
       expect(pet.incubationTime).toBe(0);
     });
 
-    it('should allow hatching after 5 minutes of adequate warmth', () => {
-      pet.warmth = 80;
-      pet.incubationTime = 5 * 60 * 1000; // 5 minutes
+    it('should allow hatching when warmth reaches 100', () => {
+      pet.warmth = 100;
       
       expect(pet.canHatch()).toBe(true);
     });
 
-    it('should not allow hatching before 5 minutes', () => {
+    it('should not allow hatching before warmth reaches 100', () => {
       pet.warmth = 80;
-      pet.incubationTime = 2 * 60 * 1000; // 2 minutes
       
       expect(pet.canHatch()).toBe(false);
     });
 
-    it('should not allow hatching if warmth too low', () => {
-      pet.warmth = 50;
-      pet.incubationTime = 5 * 60 * 1000;
+    it('should not allow hatching if warmth is below 100', () => {
+      pet.warmth = 99;
       
       expect(pet.canHatch()).toBe(false);
     });
 
-    it('should hatch egg and change to baby', () => {
-      pet.warmth = 80;
-      pet.incubationTime = 5 * 60 * 1000;
+    it('should hatch egg and change to baby when warmth is 100', () => {
+      pet.warmth = 100;
       
       const result = pet.hatch();
       
       expect(result).toBe(true);
       expect(pet.stage).toBe('baby');
       expect(pet.hasHatched).toBe(true);
+      expect(pet.isIncubating).toBe(false);
       expect(pet.health).toBe(100);
       expect(pet.hunger).toBe(100);
     });
 
-    it('should not hatch if not ready', () => {
+    it('should not hatch if warmth is not 100', () => {
       pet.warmth = 50;
       pet.incubationTime = 0;
       
