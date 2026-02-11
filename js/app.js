@@ -130,15 +130,15 @@ function setupEventListeners() {
     document.getElementById('backupBtn').addEventListener('click', openBackupModal);
     
     // Settings buttons
-    document.getElementById('settingsBtn').addEventListener('click', openSettings);
+    document.getElementById('settingsBtn')?.addEventListener('click', openSettings);
     document.getElementById('helpBtn')?.addEventListener('click', openHelp);
     document.getElementById('resetBtn')?.addEventListener('click', handleReset);
-    document.getElementById('premiumCtaBtn').addEventListener('click', () => {
+    document.getElementById('premiumCtaBtn')?.addEventListener('click', () => {
         premiumManager.openPremiumModal();
     });
     
     // More menu button (mobile)
-    document.getElementById('moreBtn').addEventListener('click', openMoreMenu);
+    document.getElementById('moreBtn')?.addEventListener('click', openMoreMenu);
     
     // More menu options
     document.getElementById('moreTrainBtn').addEventListener('click', () => {

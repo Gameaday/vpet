@@ -276,7 +276,7 @@ body {
     
     /* Reorganize action panel for mobile - only core care actions */
     .action-panel.non-egg {
-        grid-template-columns: repeat(4, 1fr); /* 4 columns: Feed, Play, Sleep, Clean */
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Flexible grid for varying buttons */
     }
     
     /* Hide Train button on mobile - accessible via More menu */
