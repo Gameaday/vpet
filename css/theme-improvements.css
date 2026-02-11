@@ -1,0 +1,235 @@
+/* ================================================
+   THEME IMPROVEMENTS & MATERIAL DESIGN 3 SHADOWS
+   ================================================ */
+
+/* Material Design 3 Elevation System
+   Light source is from ABOVE (top), shadows cast downward
+   Elevation levels: 0 (flat), 1 (raised), 2 (elevated), 3 (floating)
+*/
+
+:root {
+    /* Primary Colors - Improved Contrast */
+    --primary-600: #667eea;
+    --primary-700: #5568d3;
+    --primary-800: #4c52cc;
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    
+    /* Surface Colors */
+    --surface-0: #1a1a1a;  /* Base surface */
+    --surface-1: #2a2a2a;  /* Raised surface */
+    --surface-2: #333333;  /* Elevated surface */
+    --surface-3: #3d3d3d;  /* Floating surface */
+    
+    /* Text Colors - Better Contrast */
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --text-tertiary: #b0b0b0;
+    --text-disabled: #666666;
+    
+    /* Semantic Colors - More Vibrant */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+    
+    /* Material Design 3 Shadows */
+    --elevation-0: none;
+    --elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.3),
+                   0 1px 3px 1px rgba(0, 0, 0, 0.15);
+    --elevation-2: 0 1px 2px 0 rgba(0, 0, 0, 0.3),
+                   0 2px 6px 2px rgba(0, 0, 0, 0.15);
+    --elevation-3: 0 1px 3px 0 rgba(0, 0, 0, 0.3),
+                   0 4px 8px 3px rgba(0, 0, 0, 0.15);
+    --elevation-4: 0 2px 3px 0 rgba(0, 0, 0, 0.3),
+                   0 6px 10px 4px rgba(0, 0, 0, 0.15);
+    --elevation-5: 0 4px 4px 0 rgba(0, 0, 0, 0.3),
+                   0 8px 12px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Apply improved shadows to key components */
+
+/* Buttons - Elevation 1 (rest) to 2 (hover) */
+.action-btn,
+.battle-btn,
+.online-battle-btn,
+.social-btn,
+.game-btn,
+.qol-btn {
+    box-shadow: var(--elevation-1);
+}
+
+.action-btn:hover:not(:disabled),
+.battle-btn:hover:not(:disabled),
+.online-battle-btn:hover:not(:disabled),
+.social-btn:hover:not(:disabled),
+.game-btn:hover:not(:disabled),
+.qol-btn:hover:not(:disabled) {
+    box-shadow: var(--elevation-2);
+}
+
+.action-btn:active:not(:disabled),
+.battle-btn:active:not(:disabled),
+.online-battle-btn:active:not(:disabled),
+.social-btn:active:not(:disabled),
+.game-btn:active:not(:disabled),
+.qol-btn:active:not(:disabled) {
+    box-shadow: var(--elevation-0);
+}
+
+/* Panels - Elevation 2 */
+.stats-panel,
+.pet-display,
+.action-panel,
+.battle-panel,
+.social-panel,
+.game-panel,
+.qol-panel {
+    box-shadow: var(--elevation-1);
+}
+
+/* Modals - Elevation 5 */
+.modal-content {
+    box-shadow: var(--elevation-5);
+}
+
+/* Container - Elevation 3 on desktop */
+@media (min-width: 769px) {
+    .container {
+        box-shadow: var(--elevation-3);
+    }
+}
+
+/* FAB (Floating Action Button) Style for Primary Actions */
+.fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--primary-gradient);
+    color: var(--text-primary);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: var(--elevation-3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+}
+
+.fab:hover {
+    box-shadow: var(--elevation-4);
+    transform: scale(1.05);
+}
+
+.fab:active {
+    box-shadow: var(--elevation-2);
+    transform: scale(0.95);
+}
+
+/* Improved Color Contrast for Stats */
+.stat-bar {
+    background: var(--surface-1);
+    border: 1px solid var(--surface-2);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+}
+
+/* Better Progress Bar Colors */
+.progress-fill {
+    background: var(--primary-gradient);
+}
+
+.progress-fill.critical {
+    background: linear-gradient(90deg, var(--error) 0%, #dc2626 100%);
+}
+
+.progress-fill.warning {
+    background: linear-gradient(90deg, var(--warning) 0%, #d97706 100%);
+}
+
+.progress-fill.excellent {
+    background: linear-gradient(90deg, var(--success) 0%, #059669 100%);
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+    /* Remove shadows from container on mobile for cleaner look */
+    .container {
+        box-shadow: none;
+    }
+    
+    /* Panels have subtle elevation */
+    .action-panel,
+    .battle-panel,
+    .settings-panel {
+        box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.1),
+                    0 -1px 2px -1px rgba(0, 0, 0, 0.06);
+        border-top: 1px solid var(--surface-2);
+    }
+    
+    /* More button gets elevation 2 */
+    .more-btn {
+        box-shadow: var(--elevation-2);
+    }
+    
+    .more-btn:hover {
+        box-shadow: var(--elevation-3);
+    }
+    
+    .more-btn:active {
+        box-shadow: var(--elevation-1);
+    }
+    
+    /* Settings button - subtle circular elevation */
+    .settings-panel .settings-btn {
+        box-shadow: var(--elevation-1);
+    }
+    
+    .settings-panel .settings-btn:hover {
+        box-shadow: var(--elevation-2);
+    }
+}
+
+/* Improve button color scheme */
+.action-btn {
+    background: var(--surface-2);
+    border: 1px solid var(--surface-3);
+    color: var(--text-primary);
+}
+
+.action-btn:hover:not(:disabled) {
+    background: var(--surface-3);
+    border-color: var(--primary-600);
+}
+
+/* Special button colors */
+.feed-btn:hover:not(:disabled) {
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
+}
+
+.play-btn:hover:not(:disabled) {
+    border-color: #fbbf24;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+}
+
+.sleep-btn:hover:not(:disabled) {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+}
+
+.train-btn:hover:not(:disabled) {
+    border-color: #ec4899;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(219, 39, 119, 0.1) 100%);
+}
+
+.clean-btn:hover:not(:disabled) {
+    border-color: #06b6d4;
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(8, 145, 178, 0.1) 100%);
+}
