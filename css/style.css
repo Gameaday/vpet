@@ -142,6 +142,7 @@ main {
     50% { transform: translateY(-10px); }
 }
 
+/* Pet sprite container - maintains fixed dimensions for absolute child positioning */
 .pet-sprite {
     width: 150px;
     height: 150px;
@@ -165,6 +166,8 @@ main {
     transform: scale(0.95);
 }
 
+/* Pet animation element - centered within parent using absolute positioning */
+/* Parent (.pet-sprite) must maintain explicit dimensions for proper centering */
 .pet-animation {
     width: 100%;
     height: 100%;

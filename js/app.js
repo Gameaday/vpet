@@ -1676,6 +1676,7 @@ function openHibernationModal() {
             const wakeBtn = document.getElementById('wakeUpBtn');
             if (wakeBtn && !wakeBtn.disabled) {
                 wakeBtn.addEventListener('click', () => {
+                    // Pass false to indicate manual (not automatic) wake-up
                     const result = hibernationManager.wakeUp(false);
                     if (result) {
                         closeHibernationModal();
