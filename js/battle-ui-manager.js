@@ -34,6 +34,14 @@ class BattleUIManager {
         document.getElementById('battleYourHp').style.width = '100%';
         document.getElementById('battleOpponentHp').style.width = '100%';
         
+        // Set battle stats
+        if (this.currentBattle) {
+            document.getElementById('battleYourAttack').textContent = this.currentBattle.playerStats.attack;
+            document.getElementById('battleYourDefense').textContent = this.currentBattle.playerStats.defense;
+            document.getElementById('battleOpponentAttack').textContent = this.currentBattle.opponentStats.attack;
+            document.getElementById('battleOpponentDefense').textContent = this.currentBattle.opponentStats.defense;
+        }
+        
         // Clear log
         const logElement = document.getElementById('battleLog');
         if (logElement) logElement.innerHTML = '<p>Battle started!</p>';

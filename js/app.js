@@ -99,12 +99,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Set up all event listeners
 function setupEventListeners() {
-    // Action buttons
-    document.getElementById('feedBtn').addEventListener('click', handleFeed);
-    document.getElementById('playBtn').addEventListener('click', handlePlay);
-    document.getElementById('sleepBtn').addEventListener('click', handleSleep);
-    document.getElementById('trainBtn').addEventListener('click', handleTrain);
-    document.getElementById('cleanBtn').addEventListener('click', handleClean);
+    // Server status click handler for manual retry
+    document.getElementById('serverStatus').addEventListener('click', () => {
+        if (serverConnection && !serverConnection.connected) {
+            serverConnection.manualRetry();
+        }
+    });
+    
+    // Action buttons - now open gateway modals
+    document.getElementById('feedBtn').addEventListener('click', () => {
+        if (gatewayManager) {
+            gatewayManager.openModal('kitchen');
+        } else {
+            handleFeed();
+        }
+    });
+    
+    document.getElementById('playBtn').addEventListener('click', () => {
+        if (gatewayManager) {
+            gatewayManager.openModal('activities');
+        } else {
+            handlePlay();
+        }
+    });
+    
+    document.getElementById('sleepBtn').addEventListener('click', () => {
+        if (gatewayManager) {
+            gatewayManager.openModal('rest');
+        } else {
+            handleSleep();
+        }
+    });
+    
+    document.getElementById('trainBtn').addEventListener('click', () => {
+        if (gatewayManager) {
+            gatewayManager.openModal('training');
+        } else {
+            handleTrain();
+        }
+    });
+    
+    document.getElementById('cleanBtn').addEventListener('click', () => {
+        if (gatewayManager) {
+            gatewayManager.openModal('grooming');
+        } else {
+            handleClean();
+        }
+    });
     
     // Egg-specific buttons
     document.getElementById('warmBtn').addEventListener('click', handleWarm);
@@ -123,11 +164,21 @@ function setupEventListeners() {
     document.getElementById('backupBtn').addEventListener('click', openBackupModal);
     
     // Settings buttons
-    document.getElementById('settingsBtn').addEventListener('click', openSettings);
-    document.getElementById('helpBtn').addEventListener('click', openHelp);
-    document.getElementById('resetBtn').addEventListener('click', handleReset);
-    document.getElementById('premiumCtaBtn').addEventListener('click', () => {
+    document.getElementById('settingsBtn')?.addEventListener('click', openSettings);
+    document.getElementById('helpBtn')?.addEventListener('click', openHelp);
+    document.getElementById('resetBtn')?.addEventListener('click', handleReset);
+    document.getElementById('premiumCtaBtn')?.addEventListener('click', () => {
         premiumManager.openPremiumModal();
+    });
+    
+    // Settings modal quick action buttons
+    document.getElementById('settingsBackupBtn')?.addEventListener('click', () => {
+        closeSettingsModal();
+        openBackupModal();
+    });
+    document.getElementById('settingsHelpBtn')?.addEventListener('click', () => {
+        closeSettingsModal();
+        openHelp();
     });
     
     // Modal close buttons

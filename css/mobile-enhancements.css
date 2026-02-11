@@ -55,21 +55,23 @@ body {
         position: sticky;
         top: 0;
         z-index: 100;
-        padding: 12px 16px; /* Slightly larger padding */
+        padding: clamp(8px, 1.5vh, 12px) 4%;
     }
     
     header h1 {
-        font-size: 1.25rem; /* Larger for readability */
+        font-size: clamp(1rem, 3vw, 1.25rem);
     }
     
-    /* Scrollable main content only */
+    /* Scrollable main content only - optimized for no scroll on main view */
     main {
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-y: contain;
-        padding: 15px;
+        padding: clamp(8px, 2vh, 16px) 4%; /* Responsive padding using viewport units */
+        display: flex;
+        flex-direction: column;
     }
     
     /* Android Material Design bottom navigation style */
@@ -81,24 +83,25 @@ body {
         position: sticky;
         bottom: 0;
         background: #1a1a1a;
-        padding: 12px 8px;
-        margin: 0 -15px;
-        border-top: 2px solid rgba(102, 126, 234, 0.3);
+        padding: clamp(8px, 2vh, 12px) clamp(6px, 1.5vw, 10px);
+        margin: 0 calc(-1 * 4%);
+        border-top: 1px solid rgba(102, 126, 234, 0.2);
         z-index: 50;
+        flex-shrink: 0;
     }
     
     /* Compact button layout for mobile */
     .action-panel {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 10px; /* Increased from 8px for better spacing */
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        gap: clamp(4px, 1vw, 8px);
     }
     
     .action-btn {
         flex-direction: column;
-        padding: 12px 6px; /* Slightly more padding */
-        min-height: 64px; /* Increased from 60px for better touch */
-        font-size: 0.8rem; /* Slightly larger font */
+        padding: 6px 3px; /* Further reduced padding */
+        min-height: 52px; /* Reduced from 56px */
+        font-size: 0.7rem; /* Smaller font */
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -109,23 +112,23 @@ body {
     }
     
     .action-btn .btn-icon {
-        font-size: 1.6rem; /* Slightly larger icons */
-        margin-bottom: 4px;
+        font-size: 1.3rem; /* Smaller icons */
+        margin-bottom: 2px;
     }
     
     /* Compact battle section */
     .battle-panel {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px; /* Increased from 8px */
-        padding: 12px 10px; /* More padding */
+        gap: 6px;
+        padding: 8px 6px;
     }
     
     .battle-btn,
     .online-battle-btn {
-        padding: 14px 10px; /* More padding */
-        font-size: 0.9rem; /* Larger font */
-        min-height: 52px; /* Ensure touch target */
+        padding: 10px 6px;
+        font-size: 0.8rem;
+        min-height: 48px; /* Material Design minimum touch target */
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -139,17 +142,17 @@ body {
     .social-panel,
     .game-panel {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px; /* Increased from 8px */
-        padding: 12px 10px; /* More padding */
+        grid-template-columns: repeat(4, 1fr); /* 4 columns instead of 3 for compactness */
+        gap: 6px;
+        padding: 8px 6px;
     }
     
     .social-btn,
     .game-btn {
         flex-direction: column;
-        padding: 12px 6px; /* More padding */
-        min-height: 64px; /* Increased from 60px */
-        font-size: 0.8rem; /* Larger font */
+        padding: 8px 3px;
+        min-height: 52px;
+        font-size: 0.7rem;
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -161,23 +164,23 @@ body {
     
     .social-btn .btn-icon,
     .game-btn .btn-icon {
-        font-size: 1.6rem; /* Larger icons */
-        margin-bottom: 4px;
+        font-size: 1.3rem;
+        margin-bottom: 2px;
     }
     
     /* Compact QOL section */
     .qol-panel {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px; /* Increased from 8px */
-        padding: 12px 10px; /* More padding */
+        gap: 6px;
+        padding: 8px 6px;
     }
     
     .qol-btn {
         flex-direction: column;
-        padding: 12px 6px; /* More padding */
-        min-height: 64px; /* Increased from 60px */
-        font-size: 0.8rem; /* Larger font */
+        padding: 8px 3px;
+        min-height: 52px;
+        font-size: 0.7rem;
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -186,26 +189,69 @@ body {
         background-color: rgba(102, 126, 234, 0.3);
     }
     
-    /* Compact settings section */
+    /* Compact settings section - Material Design bottom app bar */
     .settings-panel {
         position: sticky;
         bottom: 0;
-        background: #1a1a1a;
-        padding: 12px 10px; /* More padding */
-        margin: 0 -15px;
-        border-top: 2px solid rgba(102, 126, 234, 0.3);
+        background: linear-gradient(180deg, transparent 0%, #1a1a1a 20%);
+        padding: 8px 4% 8px;
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+        margin: 0 calc(-1 * 4%);
+        border-top: 1px solid rgba(102, 126, 234, 0.2);
         display: flex;
-        justify-content: space-around;
+        align-items: center;
+        justify-content: space-between;
+        gap: clamp(8px, 2vw, 16px);
         z-index: 50;
+        flex-shrink: 0;
     }
     
-    .settings-btn,
+    .more-btn {
+        flex: 1;
+        min-height: 48px;
+        padding: 12px 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .more-btn:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .more-btn .btn-icon {
+        font-size: 1.25rem;
+    }
+    
+    /* Use higher specificity instead of !important */
+    .settings-panel .settings-btn,
+    .settings-panel .help-btn,
+    .settings-panel .reset-btn {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        min-height: 48px;
+        font-size: 1.25rem;
+        background: rgba(102, 126, 234, 0.1);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 50%;
+        padding: 0;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        flex: 0 0 auto;
+    }
+    
+    .settings-panel .settings-btn:hover {
+        background: rgba(102, 126, 234, 0.2);
+        transform: scale(1.05);
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Hide help and reset buttons on mobile - accessible via More menu */
     .help-btn,
     .reset-btn {
-        width: 52px; /* Increased from 44px */
-        height: 52px; /* Increased from 44px */
-        font-size: 1.4rem; /* Larger icons */
-        transition: transform 0.2s, background-color 0.2s;
+        display: none;
     }
     
     .settings-btn:active,
@@ -215,39 +261,101 @@ body {
         background-color: rgba(102, 126, 234, 0.3);
     }
     
-    /* Pet display optimization */
+    /* Pet display optimization - more compact */
     .pet-display {
-        margin-bottom: 16px; /* Slightly more spacing */
-        padding: 20px 16px;
+        margin-bottom: clamp(6px, 1vh, 10px);
+        padding: clamp(10px, 2vh, 16px) 4%;
+        flex-shrink: 0;
     }
     
     .pet-name {
-        font-size: 1.1rem; /* Larger name */
-        margin-bottom: 8px;
+        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        margin-bottom: clamp(3px, 0.5vh, 6px);
     }
     
     .pet-sprite {
-        width: 130px; /* Slightly larger */
-        height: 130px;
+        width: clamp(80px, 20vw, 110px);
+        height: clamp(80px, 20vw, 110px);
     }
     
-    /* Stats panel - more compact but readable */
+    .pet-stage {
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
+    }
+    
+    .evolution-preview {
+        margin-top: clamp(6px, 1vh, 10px);
+        font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+    }
+    
+    .mood-indicator {
+        font-size: clamp(1.3em, 3vw, 1.6em);
+        top: clamp(3px, 0.5vh, 6px);
+        right: clamp(3px, 0.5vh, 6px);
+    }
+    
+    /* Hide less critical panels on mobile to eliminate scrolling - prioritize core gameplay */
+    .social-panel,
+    .game-panel,
+    .battle-panel,
+    .qol-panel {
+        display: none; /* Hide on mobile - accessible via More menu modal */
+    }
+    
+    /* Reorganize action panel for mobile - only core care actions */
+    .action-panel.non-egg {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Flexible grid for varying buttons */
+    }
+    
+    /* Hide Train button on mobile - accessible via More menu */
+    .action-panel.non-egg #trainBtn {
+        display: none;
+    }
+    
+    /* Settings panel - keep minimal with More button */
+    .settings-panel {
+        grid-template-columns: repeat(2, 1fr); /* More button + Settings */
+    }
+    
+    /* Stats panel - much more compact for Galaxy S24 */
     .stats-panel {
-        gap: 10px; /* More spacing */
-        margin-bottom: 16px;
+        gap: clamp(4px, 1vh, 8px);
+        margin-bottom: clamp(6px, 1vh, 10px);
+        flex-shrink: 0;
     }
     
     .stat-bar {
-        padding: 10px; /* More padding */
+        padding: clamp(4px, 1vh, 8px) clamp(6px, 1.5vw, 10px);
     }
     
     .stat-label {
-        font-size: 0.9rem; /* Larger font */
-        font-weight: 500; /* Slightly bolder */
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
+        font-weight: 500;
     }
     
     .stat-label span:first-child {
-        margin-right: 8px; /* More spacing */
+        margin-right: clamp(4px, 1vw, 6px);
+    }
+    
+    /* Hide circular gauges on mobile for space efficiency */
+    .circular-gauge {
+        display: none;
+    }
+    
+    /* Make progress bars more visible when gauges hidden */
+    .progress-bar {
+        height: clamp(6px, 1.5vh, 10px);
+    }
+    
+    /* Stat info - more compact */
+    .stat-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: clamp(4px, 1vw, 8px);
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
+    }
+    
+    .stat-info > div {
+        padding: clamp(3px, 0.75vh, 6px);
     }
     
     /* Modal optimizations for mobile */
@@ -342,35 +450,43 @@ body {
 /* Extra small screens optimization (iPhone SE, older devices) */
 @media (max-width: 375px) {
     html {
-        font-size: 15px; /* Slightly smaller base for very small screens */
+        font-size: 14px; /* Smaller base for very small screens */
+    }
+    
+    header h1 {
+        font-size: 1rem;
     }
     
     .action-panel {
-        gap: 8px;
+        gap: 5px;
     }
     
     .action-btn,
     .social-btn,
     .game-btn,
     .qol-btn {
-        padding: 10px 4px;
-        min-height: 60px;
-        font-size: 0.75rem;
+        padding: 8px 3px;
+        min-height: 52px;
+        font-size: 0.7rem;
     }
     
     .action-btn .btn-icon,
     .social-btn .btn-icon,
     .game-btn .btn-icon {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
     
     .pet-sprite {
-        width: 110px;
-        height: 110px;
+        width: 90px;
+        height: 90px;
     }
     
-    header h1 {
-        font-size: 1.1rem;
+    .stat-bar {
+        padding: 5px 6px;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
     }
 }
 

@@ -45,6 +45,18 @@ header h1 {
     gap: 5px;
     color: #aaa;
     font-size: 0.8em;
+    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+.server-status:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.server-status.reconnecting {
+    color: #fbbf24;
 }
 
 .status-dot {
@@ -52,6 +64,7 @@ header h1 {
     height: 8px;
     border-radius: 50%;
     background: #555;
+    transition: all 0.3s ease;
 }
 
 .status-dot.online {
@@ -61,6 +74,39 @@ header h1 {
 
 .status-dot.offline {
     background: #ef4444;
+}
+
+.status-dot.reconnecting {
+    background: #fbbf24;
+    animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+}
+
+.status-retry {
+    font-size: 0.9em;
+    animation: rotate-retry 2s linear infinite;
+}
+
+@keyframes rotate-retry {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Mobile improvements for server status */
+@media (max-width: 480px) {
+    .status-text {
+        display: none; /* Hide text on very small screens */
+    }
 }
 
 /* Main Content */
@@ -905,6 +951,26 @@ main {
     height: 100%;
     background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
     transition: width 0.5s ease;
+}
+
+.battle-stats {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
+    font-size: 0.85em;
+}
+
+.battle-stat {
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.battle-stat span {
+    color: #fff;
+    font-weight: bold;
 }
 
 /* Battle animations */
@@ -2914,5 +2980,113 @@ body.theme-retro select {
     .circular-gauge-value {
         font-size: 0.8rem;
     }
+}
+
+/* More Button and Modal Styles - Material Design 3 */
+.more-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    color: #fff;
+    font-size: 0.875rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.more-btn .btn-icon {
+    font-size: 1.25rem;
+}
+
+.more-btn span:not(.btn-icon) {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.more-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.more-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.more-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr));
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.more-option-btn {
+    background: #2a2a2a;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 12px;
+    padding: 20px 16px;
+    color: #fff;
+    font-size: 0.875rem;
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    min-height: 100px;
+    position: relative;
+    overflow: hidden;
+}
+
+.more-option-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.more-option-btn:hover::before {
+    opacity: 1;
+}
+
+.more-option-btn .btn-icon {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.more-option-btn:hover {
+    background: #333;
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.more-option-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.more-option-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #222;
+}
+
+.more-option-btn:disabled::before {
+    display: none;
 }
 
