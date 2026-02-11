@@ -82,8 +82,6 @@
 .stats-panel,
 .pet-display,
 .action-panel,
-.battle-panel,
-.social-panel,
 .game-panel,
 .qol-panel {
     box-shadow: var(--elevation-1);
@@ -169,7 +167,6 @@
     /* Bottom-sticky panels cast shadows upward to separate from content below them
        This is intentional for sticky footers - they float above the scrolling content */
     .action-panel,
-    .battle-panel,
     .settings-panel {
         box-shadow: 0 -2px 4px -1px rgba(0, 0, 0, 0.1),
                     0 -1px 2px 0 rgba(0, 0, 0, 0.06);

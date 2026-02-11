@@ -999,6 +999,7 @@ main {
 }
 
 /* Action Panel */
+/* Action Panel - for both primary and secondary actions */
 .action-panel {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1006,6 +1007,12 @@ main {
     margin: 0 auto 15px;
     max-width: 400px;
     justify-content: center;
+}
+
+/* Secondary actions (Battle/Social) - smaller gap above */
+.action-panel.secondary-actions {
+    margin-top: 5px;
+    margin-bottom: 15px;
 }
 
 .action-btn {
@@ -1074,6 +1081,14 @@ main {
     border-color: #06b6d4;
 }
 
+.battle-btn {
+    border-color: #dc2626;
+}
+
+.social-btn {
+    border-color: #8b5cf6;
+}
+
 .warm-btn {
     border-color: #f97316;
     position: relative;
@@ -1136,25 +1151,11 @@ main {
     }
 }
 
-/* Battle and Social Container */
-.battle-social-container {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-/* Battle Panel */
-.battle-panel {
-    flex: 1;
-    display: flex;
-    gap: 8px;
-}
-
-.battle-btn,
+/* Online battle button (kept for backward compatibility if used elsewhere) */
 .online-battle-btn {
     flex: 1;
-    background: #dc2626;
-    border: 2px solid #991b1b;
+    background: #7c3aed;
+    border: 2px solid #5b21b6;
     border-radius: 10px;
     padding: 12px;
     color: #fff;
@@ -1168,24 +1169,18 @@ main {
     transition: all 0.2s;
 }
 
-.online-battle-btn {
-    background: #7c3aed;
-    border-color: #5b21b6;
-}
-
-.battle-btn:hover,
 .online-battle-btn:hover {
     transform: translateY(-2px);
     filter: brightness(1.2);
 }
 
-.battle-btn:active,
 .online-battle-btn:active {
     transform: translateY(0) scale(0.98);
     filter: brightness(1);
 }
+}
 
-.battle-btn:disabled,
+/* Online battle button disabled state (kept for backward compatibility) */
 .online-battle-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
@@ -1736,7 +1731,6 @@ main {
         min-height: 60px;
     }
     
-    .battle-btn,
     .online-battle-btn {
         padding: 14px;
         min-height: 50px;
@@ -2311,45 +2305,6 @@ body.theme-retro select {
 .global-toast.error {
     border-color: #ef4444;
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(26, 26, 26, 0.95) 100%);
-}
-
-/* Social Panel Styles */
-.social-panel {
-    flex: 1;
-    display: flex;
-    gap: 8px;
-}
-
-.social-btn {
-    flex: 1;
-    padding: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    font-size: 0.9em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.social-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5);
-}
-
-.social-btn:active:not(:disabled) {
-    transform: translateY(0);
-}
-
-.social-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 /* Leaderboard Modal */
@@ -3235,10 +3190,6 @@ body.theme-retro select {
     .inventory-items {
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     }
-    
-    .social-panel {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
 
 /* Empty state messages */
@@ -3560,8 +3511,6 @@ body.theme-retro select {
         max-width: 100%;
     }
     
-    .battle-panel,
-    .social-panel,
     .game-panel,
     .qol-panel {
         grid-column: 1 / 3;
@@ -3571,8 +3520,6 @@ body.theme-retro select {
         flex-wrap: wrap;
     }
     
-    .battle-panel button,
-    .social-panel button,
     .game-panel button,
     .qol-panel button {
         flex: 0 1 auto;
