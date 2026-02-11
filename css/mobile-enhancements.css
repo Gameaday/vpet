@@ -434,6 +434,14 @@ body {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
         gap: 10px;
     }
+    
+    /* Show secondary actions on tablets with better spacing */
+    .action-panel.secondary-actions {
+        display: grid;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 2px solid rgba(102, 126, 234, 0.3);
+    }
 }
 
 /* Extra small screens optimization (iPhone SE, older devices) */
@@ -715,6 +723,16 @@ body {
     .settings-panel {
         padding-bottom: 12px;
         padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+}
+
+/* Desktop and larger tablets - show secondary actions with clear separation */
+@media (min-width: 1025px) {
+    .action-panel.secondary-actions {
+        display: grid;
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 2px solid rgba(102, 126, 234, 0.3);
     }
 }
 

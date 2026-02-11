@@ -1009,8 +1009,10 @@ main {
 
 /* Secondary actions (Battle/Social) - clear separation from primary actions */
 .action-panel.secondary-actions {
-    margin-top: 10px;
+    margin-top: 24px;
     margin-bottom: 20px;
+    padding-top: 16px;
+    border-top: 2px solid rgba(102, 126, 234, 0.3);
 }
 
 .action-btn {
