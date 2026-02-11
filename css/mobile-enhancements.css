@@ -197,10 +197,19 @@ body {
         padding: 8px 6px;
         margin: 0 -8px;
         border-top: 2px solid rgba(102, 126, 234, 0.3);
-        display: flex;
-        justify-content: space-around;
+        display: grid;
+        grid-template-columns: 1fr 48px;
+        gap: 8px;
         z-index: 50;
         flex-shrink: 0;
+    }
+    
+    .more-btn {
+        min-height: 48px;
+    }
+    
+    .more-btn .btn-icon {
+        font-size: 1.6rem;
     }
     
     .settings-btn,
@@ -210,6 +219,12 @@ body {
         height: 48px;
         font-size: 1.2rem;
         transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    /* Hide help and reset buttons on mobile - accessible via More menu */
+    .help-btn,
+    .reset-btn {
+        display: none;
     }
     
     .settings-btn:active,
@@ -253,8 +268,25 @@ body {
     
     /* Hide less critical panels on mobile to eliminate scrolling - prioritize core gameplay */
     .social-panel,
-    .game-panel {
-        display: none; /* Hide on mobile - accessible via modals from settings */
+    .game-panel,
+    .battle-panel,
+    .qol-panel {
+        display: none; /* Hide on mobile - accessible via More menu modal */
+    }
+    
+    /* Reorganize action panel for mobile - only core care actions */
+    .action-panel.non-egg {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns: Feed, Play, Sleep, Clean */
+    }
+    
+    /* Hide Train button on mobile - accessible via More menu */
+    .action-panel.non-egg #trainBtn {
+        display: none;
+    }
+    
+    /* Settings panel - keep minimal with More button */
+    .settings-panel {
+        grid-template-columns: repeat(2, 1fr); /* More button + Settings */
     }
     
     /* Stats panel - much more compact for Galaxy S24 */

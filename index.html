@@ -293,11 +293,47 @@
 
             <!-- Settings Section -->
             <div class="settings-panel">
+                <button class="more-btn" id="moreBtn" title="More options">
+                    <span class="btn-icon">⋯</span>
+                    <span>More</span>
+                </button>
                 <button class="settings-btn" id="settingsBtn">⚙️</button>
-                <button class="help-btn" id="helpBtn">❓</button>
-                <button class="reset-btn" id="resetBtn">🔄</button>
             </div>
         </main>
+
+        <!-- Modal for More Options (Mobile) -->
+        <div class="modal" id="moreModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeMoreModal">&times;</span>
+                <h2>More Options</h2>
+                <div class="more-options-grid">
+                    <button class="more-option-btn" id="moreTrainBtn">
+                        <span class="btn-icon">💪</span>
+                        <span>Train</span>
+                    </button>
+                    <button class="more-option-btn" id="moreBattleBtn">
+                        <span class="btn-icon">⚔️</span>
+                        <span>Battle</span>
+                    </button>
+                    <button class="more-option-btn" id="moreOnlineBattleBtn">
+                        <span class="btn-icon">🌐</span>
+                        <span>Online Battle</span>
+                    </button>
+                    <button class="more-option-btn" id="moreHibernateBtn">
+                        <span class="btn-icon">❄️</span>
+                        <span>Cryo Sleep</span>
+                    </button>
+                    <button class="more-option-btn" id="moreBackupBtn">
+                        <span class="btn-icon">💾</span>
+                        <span>Backup</span>
+                    </button>
+                    <button class="more-option-btn" id="moreHelpBtn">
+                        <span class="btn-icon">❓</span>
+                        <span>Help</span>
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <!-- Modal for Battle -->
         <div class="modal" id="battleModal">

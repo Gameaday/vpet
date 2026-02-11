@@ -131,14 +131,44 @@ function setupEventListeners() {
     
     // Settings buttons
     document.getElementById('settingsBtn').addEventListener('click', openSettings);
-    document.getElementById('helpBtn').addEventListener('click', openHelp);
-    document.getElementById('resetBtn').addEventListener('click', handleReset);
+    document.getElementById('helpBtn')?.addEventListener('click', openHelp);
+    document.getElementById('resetBtn')?.addEventListener('click', handleReset);
     document.getElementById('premiumCtaBtn').addEventListener('click', () => {
         premiumManager.openPremiumModal();
     });
     
+    // More menu button (mobile)
+    document.getElementById('moreBtn').addEventListener('click', openMoreMenu);
+    
+    // More menu options
+    document.getElementById('moreTrainBtn').addEventListener('click', () => {
+        closeMoreMenu();
+        handleTrain();
+    });
+    document.getElementById('moreBattleBtn').addEventListener('click', () => {
+        closeMoreMenu();
+        handleLocalBattle();
+    });
+    document.getElementById('moreOnlineBattleBtn').addEventListener('click', () => {
+        closeMoreMenu();
+        handleOnlineBattle();
+    });
+    document.getElementById('moreHibernateBtn').addEventListener('click', () => {
+        closeMoreMenu();
+        openHibernationModal();
+    });
+    document.getElementById('moreBackupBtn').addEventListener('click', () => {
+        closeMoreMenu();
+        openBackupModal();
+    });
+    document.getElementById('moreHelpBtn').addEventListener('click', () => {
+        closeMoreMenu();
+        openHelp();
+    });
+    
     // Modal close buttons
     document.getElementById('closeBattleModal').addEventListener('click', closeBattleModal);
+    document.getElementById('closeMoreModal').addEventListener('click', closeMoreMenu);
     document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
     document.getElementById('closeHelpModal').addEventListener('click', closeHelp);
     document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
@@ -172,6 +202,12 @@ function setupEventListeners() {
     document.getElementById('battleModal').addEventListener('click', (e) => {
         if (e.target.id === 'battleModal') {
             closeBattleModal();
+        }
+    });
+    
+    document.getElementById('moreModal').addEventListener('click', (e) => {
+        if (e.target.id === 'moreModal') {
+            closeMoreMenu();
         }
     });
     
@@ -957,6 +993,24 @@ function openHelp() {
 // Close help modal
 function closeHelp() {
     const modal = document.getElementById('helpModal');
+    modal.classList.remove('active');
+}
+
+// Open More menu modal (mobile)
+function openMoreMenu() {
+    const modal = document.getElementById('moreModal');
+    modal.classList.add('active');
+    
+    // Update online battle button state
+    const moreOnlineBattleBtn = document.getElementById('moreOnlineBattleBtn');
+    if (moreOnlineBattleBtn && serverConnection) {
+        moreOnlineBattleBtn.disabled = !serverConnection.connected;
+    }
+}
+
+// Close More menu modal
+function closeMoreMenu() {
+    const modal = document.getElementById('moreModal');
     modal.classList.remove('active');
 }
 
