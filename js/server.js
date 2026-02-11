@@ -182,6 +182,12 @@ class ServerConnection {
         const serverStatus = document.getElementById('serverStatus');
         const onlineBattleBtn = document.getElementById('onlineBattleBtn');
         
+        // Guard against missing DOM elements (e.g., in tests)
+        if (!statusDot || !statusText || !serverStatus || 
+            !statusDot.classList || !serverStatus.classList) {
+            return;
+        }
+        
         if (connected) {
             statusDot.classList.remove('offline', 'reconnecting');
             statusDot.classList.add('online');

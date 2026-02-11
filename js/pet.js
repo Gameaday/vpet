@@ -27,7 +27,7 @@ class Pet {
         this.cleanliness = 100; // New stat for hygiene
         
         // Egg incubation system
-        this.warmth = 50; // Warmth stat for eggs (0-100)
+        this.warmth = 0; // Warmth stat for eggs (0-100) - starts cold
         this.incubationTime = 0; // Time in milliseconds with proper warmth
         this.hasHatched = false; // Track if egg has hatched
         
