@@ -55,19 +55,20 @@ jobs:
 
       - name: 📦 Create deployment package
         run: |
-          mkdir -p _site
+          mkdir -p _site/js _site/css
           
-          # Copy game files
+          # Copy main files
           cp index.html _site/
-          cp *.css _site/
-          cp *.js _site/
+          cp sw.js _site/
           cp manifest.json _site/ || true
           
-          # Copy icons directory for PWA
+          # Copy organized directories
+          cp -r js _site/
+          cp -r css _site/
           cp -r icons _site/ 2>/dev/null || true
           
-          # Exclude server-side files
-          rm -f _site/server.js 2>/dev/null || true
+          # Remove test files from deployment
+          rm -f _site/js/*.test.js 2>/dev/null || true
           
           # Copy documentation
           cp README.md _site/

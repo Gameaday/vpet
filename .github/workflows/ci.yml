@@ -24,8 +24,8 @@ jobs:
           echo "### 📁 File Structure Validation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          # Check required files
-          required_files=("index.html" "style.css" "app.js" "pet.js" "battle.js" "server.js" "README.md")
+          # Check required files in new structure
+          required_files=("index.html" "css/style.css" "js/app.js" "js/pet.js" "js/battle.js" "js/server.js" "README.md")
           all_found=true
           
           for file in "${required_files[@]}"; do
@@ -53,18 +53,18 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           
           # Count lines of code
-          total_js=$(cat *.js | wc -l)
+          total_js=$(find js -name "*.js" -type f -exec cat {} \; | wc -l)
           echo "**Total JS Lines**: $total_js" >> $GITHUB_STEP_SUMMARY
           
           # Check for console.log statements (should be minimal in production)
-          console_count=$(grep -r "console\." *.js | wc -l || true)
+          console_count=$(grep -r "console\." js/*.js | wc -l || true)
           echo "**Console statements**: $console_count" >> $GITHUB_STEP_SUMMARY
           
           # List all JS files with line counts
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**JavaScript files**:" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          wc -l *.js >> $GITHUB_STEP_SUMMARY
+          wc -l js/*.js >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: 📤 Upload artifact - Client Files
@@ -73,9 +73,11 @@ jobs:
           name: vpet-client-${{ github.sha }}
           path: |
             index.html
-            *.css
-            *.js
-            !server.js
+            sw.js
+            manifest.json
+            js/
+            css/
+            icons/
             *.md
           retention-days: 30
 

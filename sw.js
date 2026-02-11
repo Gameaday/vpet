@@ -6,11 +6,11 @@ const RUNTIME_CACHE = 'vpet-runtime';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/style.css',
-  '/app.js',
-  '/pet.js',
-  '/battle.js',
-  '/server.js',
+  '/css/style.css',
+  '/js/app.js',
+  '/js/pet.js',
+  '/js/battle.js',
+  '/js/server.js',
   '/manifest.json',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png'
