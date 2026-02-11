@@ -55,11 +55,11 @@ body {
         position: sticky;
         top: 0;
         z-index: 100;
-        padding: 10px 12px; /* Reduced padding */
+        padding: 8px 12px; /* Further reduced padding */
     }
     
     header h1 {
-        font-size: 1.15rem; /* Slightly smaller for more space */
+        font-size: 1.1rem; /* Smaller for more space */
     }
     
     /* Scrollable main content only - optimized for no scroll on main view */
@@ -69,7 +69,7 @@ body {
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-y: contain;
-        padding: 10px; /* Reduced padding */
+        padding: 8px; /* Further reduced padding */
         display: flex;
         flex-direction: column;
     }
@@ -83,8 +83,8 @@ body {
         position: sticky;
         bottom: 0;
         background: #1a1a1a;
-        padding: 10px 8px; /* Reduced padding */
-        margin: 0 -10px;
+        padding: 8px 6px; /* Further reduced padding */
+        margin: 0 -8px;
         border-top: 2px solid rgba(102, 126, 234, 0.3);
         z-index: 50;
         flex-shrink: 0;
@@ -94,14 +94,14 @@ body {
     .action-panel {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 6px; /* Reduced gap */
+        gap: 4px; /* Further reduced gap */
     }
     
     .action-btn {
         flex-direction: column;
-        padding: 8px 4px; /* Reduced padding */
-        min-height: 56px; /* Reduced from 64px */
-        font-size: 0.75rem; /* Smaller font */
+        padding: 6px 3px; /* Further reduced padding */
+        min-height: 52px; /* Reduced from 56px */
+        font-size: 0.7rem; /* Smaller font */
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -112,7 +112,7 @@ body {
     }
     
     .action-btn .btn-icon {
-        font-size: 1.4rem; /* Smaller icons */
+        font-size: 1.3rem; /* Smaller icons */
         margin-bottom: 2px;
     }
     
@@ -120,15 +120,15 @@ body {
     .battle-panel {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        padding: 10px 8px;
+        gap: 6px;
+        padding: 8px 6px;
     }
     
     .battle-btn,
     .online-battle-btn {
-        padding: 12px 8px;
-        font-size: 0.85rem;
-        min-height: 48px; /* Reduced height */
+        padding: 10px 6px;
+        font-size: 0.8rem;
+        min-height: 44px; /* Reduced height */
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -142,17 +142,17 @@ body {
     .social-panel,
     .game-panel {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        padding: 10px 8px;
+        grid-template-columns: repeat(4, 1fr); /* 4 columns instead of 3 for compactness */
+        gap: 6px;
+        padding: 8px 6px;
     }
     
     .social-btn,
     .game-btn {
         flex-direction: column;
-        padding: 10px 4px;
-        min-height: 56px;
-        font-size: 0.75rem;
+        padding: 8px 3px;
+        min-height: 52px;
+        font-size: 0.7rem;
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -164,7 +164,7 @@ body {
     
     .social-btn .btn-icon,
     .game-btn .btn-icon {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         margin-bottom: 2px;
     }
     
@@ -172,15 +172,15 @@ body {
     .qol-panel {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        padding: 10px 8px;
+        gap: 6px;
+        padding: 8px 6px;
     }
     
     .qol-btn {
         flex-direction: column;
-        padding: 10px 4px;
-        min-height: 56px;
-        font-size: 0.75rem;
+        padding: 8px 3px;
+        min-height: 52px;
+        font-size: 0.7rem;
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -194,8 +194,8 @@ body {
         position: sticky;
         bottom: 0;
         background: #1a1a1a;
-        padding: 10px 8px;
-        margin: 0 -10px;
+        padding: 8px 6px;
+        margin: 0 -8px;
         border-top: 2px solid rgba(102, 126, 234, 0.3);
         display: flex;
         justify-content: space-around;
@@ -206,9 +206,9 @@ body {
     .settings-btn,
     .help-btn,
     .reset-btn {
-        width: 48px; /* Material Design minimum touch target */
-        height: 48px;
-        font-size: 1.3rem;
+        width: 44px; /* Material Design minimum touch target */
+        height: 44px;
+        font-size: 1.2rem;
         transition: transform 0.2s, background-color 0.2s;
     }
     
@@ -221,43 +221,60 @@ body {
     
     /* Pet display optimization - more compact */
     .pet-display {
-        margin-bottom: 8px;
-        padding: 12px 10px; /* Reduced padding */
+        margin-bottom: 6px;
+        padding: 10px 8px; /* Further reduced padding */
         flex-shrink: 0;
     }
     
     .pet-name {
-        font-size: 1rem;
-        margin-bottom: 4px;
+        font-size: 0.95rem;
+        margin-bottom: 3px;
     }
     
     .pet-sprite {
-        width: 100px; /* Smaller sprite */
-        height: 100px;
+        width: 90px; /* Smaller sprite */
+        height: 90px;
     }
     
     .pet-stage {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+    }
+    
+    .evolution-preview {
+        margin-top: 6px;
+        font-size: 0.75rem;
+    }
+    
+    .mood-indicator {
+        font-size: 1.5em; /* Smaller mood indicator */
+        top: 3px;
+        right: 3px;
+    }
+    
+    /* Hide less critical panels on mobile to eliminate scrolling - prioritize core gameplay */
+    .social-panel,
+    .game-panel {
+        display: none; /* Hide on mobile - accessible via modals from settings */
     }
     
     /* Stats panel - much more compact for Galaxy S24 */
     .stats-panel {
-        gap: 6px; /* Reduced gap */
-        margin-bottom: 8px;
+        gap: 4px; /* Further reduced gap */
+        margin-bottom: 6px;
         flex-shrink: 0;
     }
     
     .stat-bar {
-        padding: 6px 8px; /* Much more compact */
+        padding: 4px 6px; /* Much more compact */
     }
     
     .stat-label {
-        font-size: 0.8rem; /* Smaller font */
+        font-size: 0.75rem; /* Smaller font */
         font-weight: 500;
     }
     
     .stat-label span:first-child {
-        margin-right: 6px;
+        margin-right: 4px;
     }
     
     /* Hide circular gauges on mobile for space efficiency */
@@ -267,19 +284,19 @@ body {
     
     /* Make progress bars more visible when gauges hidden */
     .progress-bar {
-        height: 8px; /* Slightly taller */
+        height: 6px; /* Slightly smaller */
     }
     
     /* Stat info - more compact */
     .stat-info {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
-        font-size: 0.8rem;
+        gap: 4px;
+        font-size: 0.75rem;
     }
     
     .stat-info > div {
-        padding: 4px;
+        padding: 3px;
     }
     
     /* Modal optimizations for mobile */
