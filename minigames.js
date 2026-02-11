@@ -261,8 +261,8 @@ class ReactionGame {
         const continuing = this.update();
         this.render();
         
-        if (continuing) {
-            requestAnimationFrame(() => this.gameLoop());
+        if (continuing && typeof window !== 'undefined' && window.requestAnimationFrame) {
+            window.requestAnimationFrame(() => this.gameLoop());
         }
     }
 }
@@ -690,8 +690,8 @@ class RhythmGame {
         const continuing = this.update();
         this.render();
         
-        if (continuing) {
-            requestAnimationFrame(() => this.gameLoop());
+        if (continuing && typeof window !== 'undefined' && window.requestAnimationFrame) {
+            window.requestAnimationFrame(() => this.gameLoop());
         }
     }
 }

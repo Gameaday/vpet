@@ -317,7 +317,7 @@ class EvolutionManager {
      * @param {number} amount - Amount to increase
      */
     addInfluence(pathType, amount = 1) {
-        if (this.evolutionInfluence.hasOwnProperty(pathType)) {
+        if (Object.prototype.hasOwnProperty.call(this.evolutionInfluence, pathType)) {
             this.evolutionInfluence[pathType] += amount;
             this.saveEvolutionData();
         }

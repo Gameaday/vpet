@@ -3,10 +3,10 @@
  * Integrates item system, mini-games, evolution paths, friends, and tournaments into the main app
  */
 
-/* global pet, premiumManager, soundManager, updateUI, showNotification */
+/* global pet, premiumManager, soundManager, updateUI */
 /* global InventoryManager, ShopManager, useItem, ITEMS */
 /* global MiniGameManager, ReactionGame, MemoryGame, RhythmGame */
-/* global EvolutionManager, EVOLUTION_PATHS */
+/* global EvolutionManager */
 /* global FriendManager, FriendChallengeManager */
 /* global TournamentManager */
 
@@ -17,6 +17,9 @@ let miniGameManager = null;
 let evolutionManager = null;
 let friendManager = null;
 let friendChallengeManager = null;
+
+// Unused but will be needed for future tournament UI integration
+// eslint-disable-next-line no-unused-vars
 let tournamentManager = null;
 
 // Current active mini-game
@@ -150,7 +153,20 @@ function populateShop(category) {
 function purchaseItem(itemId) {
     if (shopManager.purchaseItem(itemId)) {
         const item = ITEMS[itemId];
-        showNotification(`✅ Purchased ${item.name}!`, 'success');
+        
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'notification success';
+        notification.textContent = `✅ Purchased ${item.name}!`;
+        document.body.appendChild(notification);
+        
+        // Show and auto-hide notification
+        setTimeout(() => notification.classList.add('show'), 10);
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+        
         updateCoinsDisplay();
         populateShop(document.querySelector('.category-btn.active').dataset.category);
         
@@ -158,7 +174,18 @@ function purchaseItem(itemId) {
             soundManager.playSound('action');
         }
     } else {
-        showNotification('❌ Purchase failed', 'error');
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'notification error';
+        notification.textContent = '❌ Purchase failed';
+        document.body.appendChild(notification);
+        
+        // Show and auto-hide notification
+        setTimeout(() => notification.classList.add('show'), 10);
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
 }
 
@@ -552,7 +579,7 @@ function populateTournamentContent() {
 /**
  * Award coins to player (called from battle wins, etc.)
  */
-function awardCoins(amount, source = 'battle') {
+function awardCoins(amount) {
     // Apply premium multiplier
     if (premiumManager && premiumManager.isPremium) {
         const multiplier = premiumManager.getFeatureValue('coinMultiplier');
