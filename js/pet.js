@@ -195,8 +195,8 @@ class Pet {
                     // Validate all stats are in proper ranges
                     this.validateStats();
                     
-                    // Update stats based on time passed
-                    this.updateStatsFromTimePassed();
+                    // Note: updateStatsFromTimePassed() is now called from app.js after
+                    // hibernationManager is available to properly handle hibernation state
                 } catch (parseError) {
                     console.error('Error parsing pet data. Starting fresh:', parseError);
                     // Data is corrupted, start fresh but keep localStorage key for future saves
@@ -817,6 +817,15 @@ class Pet {
      */
     addHibernationTime(milliseconds) {
         this.totalHibernationTime = (this.totalHibernationTime || 0) + milliseconds;
+        this.save();
+    }
+
+    /**
+     * Set last update time (used when entering/exiting hibernation)
+     * @param {number} timestamp - The timestamp to set
+     */
+    setLastUpdateTime(timestamp) {
+        this.lastUpdateTime = timestamp;
         this.save();
     }
 }

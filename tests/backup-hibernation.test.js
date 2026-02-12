@@ -469,6 +469,54 @@ describe('HibernationManager', () => {
     });
   });
 
+  describe('Reconcile Hibernation State', () => {
+    it('should auto-wake pet and track hibernation time when duration has passed', () => {
+      const mockPet = {
+        addHibernationTime: vi.fn(),
+        setLastUpdateTime: vi.fn()
+      };
+      
+      // Start hibernation
+      hibernationManager.isHibernating = true;
+      hibernationManager.hibernationStartTime = new Date(Date.now() - 86400000); // 1 day ago
+      hibernationManager.hibernationDuration = 3600000; // 1 hour (should have ended)
+      
+      hibernationManager.reconcileHibernationState(mockPet);
+      
+      expect(hibernationManager.isHibernating).toBe(false);
+      expect(mockPet.addHibernationTime).toHaveBeenCalled();
+      expect(mockPet.setLastUpdateTime).toHaveBeenCalled();
+    });
+
+    it('should update lastUpdateTime when hibernation is ongoing', () => {
+      const mockPet = {
+        setLastUpdateTime: vi.fn()
+      };
+      
+      // Start hibernation that should still be active
+      hibernationManager.isHibernating = true;
+      hibernationManager.hibernationStartTime = new Date();
+      hibernationManager.hibernationDuration = 86400000; // 1 day
+      
+      hibernationManager.reconcileHibernationState(mockPet);
+      
+      expect(hibernationManager.isHibernating).toBe(true);
+      expect(mockPet.setLastUpdateTime).toHaveBeenCalled();
+    });
+
+    it('should do nothing when not hibernating', () => {
+      const mockPet = {
+        setLastUpdateTime: vi.fn()
+      };
+      
+      hibernationManager.isHibernating = false;
+      
+      hibernationManager.reconcileHibernationState(mockPet);
+      
+      expect(mockPet.setLastUpdateTime).not.toHaveBeenCalled();
+    });
+  });
+
   describe('Daily Count Reset', () => {
     it('should reset pause count on new day', () => {
       hibernationManager.pauseCount = 1;

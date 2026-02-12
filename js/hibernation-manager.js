@@ -40,15 +40,29 @@ class HibernationManager {
                     this.saveHibernationState();
                 }
 
-                // Check if hibernation should end
-                if (this.isHibernating && this.hibernationStartTime) {
-                    const elapsed = Date.now() - new Date(this.hibernationStartTime).getTime();
-                    if (elapsed >= this.hibernationDuration) {
-                        this.wakeUp(true); // Auto wake up
-                    }
-                }
+                // Note: Auto-wake check is deferred until after Pet is available
+                // to properly track hibernation time. See reconcileHibernationState()
             } catch (error) {
                 console.error('Error loading hibernation state:', error);
+            }
+        }
+    }
+
+    /**
+     * Reconcile hibernation state after Pet instance is available
+     * Handles auto-wake and updates pet's hibernation time if needed
+     * @param {object} pet - Pet instance to update
+     */
+    reconcileHibernationState(pet) {
+        // Check if hibernation should end
+        if (this.isHibernating && this.hibernationStartTime) {
+            const elapsed = Date.now() - new Date(this.hibernationStartTime).getTime();
+            if (elapsed >= this.hibernationDuration) {
+                // Auto wake up with pet instance to track hibernation time
+                this.wakeUp(true, pet);
+            } else if (pet && typeof pet.setLastUpdateTime === 'function') {
+                // Still hibernating - ensure lastUpdateTime is current to prevent decay
+                pet.setLastUpdateTime(Date.now());
             }
         }
     }
@@ -221,6 +235,11 @@ class HibernationManager {
         this.lastPauseDate = new Date().toDateString();
         this.saveHibernationState();
 
+        // Update pet's lastUpdateTime to prevent stat decay catch-up when hibernation starts
+        if (pet && typeof pet.setLastUpdateTime === 'function') {
+            pet.setLastUpdateTime(Date.now());
+        }
+
         if (typeof showToast === 'function') {
             showToast(
                 `❄️ Pet entering cryo sleep for ${durationDays} day${durationDays > 1 ? 's' : ''}...`,
@@ -271,6 +290,12 @@ class HibernationManager {
         // Update pet's total hibernation time if pet object is provided
         if (pet && typeof pet.addHibernationTime === 'function') {
             pet.addHibernationTime(duration);
+            
+            // Reset pet's lastUpdateTime so post-hibernation stat decay
+            // starts from the wake-up moment instead of including hibernation duration
+            if (typeof pet.setLastUpdateTime === 'function') {
+                pet.setLastUpdateTime(Date.now());
+            }
         }
         
         this.hibernationStartTime = null;

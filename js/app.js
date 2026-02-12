@@ -61,10 +61,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create hibernation manager
     hibernationManager = new HibernationManager(premiumManager);
     
+    // Reconcile hibernation state now that Pet instance is available
+    // This handles auto-wake and updates lastUpdateTime if still hibernating
+    hibernationManager.reconcileHibernationState(pet);
+    
     // Create server connection
     serverConnection = new ServerConnection();
     
     // Check for time away and show modal if needed
+    // Always pass hibernationManager so stats are handled correctly
     const timeAwayInfo = pet.updateStatsFromTimePassed(hibernationManager);
     if (timeAwayInfo) {
         showTimeAwayModal(timeAwayInfo);
@@ -82,9 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('⚠️ Pet woke from cryo sleep due to critical stats!', 'warning');
         }
         
-        // Skip stat updates if pet is hibernating
+        // Always call updateStatsFromTimePassed with hibernationManager
+        // It will early-return during hibernation but keeps lastUpdateTime current
+        pet.updateStatsFromTimePassed(hibernationManager);
+        
+        // Only check sickness and record stats when not hibernating
         if (!hibernationManager.shouldFreezePet()) {
-            pet.updateStatsFromTimePassed(hibernationManager);
             pet.checkSickness();
             pet.recordStatsSnapshot();
         }

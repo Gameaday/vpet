@@ -689,5 +689,20 @@ describe('Pet Class', () => {
       // Age should be ~0.5 days (24h - 12h hibernation) / 24h
       expect(pet.age).toBeCloseTo(0.5, 1);
     });
+
+    it('should allow setting lastUpdateTime', () => {
+      const newTime = Date.now() - 3600000; // 1 hour ago
+      pet.setLastUpdateTime(newTime);
+      
+      expect(pet.lastUpdateTime).toBe(newTime);
+    });
+
+    it('should persist lastUpdateTime when set', () => {
+      const newTime = Date.now() - 3600000;
+      pet.setLastUpdateTime(newTime);
+      
+      const savedData = JSON.parse(localStorage.getItem('vpet_data'));
+      expect(savedData.lastUpdateTime).toBe(newTime);
+    });
   });
 });
