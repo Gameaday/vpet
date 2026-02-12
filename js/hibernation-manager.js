@@ -62,6 +62,8 @@ class HibernationManager {
                 this.wakeUp(true, pet);
             } else if (pet && typeof pet.setLastUpdateTime === 'function') {
                 // Still hibernating - ensure lastUpdateTime is current to prevent decay
+                // on wake. This is needed at startup since the interval won't have run yet.
+                // The interval will also update it periodically during hibernation.
                 pet.setLastUpdateTime(Date.now());
             }
         }

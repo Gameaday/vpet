@@ -69,7 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
     serverConnection = new ServerConnection();
     
     // Check for time away and show modal if needed
-    // Always pass hibernationManager so stats are handled correctly
+    // Pass hibernationManager so the method can detect hibernation state and skip
+    // stat decay/aging when pet is frozen. Without it, stats would decay on load.
     const timeAwayInfo = pet.updateStatsFromTimePassed(hibernationManager);
     if (timeAwayInfo) {
         showTimeAwayModal(timeAwayInfo);

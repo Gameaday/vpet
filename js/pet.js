@@ -196,7 +196,9 @@ class Pet {
                     this.validateStats();
                     
                     // Note: updateStatsFromTimePassed() is now called from app.js after
-                    // hibernationManager is available to properly handle hibernation state
+                    // hibernationManager is available to properly handle hibernation state.
+                    // The initial call happens in app.js initialization (line ~68) before
+                    // the first interval tick, ensuring stats are updated correctly on load.
                 } catch (parseError) {
                     console.error('Error parsing pet data. Starting fresh:', parseError);
                     // Data is corrupted, start fresh but keep localStorage key for future saves
