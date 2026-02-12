@@ -210,7 +210,7 @@ body {
     
     /* Expanded state - show all buttons */
     .action-panel:not(.collapsed) {
-        max-height: 100vh; /* Full viewport height ensures all content visible */
+        max-height: 600px; /* Enough for all buttons: 5 rows × 64px + gaps + padding */
         opacity: 1;
     }
     
@@ -795,6 +795,16 @@ body {
         max-width: 600px;
     }
     
+    /* Hide action panel toggle on tablet - all buttons fit on screen */
+    .action-panel-toggle {
+        display: none;
+    }
+    
+    /* Ensure action panel is always expanded on tablet */
+    .action-panel.collapsed {
+        max-height: none;
+    }
+    
     /* Tablet optimized button layout - organic auto-fit grid */
     .action-panel {
         grid-template-columns: repeat(auto-fit, minmax(clamp(90px, 18vw, 130px), 1fr));
@@ -1122,6 +1132,16 @@ body {
 
 /* Desktop and larger tablets - optimal button sizing and spacing */
 @media (min-width: 1025px) {
+    /* Hide action panel toggle on desktop - all buttons fit on screen */
+    .action-panel-toggle {
+        display: none;
+    }
+    
+    /* Ensure action panel is always expanded on desktop */
+    .action-panel.collapsed {
+        max-height: none;
+    }
+    
     .action-panel {
         /* Larger screens can fit more buttons per row */
         grid-template-columns: repeat(auto-fit, minmax(clamp(100px, 15vw, 140px), 1fr));
