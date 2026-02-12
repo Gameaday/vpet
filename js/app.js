@@ -355,18 +355,117 @@ function setupTouchGestures() {
         }, { passive: true });
     });
     
-    // Action panel toggle functionality
+    // Smart action panel toggle functionality
     const actionPanelToggle = document.getElementById('actionPanelToggle');
     const actionPanel = document.getElementById('actionPanel');
-    if (actionPanelToggle && actionPanel) {
+    const actionPanelWrapper = document.getElementById('actionPanelWrapper');
+    
+    if (actionPanelToggle && actionPanel && actionPanelWrapper) {
+        // Configuration constants
+        const MOBILE_BREAKPOINT = 768; // px - matches CSS @media (max-width: 768px)
+        const DEFAULT_GAP = 12; // px - fallback if computed style unavailable
+        const DEFAULT_BUTTON_HEIGHT = 64; // px - Material Design 3 touch target
+        const HEIGHT_BUFFER = 20; // px - padding buffer for scrolling comfort
+        const RESIZE_DEBOUNCE_MS = 150; // Debounce viewport resize events
+        const MUTATION_DELAY_MS = 50; // Delay after DOM mutations before recalculating
+        const INITIAL_DELAY_MS = 200; // Initial delay to ensure DOM fully rendered
+        
+        let isUpdating = false; // Prevent infinite loops
+        
+        // Function to determine if toggle should be visible
+        function updateActionPanelBehavior() {
+            if (isUpdating) return; // Prevent recursive calls
+            isUpdating = true;
+            
+            try {
+                const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+                
+                if (!isMobile) {
+                    // On desktop/tablet, hide toggle and always show all buttons
+                    actionPanelToggle.style.display = 'none';
+                    actionPanel.classList.remove('collapsed');
+                    actionPanel.style.maxHeight = 'none';
+                    return;
+                }
+                
+                // On mobile, show toggle and calculate dynamic height
+                actionPanelToggle.style.display = '';
+                
+                // Get all visible buttons in the action panel
+                const visibleButtons = Array.from(actionPanel.children).filter(
+                    btn => btn.offsetHeight > 0 && window.getComputedStyle(btn).display !== 'none'
+                );
+                
+                if (visibleButtons.length === 0) {
+                    // No buttons yet, will update later
+                    return;
+                }
+                
+                // Calculate the height needed for all buttons
+                // Get actual button height and gap from computed styles
+                const computedStyle = window.getComputedStyle(actionPanel);
+                const gap = parseInt(computedStyle.gap) || DEFAULT_GAP;
+                
+                // Calculate grid layout: 2 columns
+                const columns = 2;
+                const rows = Math.ceil(visibleButtons.length / columns);
+                
+                // Get the actual height of a button (including padding, borders)
+                const buttonHeight = visibleButtons[0]?.offsetHeight || DEFAULT_BUTTON_HEIGHT;
+                
+                // Calculate total height: (rows * buttonHeight) + ((rows - 1) * gap) + buffer
+                // Buffer provides comfortable scrolling space
+                const totalHeight = (rows * buttonHeight) + ((rows - 1) * gap) + HEIGHT_BUFFER;
+                
+                // Set dynamic max-height when expanded
+                actionPanel.style.setProperty('--dynamic-max-height', `${totalHeight}px`);
+            } finally {
+                isUpdating = false;
+            }
+        }
+        
+        // Toggle click handler
         actionPanelToggle.addEventListener('click', () => {
             const isExpanded = actionPanelToggle.getAttribute('aria-expanded') === 'true';
-            // Toggle the states
             actionPanelToggle.setAttribute('aria-expanded', !isExpanded);
-            // aria-label describes what the button will do when clicked next time
             actionPanelToggle.setAttribute('aria-label', !isExpanded ? 'Collapse actions' : 'Expand actions');
             actionPanel.classList.toggle('collapsed');
         });
+        
+        // Update on resize with debouncing
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(updateActionPanelBehavior, RESIZE_DEBOUNCE_MS);
+        }, { passive: true });
+        
+        // Observe changes to action panel content (when buttons are added/removed)
+        // Only observe childList changes to avoid triggering on style changes we make
+        const observer = new MutationObserver((mutations) => {
+            // Only update if children were added or removed, not style changes
+            const hasChildListChanges = mutations.some(m => m.type === 'childList');
+            if (hasChildListChanges) {
+                setTimeout(updateActionPanelBehavior, MUTATION_DELAY_MS);
+            }
+        });
+        
+        observer.observe(actionPanel, {
+            childList: true,
+            subtree: false // Don't observe deep changes
+        });
+        
+        // Initial update: Use double requestAnimationFrame for accurate measurements
+        // First frame: browser commits layout changes
+        // Second frame: computed styles are available, ensuring accurate button heights/gaps
+        // The setTimeout fallback catches cases where rAF might not fire (e.g., hidden tabs)
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                updateActionPanelBehavior();
+            });
+        });
+        
+        // Fallback in case requestAnimationFrame doesn't execute (tab not visible, etc.)
+        setTimeout(updateActionPanelBehavior, INITIAL_DELAY_MS);
     }
 }
 
