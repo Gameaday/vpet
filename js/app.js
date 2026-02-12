@@ -361,8 +361,10 @@ function setupTouchGestures() {
     if (actionPanelToggle && actionPanel) {
         actionPanelToggle.addEventListener('click', () => {
             const isExpanded = actionPanelToggle.getAttribute('aria-expanded') === 'true';
+            // Toggle the states
             actionPanelToggle.setAttribute('aria-expanded', !isExpanded);
-            actionPanelToggle.setAttribute('aria-label', isExpanded ? 'Expand actions' : 'Collapse actions');
+            // aria-label describes what the button will do when clicked next time
+            actionPanelToggle.setAttribute('aria-label', !isExpanded ? 'Collapse actions' : 'Expand actions');
             actionPanel.classList.toggle('collapsed');
         });
     }
