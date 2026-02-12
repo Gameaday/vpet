@@ -96,6 +96,35 @@ class HibernationManager {
     }
 
     /**
+     * Check if pet has critical stats (excluding energy)
+     * @param {object} pet - Pet object to check
+     * @returns {object} - {hasCriticalStats: boolean, stat: string}
+     * @private
+     */
+    _hasCriticalStats(pet) {
+        if (!pet) {
+            return { hasCriticalStats: false, stat: null };
+        }
+
+        const criticalThreshold = HibernationManager.CRITICAL_STAT_THRESHOLD;
+        
+        if (pet.hunger < criticalThreshold) {
+            return { hasCriticalStats: true, stat: 'hunger' };
+        }
+        if (pet.health < criticalThreshold) {
+            return { hasCriticalStats: true, stat: 'health' };
+        }
+        if (pet.happiness < criticalThreshold) {
+            return { hasCriticalStats: true, stat: 'happiness' };
+        }
+        if (pet.cleanliness < criticalThreshold) {
+            return { hasCriticalStats: true, stat: 'cleanliness' };
+        }
+
+        return { hasCriticalStats: false, stat: null };
+    }
+
+    /**
      * Check if user can start hibernation
      * @param {object} pet - Optional pet object to check critical stats
      * @returns {object} - {canHibernate: boolean, reason: string}
@@ -109,32 +138,18 @@ class HibernationManager {
         }
 
         // Check if pet has critical stats (excluding energy)
-        if (pet) {
-            const criticalThreshold = HibernationManager.CRITICAL_STAT_THRESHOLD;
-            if (pet.hunger < criticalThreshold) {
-                return {
-                    canHibernate: false,
-                    reason: 'Pet hunger is too low! Feed your pet before hibernation.'
-                };
-            }
-            if (pet.health < criticalThreshold) {
-                return {
-                    canHibernate: false,
-                    reason: 'Pet health is too low! Heal your pet before hibernation.'
-                };
-            }
-            if (pet.happiness < criticalThreshold) {
-                return {
-                    canHibernate: false,
-                    reason: 'Pet happiness is too low! Play with your pet before hibernation.'
-                };
-            }
-            if (pet.cleanliness < criticalThreshold) {
-                return {
-                    canHibernate: false,
-                    reason: 'Pet cleanliness is too low! Clean your pet before hibernation.'
-                };
-            }
+        const criticalCheck = this._hasCriticalStats(pet);
+        if (criticalCheck.hasCriticalStats) {
+            const statMessages = {
+                hunger: 'Pet hunger is too low! Feed your pet before hibernation.',
+                health: 'Pet health is too low! Heal your pet before hibernation.',
+                happiness: 'Pet happiness is too low! Play with your pet before hibernation.',
+                cleanliness: 'Pet cleanliness is too low! Clean your pet before hibernation.'
+            };
+            return {
+                canHibernate: false,
+                reason: statMessages[criticalCheck.stat]
+            };
         }
 
         const limits = this.getHibernationLimits();
@@ -350,20 +365,12 @@ class HibernationManager {
      * @returns {boolean} - True if emergency wake up is needed
      */
     needsEmergencyWakeUp(pet) {
-        if (!this.isHibernating || !pet) {
+        if (!this.isHibernating) {
             return false;
         }
 
-        const criticalThreshold = HibernationManager.CRITICAL_STAT_THRESHOLD;
-        // Check non-energy stats (energy is expected to be low during sleep)
-        if (pet.hunger < criticalThreshold || 
-            pet.health < criticalThreshold || 
-            pet.happiness < criticalThreshold || 
-            pet.cleanliness < criticalThreshold) {
-            return true;
-        }
-
-        return false;
+        const criticalCheck = this._hasCriticalStats(pet);
+        return criticalCheck.hasCriticalStats;
     }
 }
 

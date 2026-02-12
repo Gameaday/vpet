@@ -223,7 +223,7 @@ class Pet {
         };
         
         // Skip stat updates if pet is hibernating
-        if (hibernationManager && typeof hibernationManager.shouldFreezePet === 'function' && hibernationManager.shouldFreezePet()) {
+        if (hibernationManager && hibernationManager.shouldFreezePet()) {
             // Only update lastUpdateTime, no stat decay or aging during hibernation
             this.lastUpdateTime = now;
             this.save();
@@ -306,15 +306,16 @@ class Pet {
         // Update age (keep as decimal for accurate evolution tracking)
         // Subtract total hibernation time from age calculation
         const totalLifetime = now - this.birthTime;
-        const hibernationTime = this.totalHibernationTime || 0;
+        let hibernationTime = this.totalHibernationTime || 0;
         
         // Validate hibernation time doesn't exceed total lifetime
         if (hibernationTime > totalLifetime) {
             console.warn('Hibernation time exceeds total lifetime. Resetting hibernation time.');
             this.totalHibernationTime = 0;
+            hibernationTime = 0;
         }
         
-        const totalLiveTime = totalLifetime - Math.min(hibernationTime, totalLifetime);
+        const totalLiveTime = totalLifetime - hibernationTime;
         const daysPassed = totalLiveTime / (1000 * 60 * 60 * 24);
         this.age = Math.max(0, daysPassed); // Don't floor - evolution needs precise age
         
