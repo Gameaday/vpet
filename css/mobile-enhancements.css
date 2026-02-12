@@ -177,13 +177,13 @@ body {
     
     /* Collapsed state - show only first row (2 buttons in 2-column grid) */
     .action-panel.collapsed {
-        max-height: calc(44px + var(--md-spacing-lg, 16px) * 2 + 14px); /* button height + padding + gap */
+        max-height: calc(44px + var(--md-spacing-lg, 16px) * 2 + var(--md-spacing-md, 12px)); /* min button height + top/bottom padding + gap */
         opacity: 1;
     }
     
     /* Expanded state - show all buttons */
     .action-panel:not(.collapsed) {
-        max-height: 600px; /* Large enough for all buttons */
+        max-height: none; /* No limit - show all content */
         opacity: 1;
     }
     
