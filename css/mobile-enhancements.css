@@ -210,7 +210,7 @@ body {
     
     /* Expanded state - show all buttons */
     .action-panel:not(.collapsed) {
-        max-height: 800px; /* Enough for all buttons with smooth transition */
+        max-height: 100vh; /* Full viewport height ensures all content visible */
         opacity: 1;
     }
     
