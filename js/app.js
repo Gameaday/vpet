@@ -354,6 +354,18 @@ function setupTouchGestures() {
             }
         }, { passive: true });
     });
+    
+    // Action panel toggle functionality
+    const actionPanelToggle = document.getElementById('actionPanelToggle');
+    const actionPanel = document.getElementById('actionPanel');
+    if (actionPanelToggle && actionPanel) {
+        actionPanelToggle.addEventListener('click', () => {
+            const isExpanded = actionPanelToggle.getAttribute('aria-expanded') === 'true';
+            actionPanelToggle.setAttribute('aria-expanded', !isExpanded);
+            actionPanelToggle.setAttribute('aria-label', isExpanded ? 'Expand actions' : 'Collapse actions');
+            actionPanel.classList.toggle('collapsed');
+        });
+    }
 }
 
 
