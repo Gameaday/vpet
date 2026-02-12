@@ -355,17 +355,103 @@ function setupTouchGestures() {
         }, { passive: true });
     });
     
-    // Action panel toggle functionality
+    // Smart action panel toggle functionality
     const actionPanelToggle = document.getElementById('actionPanelToggle');
     const actionPanel = document.getElementById('actionPanel');
-    if (actionPanelToggle && actionPanel) {
+    const actionPanelWrapper = document.getElementById('actionPanelWrapper');
+    
+    if (actionPanelToggle && actionPanel && actionPanelWrapper) {
+        let isUpdating = false; // Prevent infinite loops
+        
+        // Function to determine if toggle should be visible
+        function updateActionPanelBehavior() {
+            if (isUpdating) return; // Prevent recursive calls
+            isUpdating = true;
+            
+            try {
+                const isMobile = window.innerWidth <= 768;
+                
+                if (!isMobile) {
+                    // On desktop/tablet, hide toggle and always show all buttons
+                    actionPanelToggle.style.display = 'none';
+                    actionPanel.classList.remove('collapsed');
+                    actionPanel.style.maxHeight = 'none';
+                    return;
+                }
+                
+                // On mobile, show toggle and calculate dynamic height
+                actionPanelToggle.style.display = '';
+                
+                // Get all visible buttons in the action panel
+                const visibleButtons = Array.from(actionPanel.children).filter(
+                    btn => btn.offsetHeight > 0 && window.getComputedStyle(btn).display !== 'none'
+                );
+                
+                if (visibleButtons.length === 0) {
+                    // No buttons yet, will update later
+                    return;
+                }
+                
+                // Calculate the height needed for all buttons
+                // Get actual button height and gap from computed styles
+                const computedStyle = window.getComputedStyle(actionPanel);
+                const gap = parseInt(computedStyle.gap) || 12;
+                
+                // Calculate grid layout: 2 columns
+                const columns = 2;
+                const rows = Math.ceil(visibleButtons.length / columns);
+                
+                // Get the actual height of a button (including padding, borders)
+                const buttonHeight = visibleButtons[0]?.offsetHeight || 64;
+                
+                // Calculate total height: (rows * buttonHeight) + ((rows - 1) * gap) + padding buffer
+                const totalHeight = (rows * buttonHeight) + ((rows - 1) * gap) + 20;
+                
+                // Set dynamic max-height when expanded
+                actionPanel.style.setProperty('--dynamic-max-height', `${totalHeight}px`);
+            } finally {
+                isUpdating = false;
+            }
+        }
+        
+        // Toggle click handler
         actionPanelToggle.addEventListener('click', () => {
             const isExpanded = actionPanelToggle.getAttribute('aria-expanded') === 'true';
-            // Toggle the states
             actionPanelToggle.setAttribute('aria-expanded', !isExpanded);
-            // aria-label describes what the button will do when clicked next time
             actionPanelToggle.setAttribute('aria-label', !isExpanded ? 'Collapse actions' : 'Expand actions');
             actionPanel.classList.toggle('collapsed');
+        });
+        
+        // Update on resize with debouncing
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(updateActionPanelBehavior, 150);
+        }, { passive: true });
+        
+        // Observe changes to action panel content (when buttons are added/removed)
+        // Only observe childList changes to avoid triggering on style changes we make
+        const observer = new MutationObserver((mutations) => {
+            // Only update if children were added or removed, not style changes
+            const hasChildListChanges = mutations.some(m => m.type === 'childList');
+            if (hasChildListChanges) {
+                setTimeout(updateActionPanelBehavior, 50);
+            }
+        });
+        
+        observer.observe(actionPanel, {
+            childList: true,
+            subtree: false // Don't observe deep changes
+        });
+        
+        // Initial update with delay to ensure DOM is fully rendered
+        setTimeout(updateActionPanelBehavior, 200);
+        
+        // Re-check after animation frames
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                updateActionPanelBehavior();
+            });
         });
     }
 }
