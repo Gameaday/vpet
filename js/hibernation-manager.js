@@ -5,6 +5,9 @@
  */
 
 class HibernationManager {
+    // Critical stat threshold for hibernation checks
+    static CRITICAL_STAT_THRESHOLD = 30;
+
     constructor(premiumManager) {
         this.premiumManager = premiumManager;
         this.isHibernating = false;
@@ -37,15 +40,31 @@ class HibernationManager {
                     this.saveHibernationState();
                 }
 
-                // Check if hibernation should end
-                if (this.isHibernating && this.hibernationStartTime) {
-                    const elapsed = Date.now() - new Date(this.hibernationStartTime).getTime();
-                    if (elapsed >= this.hibernationDuration) {
-                        this.wakeUp(true); // Auto wake up
-                    }
-                }
+                // Note: Auto-wake check is deferred until after Pet is available
+                // to properly track hibernation time. See reconcileHibernationState()
             } catch (error) {
                 console.error('Error loading hibernation state:', error);
+            }
+        }
+    }
+
+    /**
+     * Reconcile hibernation state after Pet instance is available
+     * Handles auto-wake and updates pet's hibernation time if needed
+     * @param {object} pet - Pet instance to update
+     */
+    reconcileHibernationState(pet) {
+        // Check if hibernation should end
+        if (this.isHibernating && this.hibernationStartTime) {
+            const elapsed = Date.now() - new Date(this.hibernationStartTime).getTime();
+            if (elapsed >= this.hibernationDuration) {
+                // Auto wake up with pet instance to track hibernation time
+                this.wakeUp(true, pet);
+            } else if (pet && typeof pet.setLastUpdateTime === 'function') {
+                // Still hibernating - ensure lastUpdateTime is current to prevent decay
+                // on wake. This is needed at startup since the interval won't have run yet.
+                // The interval will also update it periodically during hibernation.
+                pet.setLastUpdateTime(Date.now());
             }
         }
     }
@@ -93,14 +112,59 @@ class HibernationManager {
     }
 
     /**
+     * Check if pet has critical stats (excluding energy)
+     * @param {object} pet - Pet object to check
+     * @returns {object} - {hasCriticalStats: boolean, stat: string}
+     * @private
+     */
+    _hasCriticalStats(pet) {
+        if (!pet) {
+            return { hasCriticalStats: false, stat: null };
+        }
+
+        const criticalThreshold = HibernationManager.CRITICAL_STAT_THRESHOLD;
+        
+        if (pet.hunger < criticalThreshold) {
+            return { hasCriticalStats: true, stat: 'hunger' };
+        }
+        if (pet.health < criticalThreshold) {
+            return { hasCriticalStats: true, stat: 'health' };
+        }
+        if (pet.happiness < criticalThreshold) {
+            return { hasCriticalStats: true, stat: 'happiness' };
+        }
+        if (pet.cleanliness < criticalThreshold) {
+            return { hasCriticalStats: true, stat: 'cleanliness' };
+        }
+
+        return { hasCriticalStats: false, stat: null };
+    }
+
+    /**
      * Check if user can start hibernation
+     * @param {object} pet - Optional pet object to check critical stats
      * @returns {object} - {canHibernate: boolean, reason: string}
      */
-    canStartHibernation() {
+    canStartHibernation(pet = null) {
         if (this.isHibernating) {
             return {
                 canHibernate: false,
                 reason: 'Pet is already hibernating'
+            };
+        }
+
+        // Check if pet has critical stats (excluding energy)
+        const criticalCheck = this._hasCriticalStats(pet);
+        if (criticalCheck.hasCriticalStats) {
+            const statMessages = {
+                hunger: 'Pet hunger is too low! Feed your pet before hibernation.',
+                health: 'Pet health is too low! Heal your pet before hibernation.',
+                happiness: 'Pet happiness is too low! Play with your pet before hibernation.',
+                cleanliness: 'Pet cleanliness is too low! Clean your pet before hibernation.'
+            };
+            return {
+                canHibernate: false,
+                reason: statMessages[criticalCheck.stat]
             };
         }
 
@@ -130,10 +194,11 @@ class HibernationManager {
     /**
      * Start hibernation (cryo sleep)
      * @param {number} durationDays - Duration in days
+     * @param {object} pet - Optional pet object to check critical stats
      * @returns {boolean} - Success status
      */
-    startHibernation(durationDays) {
-        const check = this.canStartHibernation();
+    startHibernation(durationDays, pet = null) {
+        const check = this.canStartHibernation(pet);
         if (!check.canHibernate) {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${check.reason}`, 'error', 3000);
@@ -172,6 +237,11 @@ class HibernationManager {
         this.lastPauseDate = new Date().toDateString();
         this.saveHibernationState();
 
+        // Update pet's lastUpdateTime to prevent stat decay catch-up when hibernation starts
+        if (pet && typeof pet.setLastUpdateTime === 'function') {
+            pet.setLastUpdateTime(Date.now());
+        }
+
         if (typeof showToast === 'function') {
             showToast(
                 `❄️ Pet entering cryo sleep for ${durationDays} day${durationDays > 1 ? 's' : ''}...`,
@@ -186,9 +256,10 @@ class HibernationManager {
     /**
      * Wake up from hibernation
      * @param {boolean} autoWakeup - True if waking up automatically
+     * @param {object} pet - Optional pet object to update hibernation time
      * @returns {boolean} - Success status
      */
-    wakeUp(autoWakeup = false) {
+    wakeUp(autoWakeup = false, pet = null) {
         if (!this.isHibernating) {
             return false;
         }
@@ -217,6 +288,18 @@ class HibernationManager {
         this.isHibernating = false;
         const startTime = new Date(this.hibernationStartTime);
         const duration = Date.now() - startTime.getTime();
+        
+        // Update pet's total hibernation time if pet object is provided
+        if (pet && typeof pet.addHibernationTime === 'function') {
+            pet.addHibernationTime(duration);
+            
+            // Reset pet's lastUpdateTime so post-hibernation stat decay
+            // starts from the wake-up moment instead of including hibernation duration
+            if (typeof pet.setLastUpdateTime === 'function') {
+                pet.setLastUpdateTime(Date.now());
+            }
+        }
+        
         this.hibernationStartTime = null;
         this.hibernationDuration = 0;
         this.saveHibernationState();
@@ -275,15 +358,16 @@ class HibernationManager {
 
     /**
      * Get hibernation status for UI
+     * @param {object} pet - Optional pet object to check critical stats
      * @returns {object}
      */
-    getStatus() {
+    getStatus(pet = null) {
         const limits = this.getHibernationLimits();
         const remaining = this.getRemainingTime();
 
         return {
             isHibernating: this.isHibernating,
-            canStartHibernation: this.canStartHibernation(),
+            canStartHibernation: this.canStartHibernation(pet),
             remainingTime: remaining,
             remainingTimeFormatted: this.getRemainingTimeFormatted(),
             pauseCount: this.pauseCount,
@@ -299,6 +383,21 @@ class HibernationManager {
      */
     shouldFreezePet() {
         return this.isHibernating;
+    }
+
+    /**
+     * Check if pet needs emergency wake up due to critical stats
+     * Note: This is a failsafe for stats that somehow became critical during hibernation
+     * @param {object} pet - Pet object to check
+     * @returns {boolean} - True if emergency wake up is needed
+     */
+    needsEmergencyWakeUp(pet) {
+        if (!this.isHibernating) {
+            return false;
+        }
+
+        const criticalCheck = this._hasCriticalStats(pet);
+        return criticalCheck.hasCriticalStats;
     }
 }
 
