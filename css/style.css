@@ -1061,16 +1061,22 @@ main {
     display: flex;
     flex-direction: row; /* Horizontal layout - icon and text side by side */
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center; /* Center content for visual consistency */
     gap: 8px;
     transition: all 0.2s;
     /* Remove aspect ratio for more compact, rectangular buttons */
     min-width: 44px; /* WCAG minimum */
     min-height: 44px;
     width: 100%;
+}
+
+.action-btn > span:not(.btn-icon) {
+    /* Text label styling with overflow handling */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 1;
+    min-width: 0; /* Allow flexbox to shrink text */
 }
 
 .action-btn:hover {
