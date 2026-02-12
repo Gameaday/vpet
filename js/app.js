@@ -454,17 +454,18 @@ function setupTouchGestures() {
             subtree: false // Don't observe deep changes
         });
         
-        // Initial update with delay to ensure DOM is fully rendered
-        setTimeout(updateActionPanelBehavior, INITIAL_DELAY_MS);
-        
-        // Double requestAnimationFrame ensures styles are computed after layout
+        // Initial update: Use double requestAnimationFrame for accurate measurements
         // First frame: browser commits layout changes
-        // Second frame: computed styles are available for accurate measurements
+        // Second frame: computed styles are available, ensuring accurate button heights/gaps
+        // The setTimeout fallback catches cases where rAF might not fire (e.g., hidden tabs)
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 updateActionPanelBehavior();
             });
         });
+        
+        // Fallback in case requestAnimationFrame doesn't execute (tab not visible, etc.)
+        setTimeout(updateActionPanelBehavior, INITIAL_DELAY_MS);
     }
 }
 
