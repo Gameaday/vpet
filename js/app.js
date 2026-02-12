@@ -361,6 +361,15 @@ function setupTouchGestures() {
     const actionPanelWrapper = document.getElementById('actionPanelWrapper');
     
     if (actionPanelToggle && actionPanel && actionPanelWrapper) {
+        // Configuration constants
+        const MOBILE_BREAKPOINT = 768; // px - matches CSS @media (max-width: 768px)
+        const DEFAULT_GAP = 12; // px - fallback if computed style unavailable
+        const DEFAULT_BUTTON_HEIGHT = 64; // px - Material Design 3 touch target
+        const HEIGHT_BUFFER = 20; // px - padding buffer for scrolling comfort
+        const RESIZE_DEBOUNCE_MS = 150; // Debounce viewport resize events
+        const MUTATION_DELAY_MS = 50; // Delay after DOM mutations before recalculating
+        const INITIAL_DELAY_MS = 200; // Initial delay to ensure DOM fully rendered
+        
         let isUpdating = false; // Prevent infinite loops
         
         // Function to determine if toggle should be visible
@@ -369,7 +378,7 @@ function setupTouchGestures() {
             isUpdating = true;
             
             try {
-                const isMobile = window.innerWidth <= 768;
+                const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
                 
                 if (!isMobile) {
                     // On desktop/tablet, hide toggle and always show all buttons
@@ -395,17 +404,18 @@ function setupTouchGestures() {
                 // Calculate the height needed for all buttons
                 // Get actual button height and gap from computed styles
                 const computedStyle = window.getComputedStyle(actionPanel);
-                const gap = parseInt(computedStyle.gap) || 12;
+                const gap = parseInt(computedStyle.gap) || DEFAULT_GAP;
                 
                 // Calculate grid layout: 2 columns
                 const columns = 2;
                 const rows = Math.ceil(visibleButtons.length / columns);
                 
                 // Get the actual height of a button (including padding, borders)
-                const buttonHeight = visibleButtons[0]?.offsetHeight || 64;
+                const buttonHeight = visibleButtons[0]?.offsetHeight || DEFAULT_BUTTON_HEIGHT;
                 
-                // Calculate total height: (rows * buttonHeight) + ((rows - 1) * gap) + padding buffer
-                const totalHeight = (rows * buttonHeight) + ((rows - 1) * gap) + 20;
+                // Calculate total height: (rows * buttonHeight) + ((rows - 1) * gap) + buffer
+                // Buffer provides comfortable scrolling space
+                const totalHeight = (rows * buttonHeight) + ((rows - 1) * gap) + HEIGHT_BUFFER;
                 
                 // Set dynamic max-height when expanded
                 actionPanel.style.setProperty('--dynamic-max-height', `${totalHeight}px`);
@@ -426,7 +436,7 @@ function setupTouchGestures() {
         let resizeTimeout;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(updateActionPanelBehavior, 150);
+            resizeTimeout = setTimeout(updateActionPanelBehavior, RESIZE_DEBOUNCE_MS);
         }, { passive: true });
         
         // Observe changes to action panel content (when buttons are added/removed)
@@ -435,7 +445,7 @@ function setupTouchGestures() {
             // Only update if children were added or removed, not style changes
             const hasChildListChanges = mutations.some(m => m.type === 'childList');
             if (hasChildListChanges) {
-                setTimeout(updateActionPanelBehavior, 50);
+                setTimeout(updateActionPanelBehavior, MUTATION_DELAY_MS);
             }
         });
         
@@ -445,9 +455,11 @@ function setupTouchGestures() {
         });
         
         // Initial update with delay to ensure DOM is fully rendered
-        setTimeout(updateActionPanelBehavior, 200);
+        setTimeout(updateActionPanelBehavior, INITIAL_DELAY_MS);
         
-        // Re-check after animation frames
+        // Double requestAnimationFrame ensures styles are computed after layout
+        // First frame: browser commits layout changes
+        // Second frame: computed styles are available for accurate measurements
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 updateActionPanelBehavior();
