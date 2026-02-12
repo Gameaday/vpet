@@ -64,7 +64,7 @@ header h1 {
     height: 8px;
     border-radius: 50%;
     background: #555;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .status-dot.online {
@@ -801,7 +801,7 @@ main {
 .evolution-progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    transition: width 0.3s ease;
+    transition: width var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
 }
 
@@ -879,7 +879,7 @@ main {
 
 .progress-fill {
     height: 100%;
-    transition: width 0.3s ease, box-shadow 0.3s ease;
+    transition: width var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1)), box-shadow 0.3s ease;
     border-radius: 8px;
 }
 
@@ -970,7 +970,7 @@ main {
     padding: 4px 8px;
     border-radius: 8px;
     background: rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .warmth-status.cold {
@@ -1088,7 +1088,7 @@ main {
 
 .action-btn:hover .btn-icon {
     transform: scale(1.05);
-    transition: transform 0.2s;
+    transition: transform var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .action-btn:active {
@@ -1144,7 +1144,7 @@ main {
     border-color: #f97316;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .warm-btn:hover {
@@ -1195,7 +1195,7 @@ main {
 
 .hatch-btn {
     border-color: #84cc16;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .hatch-btn:not(:disabled):hover {
@@ -1300,7 +1300,7 @@ main {
     backdrop-filter: blur(4px);
     align-items: center;
     justify-content: center;
-    animation: fadeIn 0.2s ease;
+    animation: fadeIn var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 @keyframes fadeIn {
@@ -1326,16 +1326,16 @@ main {
     position: relative;
     border: 2px solid #667eea;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    animation: slideUp 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    animation: slideUp var(--md-duration-medium2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0, 0, 1));
 }
 
 @keyframes slideUp {
     from {
-        transform: translateY(20px);
+        transform: translateY(30px) scale(0.95);
         opacity: 0;
     }
     to {
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
         opacity: 1;
     }
 }
@@ -1348,7 +1348,7 @@ main {
     color: #aaa;
     cursor: pointer;
     line-height: 1;
-    transition: all 0.2s;
+    transition: all var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     padding: 5px;
     width: 35px;
     height: 35px;
@@ -1361,7 +1361,7 @@ main {
 .close-btn:hover {
     color: #fff;
     background: rgba(255, 255, 255, 0.1);
-    transform: rotate(90deg);
+    transform: rotate(90deg) scale(1.1);
 }
 
 .modal h2 {
@@ -1715,7 +1715,7 @@ main {
     color: #fff;
     font-size: 0.95em;
     opacity: 0;
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0, 0, 1));
     z-index: 2000;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     min-width: 200px;
@@ -2387,7 +2387,7 @@ body.theme-retro select {
     font-size: 1em;
     opacity: 0;
     transform: translateX(400px);
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     z-index: 1001;
     max-width: 300px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -2435,7 +2435,7 @@ body.theme-retro select {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: all 0.2s ease;
+    transition: all var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .leaderboard-entry:hover {
@@ -2509,7 +2509,7 @@ body.theme-retro select {
     color: white;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2757,7 +2757,7 @@ body.theme-retro select {
     gap: 5px;
     font-size: 0.9rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
@@ -2802,7 +2802,7 @@ body.theme-retro select {
     color: white;
     cursor: pointer;
     font-size: 0.85rem;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .category-btn:hover {
@@ -2825,7 +2825,7 @@ body.theme-retro select {
     border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .shop-item:hover {
@@ -2859,7 +2859,7 @@ body.theme-retro select {
     color: white;
     cursor: pointer;
     font-size: 0.85rem;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .shop-item .buy-btn:hover {
@@ -2887,7 +2887,7 @@ body.theme-retro select {
     border-radius: 8px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .inventory-item:hover {
@@ -2978,7 +2978,7 @@ body.theme-retro select {
     color: #aaa;
     cursor: pointer;
     font-size: 0.9rem;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     border-bottom: 2px solid transparent;
 }
 
@@ -3037,7 +3037,7 @@ body.theme-retro select {
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.8rem;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .challenge-btn {
@@ -3095,7 +3095,7 @@ body.theme-retro select {
     border-radius: 12px;
     padding: 20px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .tournament-option:hover {
@@ -3194,7 +3194,7 @@ body.theme-retro select {
     border: 2px solid rgba(100, 255, 218, 0.3);
     border-radius: 8px;
     padding: 12px;
-    transition: all 0.3s ease;
+    transition: all var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .bracket-match.current {

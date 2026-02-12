@@ -140,7 +140,7 @@ body {
         border: none;
         color: rgba(102, 126, 234, 0.9);
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all var(--md-duration-medium1, 250ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
         display: flex;
         align-items: center;
         justify-content: center;
@@ -158,14 +158,19 @@ body {
         height: 4px;
         background: rgba(102, 126, 234, 0.4);
         border-radius: 2px;
+        transition: background var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     }
     
     .action-panel-toggle:active {
         background: rgba(102, 126, 234, 0.15);
     }
     
+    .action-panel-toggle:active::before {
+        background: rgba(102, 126, 234, 0.6);
+    }
+    
     .action-panel-toggle .toggle-icon {
-        transition: transform 0.3s ease;
+        transition: transform var(--md-duration-medium2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0, 0, 1));
         filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
     }
     
@@ -185,7 +190,8 @@ body {
         flex-shrink: 0;
         border-radius: 0;
         box-shadow: none;
-        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        transition: max-height var(--md-duration-medium4, 400ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0, 0, 1)), 
+                    opacity var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
         overflow: hidden;
         position: relative;
     }
@@ -397,7 +403,7 @@ body {
         background: linear-gradient(135deg, rgba(42, 42, 42, 0.8) 0%, rgba(51, 51, 51, 0.8) 100%);
         border: 2px solid rgba(102, 126, 234, 0.25);
         backdrop-filter: blur(8px);
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     }
     
     .online-battle-btn:active {
@@ -423,7 +429,7 @@ body {
         background: linear-gradient(135deg, rgba(42, 42, 42, 0.8) 0%, rgba(51, 51, 51, 0.8) 100%);
         border: 2px solid rgba(102, 126, 234, 0.25);
         backdrop-filter: blur(8px);
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     }
     
     .social-btn:active,
@@ -487,7 +493,7 @@ body {
         background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
         border: 2px solid rgba(102, 126, 234, 0.4);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     }
     
     .more-btn:hover {
@@ -512,7 +518,7 @@ body {
         border: 2px solid rgba(102, 126, 234, 0.3);
         border-radius: 50%;
         padding: 0;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
         display: flex;
         align-items: center;
         justify-content: center;
@@ -652,7 +658,7 @@ body {
         border-radius: 7px;
         box-shadow: 0 0 8px rgba(102, 126, 234, 0.5),
                     inset 0 1px 2px rgba(255, 255, 255, 0.3);
-        transition: width 0.3s ease, box-shadow 0.3s ease;
+        transition: width var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1)), box-shadow 0.3s ease;
     }
     
     .progress-fill.critical {
@@ -732,7 +738,7 @@ body {
         border: 2px solid rgba(102, 126, 234, 0.3);
         border-radius: 50%;
         color: #fff;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     }
     
     .close-btn:hover {
@@ -1092,7 +1098,7 @@ body {
     padding: 0 4px;
     line-height: 1;
     opacity: 0.7;
-    transition: opacity 0.2s;
+    transition: opacity var(--md-duration-short4, 200ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     flex-shrink: 0;
 }
 
