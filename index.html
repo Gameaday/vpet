@@ -194,62 +194,67 @@
             </div>
 
             <!-- Unified Action Panel - Contextually shows appropriate buttons -->
-            <div class="action-panel" id="actionPanel">
-                <!-- Egg-only buttons -->
-                <button class="action-btn warm-btn egg-only" id="warmBtn" style="display: none;">
-                    <span class="btn-icon">🔥</span>
-                    <span>Incubate</span>
+            <div class="action-panel-wrapper" id="actionPanelWrapper">
+                <button class="action-panel-toggle" id="actionPanelToggle" aria-label="Expand actions" aria-expanded="false">
+                    <span class="toggle-icon">▲</span>
                 </button>
-                <button class="action-btn hatch-btn egg-only" id="hatchBtn" disabled style="display: none;">
-                    <span class="btn-icon">🐣</span>
-                    <span>Hatch</span>
-                </button>
-                
-                <!-- Primary care buttons (non-egg) -->
-                <button class="action-btn feed-btn non-egg" id="feedBtn" 
-                        aria-label="Feed your pet to restore hunger" 
-                        title="Feed your pet">
-                    <span class="btn-icon" aria-hidden="true">🍖</span>
-                    <span>Feed</span>
-                </button>
-                <button class="action-btn play-btn non-egg" id="playBtn" 
-                        aria-label="Play with your pet to increase happiness" 
-                        title="Play with your pet">
-                    <span class="btn-icon" aria-hidden="true">🎮</span>
-                    <span>Play</span>
-                </button>
-                <button class="action-btn sleep-btn non-egg" id="sleepBtn" 
-                        aria-label="Put your pet to sleep to restore energy" 
-                        title="Put pet to sleep">
-                    <span class="btn-icon" aria-hidden="true">💤</span>
-                    <span>Sleep</span>
-                </button>
-                <button class="action-btn train-btn non-egg" id="trainBtn" 
-                        aria-label="Train your pet to increase level" 
-                        title="Train your pet">
-                    <span class="btn-icon" aria-hidden="true">💪</span>
-                    <span>Train</span>
-                </button>
-                <button class="action-btn clean-btn non-egg" id="cleanBtn" 
-                        aria-label="Clean your pet to maintain hygiene" 
-                        title="Clean your pet">
-                    <span class="btn-icon" aria-hidden="true">🧹</span>
-                    <span>Clean</span>
-                </button>
-                
-                <!-- Secondary action buttons (non-egg) -->
-                <button class="action-btn battle-btn non-egg" id="battleGatewayBtn" 
-                        aria-label="Battle Options" 
-                        title="Battle Options">
-                    <span class="btn-icon" aria-hidden="true">⚔️</span>
-                    <span>Battle</span>
-                </button>
-                <button class="action-btn social-btn non-egg" id="socialGatewayBtn" 
-                        aria-label="Social Features" 
-                        title="Social Features">
-                    <span class="btn-icon" aria-hidden="true">👥</span>
-                    <span>Social</span>
-                </button>
+                <div class="action-panel collapsed" id="actionPanel">
+                    <!-- Egg-only buttons -->
+                    <button class="action-btn warm-btn egg-only" id="warmBtn" style="display: none;">
+                        <span class="btn-icon">🔥</span>
+                        <span>Incubate</span>
+                    </button>
+                    <button class="action-btn hatch-btn egg-only" id="hatchBtn" disabled style="display: none;">
+                        <span class="btn-icon">🐣</span>
+                        <span>Hatch</span>
+                    </button>
+                    
+                    <!-- Primary care buttons (non-egg) -->
+                    <button class="action-btn feed-btn non-egg" id="feedBtn" 
+                            aria-label="Feed your pet to restore hunger" 
+                            title="Feed your pet">
+                        <span class="btn-icon" aria-hidden="true">🍖</span>
+                        <span>Feed</span>
+                    </button>
+                    <button class="action-btn play-btn non-egg" id="playBtn" 
+                            aria-label="Play with your pet to increase happiness" 
+                            title="Play with your pet">
+                        <span class="btn-icon" aria-hidden="true">🎮</span>
+                        <span>Play</span>
+                    </button>
+                    <button class="action-btn sleep-btn non-egg" id="sleepBtn" 
+                            aria-label="Put your pet to sleep to restore energy" 
+                            title="Put pet to sleep">
+                        <span class="btn-icon" aria-hidden="true">💤</span>
+                        <span>Sleep</span>
+                    </button>
+                    <button class="action-btn train-btn non-egg" id="trainBtn" 
+                            aria-label="Train your pet to increase level" 
+                            title="Train your pet">
+                        <span class="btn-icon" aria-hidden="true">💪</span>
+                        <span>Train</span>
+                    </button>
+                    <button class="action-btn clean-btn non-egg" id="cleanBtn" 
+                            aria-label="Clean your pet to maintain hygiene" 
+                            title="Clean your pet">
+                        <span class="btn-icon" aria-hidden="true">🧹</span>
+                        <span>Clean</span>
+                    </button>
+                    
+                    <!-- Secondary action buttons (non-egg) -->
+                    <button class="action-btn battle-btn non-egg" id="battleGatewayBtn" 
+                            aria-label="Battle Options" 
+                            title="Battle Options">
+                        <span class="btn-icon" aria-hidden="true">⚔️</span>
+                        <span>Battle</span>
+                    </button>
+                    <button class="action-btn social-btn non-egg" id="socialGatewayBtn" 
+                            aria-label="Social Features" 
+                            title="Social Features">
+                        <span class="btn-icon" aria-hidden="true">👥</span>
+                        <span>Social</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Shop/Inventory/Games removed - accessed via Feed/Play gateway modals -->
@@ -739,7 +744,7 @@
                         <span>Quick Feed</span>
                     </button>
                     <div class="hunger-display">
-                        Hunger: <span id="kitchenHungerValue">100</span>%
+                        Hunger: <span id="kitchenHungerValue">--</span>%
                     </div>
                 </div>
                 <div class="food-grid" id="foodGrid">
@@ -767,7 +772,7 @@
                         <span>Quick Play</span>
                     </button>
                     <div class="happiness-display">
-                        Happiness: <span id="activitiesHappinessValue">100</span>%
+                        Happiness: <span id="activitiesHappinessValue">--</span>%
                     </div>
                 </div>
                 <div class="activities-grid">
@@ -812,7 +817,7 @@
                         <span>Quick Nap</span>
                     </button>
                     <div class="energy-display">
-                        Energy: <span id="restEnergyValue">100</span>%
+                        Energy: <span id="restEnergyValue">--</span>%
                     </div>
                 </div>
                 <div class="rest-options">
@@ -857,7 +862,7 @@
                         <span>Quick Clean</span>
                     </button>
                     <div class="cleanliness-display">
-                        Cleanliness: <span id="groomingCleanValue">100</span>%
+                        Cleanliness: <span id="groomingCleanValue">--</span>%
                     </div>
                 </div>
                 <div class="grooming-options">

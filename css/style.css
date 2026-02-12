@@ -1031,9 +1031,9 @@ main {
 /* Action Panel - Organic, intelligent layout that adapts to any screen size */
 .action-panel {
     display: grid;
-    /* Auto-fit creates as many columns as will fit, with each button 80-140px wide */
-    grid-template-columns: repeat(auto-fit, minmax(clamp(80px, 20vw, 140px), 1fr));
-    gap: clamp(6px, 1.5vw, 12px);
+    /* Fixed 2-column grid for uniform button sizes across all viewports */
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(8px, 2vw, 12px);
     margin: 0 auto 20px;
     max-width: 100%;
     width: 100%;
@@ -1050,39 +1050,49 @@ main {
 .action-btn {
     background: #333;
     border: 2px solid #555;
-    border-radius: 10px;
-    /* Responsive padding that scales with button size */
-    padding: clamp(8px, 2vw, 14px) clamp(6px, 1.5vw, 12px);
+    border-radius: 12px;
+    /* Compact horizontal layout padding */
+    padding: 10px 14px;
     color: #fff;
-    /* Responsive font size */
-    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    /* Slightly smaller font for compact design */
+    font-size: clamp(0.75rem, 1.8vw, 0.85rem);
     font-family: 'Courier New', monospace;
     cursor: pointer;
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Horizontal layout - icon and text side by side */
     align-items: center;
-    justify-content: center;
-    gap: clamp(2px, 0.5vw, 6px);
+    justify-content: center; /* Center content for visual consistency */
+    gap: 8px;
     transition: all 0.2s;
-    /* Minimum touch target size for accessibility */
-    min-height: 48px;
-    min-width: 48px;
+    /* Remove aspect ratio for more compact, rectangular buttons */
+    min-width: 44px; /* WCAG minimum */
+    min-height: 44px;
+    width: 100%;
+}
+
+.action-btn > span:not(.btn-icon) {
+    /* Text label styling with overflow handling */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0; /* Allow flexbox to shrink text */
 }
 
 .action-btn:hover {
     background: #444;
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     border-color: #667eea;
 }
 
 .action-btn:hover .btn-icon {
-    transform: scale(1.1);
+    transform: scale(1.05);
     transition: transform 0.2s;
 }
 
 .action-btn:active {
-    transform: translateY(0) scale(0.98);
+    transform: translateY(0) scale(0.99);
     box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -1096,9 +1106,10 @@ main {
 }
 
 .btn-icon {
-    /* Responsive icon size that scales with button */
-    font-size: clamp(1.1em, 2.5vw, 1.5em);
+    /* Smaller, more refined icon size */
+    font-size: 1.2em;
     line-height: 1;
+    flex-shrink: 0;
 }
 
 .feed-btn {
@@ -1817,14 +1828,19 @@ main {
         height: 120px;
     }
 
+    /* Adjust gap for better spacing on mobile */
     .action-panel {
-        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
     }
     
-    /* Larger touch targets for mobile */
+    /* Compact padding for mobile while maintaining touch targets */
     .action-btn {
-        padding: 14px;
-        min-height: 60px;
+        padding: 10px 12px;
+        font-size: 0.75rem;
+    }
+    
+    .btn-icon {
+        font-size: 1.1em;
     }
     
     .online-battle-btn {
@@ -3311,22 +3327,16 @@ body.theme-retro select {
 
 .stats-panel.circular-mode {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
     padding: 12px 8px;
-    overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
-}
-
-.stats-panel.circular-mode::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    overflow-x: visible;
 }
 
 .stats-panel.circular-mode .stat-bar {
     flex: 0 0 auto;
-    width: 70px;
+    width: 60px;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -3431,20 +3441,29 @@ body.theme-retro select {
 /* Responsive adjustments for circular mode */
 @media (max-width: 768px) {
     .stats-panel.circular-mode {
-        gap: 10px;
+        gap: 6px;
+        padding: 10px 4px;
     }
     
     .stats-panel.circular-mode .stat-bar {
-        width: 70px;
+        width: 55px;
     }
     
     .circular-gauge {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
     }
     
     .circular-gauge-value {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .stats-panel.circular-mode .stat-label {
+        font-size: 0.65rem;
+    }
+    
+    .stats-panel.circular-mode .stat-label span:first-child {
+        font-size: 1.1rem;
     }
 }
 

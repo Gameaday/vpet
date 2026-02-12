@@ -354,6 +354,20 @@ function setupTouchGestures() {
             }
         }, { passive: true });
     });
+    
+    // Action panel toggle functionality
+    const actionPanelToggle = document.getElementById('actionPanelToggle');
+    const actionPanel = document.getElementById('actionPanel');
+    if (actionPanelToggle && actionPanel) {
+        actionPanelToggle.addEventListener('click', () => {
+            const isExpanded = actionPanelToggle.getAttribute('aria-expanded') === 'true';
+            // Toggle the states
+            actionPanelToggle.setAttribute('aria-expanded', !isExpanded);
+            // aria-label describes what the button will do when clicked next time
+            actionPanelToggle.setAttribute('aria-label', !isExpanded ? 'Collapse actions' : 'Expand actions');
+            actionPanel.classList.toggle('collapsed');
+        });
+    }
 }
 
 
