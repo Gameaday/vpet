@@ -627,4 +627,67 @@ describe('Pet Class', () => {
       expect(pet.battleHistory.length).toBe(10);
     });
   });
+
+  describe('Hibernation Time Tracking', () => {
+    it('should initialize with zero hibernation time', () => {
+      expect(pet.totalHibernationTime).toBe(0);
+    });
+
+    it('should add hibernation time correctly', () => {
+      const hibernationDuration = 3600000; // 1 hour
+      pet.addHibernationTime(hibernationDuration);
+      
+      expect(pet.totalHibernationTime).toBe(hibernationDuration);
+    });
+
+    it('should accumulate hibernation time across multiple periods', () => {
+      pet.addHibernationTime(3600000); // 1 hour
+      pet.addHibernationTime(7200000); // 2 hours
+      
+      expect(pet.totalHibernationTime).toBe(10800000); // 3 hours total
+    });
+
+    it('should save hibernation time to localStorage', () => {
+      pet.addHibernationTime(3600000);
+      
+      const savedData = JSON.parse(localStorage.getItem('vpet_data'));
+      expect(savedData.totalHibernationTime).toBe(3600000);
+    });
+
+    it('should load hibernation time from localStorage', () => {
+      const petData = {
+        name: 'Test',
+        stage: 'baby',
+        health: 100,
+        hunger: 100,
+        happiness: 100,
+        energy: 100,
+        age: 1,
+        level: 1,
+        wins: 0,
+        isSleeping: false,
+        birthTime: Date.now(),
+        lastUpdateTime: Date.now(),
+        totalHibernationTime: 7200000,
+        hasHatched: true
+      };
+      localStorage.setItem('vpet_data', JSON.stringify(petData));
+      
+      const newPet = new Pet();
+      expect(newPet.totalHibernationTime).toBe(7200000);
+    });
+
+    it('should adjust age calculation when hibernation time exists', () => {
+      const birthTime = Date.now() - 86400000; // 1 day ago
+      pet.birthTime = birthTime;
+      pet.totalHibernationTime = 43200000; // 12 hours
+      pet.hasHatched = true;
+      pet.stage = 'baby';
+      
+      pet.updateStatsFromTimePassed();
+      
+      // Age should be ~0.5 days (24h - 12h hibernation) / 24h
+      expect(pet.age).toBeCloseTo(0.5, 1);
+    });
+  });
 });
