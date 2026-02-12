@@ -41,6 +41,9 @@ class Pet {
         this.hasHatched = false; // Track if egg has hatched
         this.isIncubating = false; // Track if egg is currently being incubated
         
+        // Hibernation tracking (for age calculation)
+        this.totalHibernationTime = 0; // Total time spent in hibernation (milliseconds)
+        
         // Visual appearance traits - initialized on first hatch
         this.appearance = {
             eyeShape: 'round', // round, oval, star, heart
@@ -104,6 +107,7 @@ class Pet {
                 incubationTime: this.incubationTime || 0,
                 hasHatched: this.hasHatched || false,
                 isIncubating: this.isIncubating || false,
+                totalHibernationTime: this.totalHibernationTime || 0,
                 appearance: this.appearance || {eyeShape: 'round', eyeColor: 'black', mouthShape: 'happy', bodyColor: 'default', bodySize: 'normal'}
             };
             
@@ -175,6 +179,7 @@ class Pet {
                     this.incubationTime = Number(petData.incubationTime) || 0;
                     this.hasHatched = Boolean(petData.hasHatched);
                     this.isIncubating = Boolean(petData.isIncubating);
+                    this.totalHibernationTime = Number(petData.totalHibernationTime) || 0;
                     
                     // Load appearance traits or set defaults
                     if (petData.appearance && typeof petData.appearance === 'object') {
@@ -204,7 +209,7 @@ class Pet {
     }
 
     // Update stats based on time that passed since last update
-    updateStatsFromTimePassed() {
+    updateStatsFromTimePassed(hibernationManager = null) {
         const now = Date.now();
         const timePassed = now - this.lastUpdateTime;
         const minutesPassed = timePassed / (1000 * 60);
@@ -216,6 +221,14 @@ class Pet {
             happiness: this.happiness,
             energy: this.energy
         };
+        
+        // Skip stat updates if pet is hibernating
+        if (hibernationManager && hibernationManager.shouldFreezePet()) {
+            // Only update lastUpdateTime, no stat decay or aging during hibernation
+            this.lastUpdateTime = now;
+            this.save();
+            return null;
+        }
         
         // Eggs only decay warmth, not other stats
         if (this.stage === 'egg' && !this.hasHatched) {
@@ -291,8 +304,10 @@ class Pet {
         }
         
         // Update age (keep as decimal for accurate evolution tracking)
-        const daysPassed = (now - this.birthTime) / (1000 * 60 * 60 * 24);
-        this.age = daysPassed; // Don't floor - evolution needs precise age
+        // Subtract total hibernation time from age calculation
+        const totalLiveTime = now - this.birthTime - (this.totalHibernationTime || 0);
+        const daysPassed = totalLiveTime / (1000 * 60 * 60 * 24);
+        this.age = Math.max(0, daysPassed); // Don't floor - evolution needs precise age
         
         // Check for evolution
         this.checkEvolution();
@@ -784,6 +799,15 @@ class Pet {
             level: Math.floor(this.level),
             wins: this.wins
         };
+    }
+
+    /**
+     * Add hibernation time to track total time spent hibernating
+     * @param {number} milliseconds - Time in milliseconds to add
+     */
+    addHibernationTime(milliseconds) {
+        this.totalHibernationTime = (this.totalHibernationTime || 0) + milliseconds;
+        this.save();
     }
 }
 

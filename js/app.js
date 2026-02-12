@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     serverConnection = new ServerConnection();
     
     // Check for time away and show modal if needed
-    const timeAwayInfo = pet.updateStatsFromTimePassed();
+    const timeAwayInfo = pet.updateStatsFromTimePassed(hibernationManager);
     if (timeAwayInfo) {
         showTimeAwayModal(timeAwayInfo);
     }
@@ -76,9 +76,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up periodic updates
     const updateFrequency = AppConfig.TIMERS?.statsUpdate || 10000;
     updateInterval = setInterval(() => {
-        // Skip updates if pet is hibernating
+        // Check for emergency wake up if pet has critical stats during hibernation
+        if (hibernationManager.shouldFreezePet() && hibernationManager.needsEmergencyWakeUp(pet)) {
+            hibernationManager.wakeUp(true, pet);
+            showNotification('⚠️ Pet woke from cryo sleep due to critical stats!', 'warning');
+        }
+        
+        // Skip stat updates if pet is hibernating
         if (!hibernationManager.shouldFreezePet()) {
-            pet.updateStatsFromTimePassed();
+            pet.updateStatsFromTimePassed(hibernationManager);
             pet.checkSickness();
             pet.recordStatsSnapshot();
         }
@@ -1823,7 +1829,7 @@ function openHibernationModal() {
     const status = document.getElementById('hibernationStatus');
     const controls = document.getElementById('hibernationControls');
     
-    const hibStatus = hibernationManager.getStatus();
+    const hibStatus = hibernationManager.getStatus(pet);
     
     // Update status section
     if (hibStatus.isHibernating) {
@@ -1851,8 +1857,8 @@ function openHibernationModal() {
             const wakeBtn = document.getElementById('wakeUpBtn');
             if (wakeBtn && !wakeBtn.disabled) {
                 wakeBtn.addEventListener('click', () => {
-                    // Pass false to indicate manual (not automatic) wake-up
-                    const result = hibernationManager.wakeUp(false);
+                    // Pass false to indicate manual (not automatic) wake-up, and pass pet
+                    const result = hibernationManager.wakeUp(false, pet);
                     if (result) {
                         closeHibernationModal();
                         updateUI();
@@ -1889,7 +1895,7 @@ function openHibernationModal() {
             
             document.getElementById('startHibernationBtn').addEventListener('click', () => {
                 const days = parseInt(document.getElementById('hibernationDays').value);
-                if (hibernationManager.startHibernation(days)) {
+                if (hibernationManager.startHibernation(days, pet)) {
                     closeHibernationModal();
                     updateUI();
                 }

@@ -85,7 +85,7 @@ class GatewayManager {
         document.getElementById('deepSleepBtn')?.addEventListener('click', () => this.deepSleep());
         document.getElementById('cryoSleepBtn')?.addEventListener('click', () => {
             this.closeModal('rest');
-            document.getElementById('hibernateBtn')?.click();
+            document.getElementById('settingsHibernateBtn')?.click();
         });
         document.getElementById('dreamActivityBtn')?.addEventListener('click', () => this.dreamActivity());
         

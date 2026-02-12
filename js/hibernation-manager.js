@@ -94,14 +94,44 @@ class HibernationManager {
 
     /**
      * Check if user can start hibernation
+     * @param {object} pet - Optional pet object to check critical stats
      * @returns {object} - {canHibernate: boolean, reason: string}
      */
-    canStartHibernation() {
+    canStartHibernation(pet = null) {
         if (this.isHibernating) {
             return {
                 canHibernate: false,
                 reason: 'Pet is already hibernating'
             };
+        }
+
+        // Check if pet has critical stats (excluding energy)
+        if (pet) {
+            const criticalThreshold = 30;
+            if (pet.hunger < criticalThreshold) {
+                return {
+                    canHibernate: false,
+                    reason: 'Pet hunger is too low! Feed your pet before hibernation.'
+                };
+            }
+            if (pet.health < criticalThreshold) {
+                return {
+                    canHibernate: false,
+                    reason: 'Pet health is too low! Heal your pet before hibernation.'
+                };
+            }
+            if (pet.happiness < criticalThreshold) {
+                return {
+                    canHibernate: false,
+                    reason: 'Pet happiness is too low! Play with your pet before hibernation.'
+                };
+            }
+            if (pet.cleanliness < criticalThreshold) {
+                return {
+                    canHibernate: false,
+                    reason: 'Pet cleanliness is too low! Clean your pet before hibernation.'
+                };
+            }
         }
 
         const limits = this.getHibernationLimits();
@@ -130,10 +160,11 @@ class HibernationManager {
     /**
      * Start hibernation (cryo sleep)
      * @param {number} durationDays - Duration in days
+     * @param {object} pet - Optional pet object to check critical stats
      * @returns {boolean} - Success status
      */
-    startHibernation(durationDays) {
-        const check = this.canStartHibernation();
+    startHibernation(durationDays, pet = null) {
+        const check = this.canStartHibernation(pet);
         if (!check.canHibernate) {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${check.reason}`, 'error', 3000);
@@ -186,9 +217,10 @@ class HibernationManager {
     /**
      * Wake up from hibernation
      * @param {boolean} autoWakeup - True if waking up automatically
+     * @param {object} pet - Optional pet object to update hibernation time
      * @returns {boolean} - Success status
      */
-    wakeUp(autoWakeup = false) {
+    wakeUp(autoWakeup = false, pet = null) {
         if (!this.isHibernating) {
             return false;
         }
@@ -217,6 +249,12 @@ class HibernationManager {
         this.isHibernating = false;
         const startTime = new Date(this.hibernationStartTime);
         const duration = Date.now() - startTime.getTime();
+        
+        // Update pet's total hibernation time if pet object is provided
+        if (pet && typeof pet.addHibernationTime === 'function') {
+            pet.addHibernationTime(duration);
+        }
+        
         this.hibernationStartTime = null;
         this.hibernationDuration = 0;
         this.saveHibernationState();
@@ -275,15 +313,16 @@ class HibernationManager {
 
     /**
      * Get hibernation status for UI
+     * @param {object} pet - Optional pet object to check critical stats
      * @returns {object}
      */
-    getStatus() {
+    getStatus(pet = null) {
         const limits = this.getHibernationLimits();
         const remaining = this.getRemainingTime();
 
         return {
             isHibernating: this.isHibernating,
-            canStartHibernation: this.canStartHibernation(),
+            canStartHibernation: this.canStartHibernation(pet),
             remainingTime: remaining,
             remainingTimeFormatted: this.getRemainingTimeFormatted(),
             pauseCount: this.pauseCount,
@@ -299,6 +338,29 @@ class HibernationManager {
      */
     shouldFreezePet() {
         return this.isHibernating;
+    }
+
+    /**
+     * Check if pet needs emergency wake up due to critical stats
+     * Note: This is a failsafe for stats that somehow became critical during hibernation
+     * @param {object} pet - Pet object to check
+     * @returns {boolean} - True if emergency wake up is needed
+     */
+    needsEmergencyWakeUp(pet) {
+        if (!this.isHibernating || !pet) {
+            return false;
+        }
+
+        const criticalThreshold = 30;
+        // Check non-energy stats (energy is expected to be low during sleep)
+        if (pet.hunger < criticalThreshold || 
+            pet.health < criticalThreshold || 
+            pet.happiness < criticalThreshold || 
+            pet.cleanliness < criticalThreshold) {
+            return true;
+        }
+
+        return false;
     }
 }
 
