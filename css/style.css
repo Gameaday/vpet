@@ -879,7 +879,8 @@ main {
 
 .progress-fill {
     height: 100%;
-    transition: width var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1)), box-shadow 0.3s ease;
+    transition: width var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1)), 
+                box-shadow var(--md-duration-medium2, 300ms) var(--md-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     border-radius: 8px;
 }
 
