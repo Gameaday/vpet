@@ -666,9 +666,9 @@ describe('Pet Class', () => {
         level: 1,
         wins: 0,
         isSleeping: false,
-        birthTime: Date.now(),
+        birthTime: Date.now() - 86400000, // 1 day ago
         lastUpdateTime: Date.now(),
-        totalHibernationTime: 7200000,
+        totalHibernationTime: 7200000, // 2 hours
         hasHatched: true
       };
       localStorage.setItem('vpet_data', JSON.stringify(petData));

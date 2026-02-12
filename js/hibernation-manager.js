@@ -5,6 +5,9 @@
  */
 
 class HibernationManager {
+    // Critical stat threshold for hibernation checks
+    static CRITICAL_STAT_THRESHOLD = 30;
+
     constructor(premiumManager) {
         this.premiumManager = premiumManager;
         this.isHibernating = false;
@@ -107,7 +110,7 @@ class HibernationManager {
 
         // Check if pet has critical stats (excluding energy)
         if (pet) {
-            const criticalThreshold = 30;
+            const criticalThreshold = HibernationManager.CRITICAL_STAT_THRESHOLD;
             if (pet.hunger < criticalThreshold) {
                 return {
                     canHibernate: false,
@@ -351,7 +354,7 @@ class HibernationManager {
             return false;
         }
 
-        const criticalThreshold = 30;
+        const criticalThreshold = HibernationManager.CRITICAL_STAT_THRESHOLD;
         // Check non-energy stats (energy is expected to be low during sleep)
         if (pet.hunger < criticalThreshold || 
             pet.health < criticalThreshold || 
